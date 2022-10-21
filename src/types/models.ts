@@ -18,6 +18,7 @@ export type User = {
   firstName: string;
   lastName: string;
   collegeId: number;
+  college: College;
 };
 
 /**

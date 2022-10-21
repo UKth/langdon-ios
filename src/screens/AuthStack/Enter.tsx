@@ -8,6 +8,7 @@ import { AuthStackParamList } from "../../navigation/AuthStack";
 import { getData, postData } from "../../util";
 import { API_URL } from "../../constants/urls";
 import { Alert } from "react-native";
+import { UserContext } from "../../contexts/userContext";
 
 const sendCode = async (email: string) => {
   const data = await postData(API_URL + "user/sendCode", { email });
@@ -25,10 +26,7 @@ const getTokens = async (registerData: {
   userId?: number;
 }) => {
   const data = await postData(API_URL + "user/enter", registerData);
-  if (!data?.ok) {
-    Alert.alert(data?.error);
-    return;
-  }
+
   return data;
 };
 
@@ -37,10 +35,6 @@ const Enter = ({
 }: {
   route: RouteProp<AuthStackParamList, "Enter">;
 }) => {
-  const [backgroundIndex, setBackgroundIndex] = useState(-1);
-  const navigation =
-    useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
-
   const { college } = route.params;
   const [netId, setNetId] = useState("");
   const [codeSent, setCodeSent] = useState(false);
@@ -48,6 +42,8 @@ const Enter = ({
   const [lastName, setLastName] = useState("");
   const [code, setCode] = useState("");
   const [userId, setUserId] = useState();
+
+  const { setAccessToken, setRefreshToken, setUser } = useContext(UserContext);
 
   return (
     <View style={{ paddingTop: 100, display: "flex", alignItems: "center" }}>
@@ -165,6 +161,11 @@ const Enter = ({
                 });
                 if (data?.ok) {
                   console.log(data);
+                  if (data.refreshToken && data.accessToken && data.user) {
+                    setAccessToken(data.accessToken);
+                    setRefreshToken(data.refreshToken);
+                    setUser(data.user);
+                  }
                 } else {
                   Alert.alert(data.error);
                 }

@@ -8,7 +8,7 @@ import { AuthStackParamList } from "../../navigation/AuthStack";
 // import { debounce, getData } from "@util";
 import { debounce, getData } from "../../util";
 import { API_URL } from "../../constants/urls";
-import { College } from "@customTypes/models";
+import { College } from "../../types/models";
 
 const searchCollege = debounce(
   async (

@@ -1,10 +1,10 @@
-import { College } from "@customTypes/models";
+import React from "react";
+
+import { College } from "../types/models";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { SearchCollege, Enter } from "../screens/AuthStack/index";
 // import { SearchCollege, Enter } from "@screens/AuthStack";
-
-import React from "react";
 
 export type AuthStackParamList = {
   SearchCollege: undefined;

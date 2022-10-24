@@ -13,7 +13,9 @@ import { College } from "../../types/models";
 const searchCollege = debounce(
   async (
     keyword: string,
-    setSearchedCollege: React.Dispatch<React.SetStateAction<string>>
+    setSearchedCollege: React.Dispatch<
+      React.SetStateAction<College[] | undefined>
+    >
   ) => {
     if (keyword !== "") {
       const data = await getData(API_URL + "college/getCollege/" + keyword);
@@ -26,7 +28,6 @@ const searchCollege = debounce(
 );
 
 const SearchCollege = () => {
-  const [backgroundIndex, setBackgroundIndex] = useState(-1);
   const navigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const [keyword, setKeyword] = useState("");

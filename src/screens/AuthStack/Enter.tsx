@@ -107,6 +107,7 @@ const Enter = ({
               }}
               onChangeText={(text) => setFirstName(text.trim())}
               placeholder="first name"
+              placeholderTextColor={"#a0a0a0"}
             />
           ) : null}
           {!userId ? (
@@ -122,6 +123,7 @@ const Enter = ({
               }}
               onChangeText={(text) => setLastName(text.trim())}
               placeholder="last name"
+              placeholderTextColor={"#a0a0a0"}
             />
           ) : null}
           <TextInput
@@ -137,6 +139,7 @@ const Enter = ({
             onChangeText={(text) => setCode(text.trim())}
             keyboardType="number-pad"
             placeholder="Verification code"
+            placeholderTextColor={"#a0a0a0"}
           />
           <Pressable
             style={({ pressed }) => [
@@ -160,7 +163,7 @@ const Enter = ({
                     : { firstName, lastName }),
                 });
                 if (data?.ok) {
-                  console.log(data);
+                  console.log("GOT TOKEN:", data, "\n\n########");
                   if (data.refreshToken && data.accessToken && data.user) {
                     setAccessToken(data.accessToken);
                     setRefreshToken(data.refreshToken);

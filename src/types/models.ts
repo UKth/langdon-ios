@@ -76,6 +76,9 @@ export type Section = {
  * Model ClassMeeting
  *
  */
+
+export const WI_GMT_DIFF = 1;
+
 export type ClassMeeting = {
   id: number;
   meetingOrExamNumber: string;

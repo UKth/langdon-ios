@@ -4,11 +4,11 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["components/*"],
-      "@screens/*": ["src/screens/*"],
+      "@mycomponents/*": ["src/components/*"],
       "@customTypes/*": ["src/types/*"],
-      "@util": ["util"],
-      "@constants/*": ["constants/*"]
+      "@screens/*": ["src/screens/*"],
+      "@util": ["src/util"],
+      "@constants/*": ["src/constants/*"]
     }
   }
 }

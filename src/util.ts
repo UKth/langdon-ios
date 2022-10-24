@@ -36,3 +36,16 @@ export const debounce = (callback: Function, delay: number) => {
     timer = setTimeout(callback, delay, ...args);
   };
 };
+
+export type meetingDayChar = "M" | "T" | "W" | "R" | "F";
+
+export const dayCharToInt = (c: meetingDayChar) => {
+  const dict = {
+    M: 0,
+    T: 1,
+    W: 2,
+    R: 3,
+    F: 4,
+  };
+  return dict[c];
+};

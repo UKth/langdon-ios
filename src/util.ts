@@ -17,7 +17,7 @@ export const postData = async (url = "", data = {}, isPrivate = true) => {
     },
     redirect: "follow",
     referrerPolicy: "no-referrer",
-    body: JSON.stringify({ ...data, accessToken }),
+    body: JSON.stringify({ ...data, ...(isPrivate ? { accessToken } : {}) }),
   });
   return response.json();
 };

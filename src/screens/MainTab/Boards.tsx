@@ -13,11 +13,10 @@ const Boards = () => {
   const [boards, setBoards] = useState<Board[]>([]);
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
-  const { accessToken } = useContext(UserContext);
 
   useEffect(() => {
     (async () => {
-      const data = await postData(API_URL + "board/getBoards", { accessToken });
+      const data = await postData(API_URL + "board/getBoards");
       console.log(data);
       if (data?.ok) {
         setBoards(data?.boards);

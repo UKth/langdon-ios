@@ -49,7 +49,7 @@ const TimeTable = ({
 }: {
   route: RouteProp<MainTabParamList, "TimeTable">;
 }) => {
-  const { user, setUser, accessToken, setAccessToken, setRefreshToken } =
+  const { user, setUser, setAccessToken, setRefreshToken } =
     useContext(UserContext);
 
   const [searchedCourse, setSearchedCourse] =
@@ -69,7 +69,7 @@ const TimeTable = ({
   >();
 
   const updateEnrolledClasses = async () => {
-    const data = await getEnrolledClasses(accessToken);
+    const data = await getEnrolledClasses();
     setEnrolledClasses(data);
   };
 
@@ -272,9 +272,9 @@ const TimeTable = ({
                                 .map((cls) => cls.id)
                                 .includes(cls.id)
                             ) {
-                              await dropClass(cls.id, accessToken);
+                              await dropClass(cls.id);
                             } else {
-                              await enrollClass(cls.id, accessToken);
+                              await enrollClass(cls.id);
                             }
                             updateEnrolledClasses();
                           }}

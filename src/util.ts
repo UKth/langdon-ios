@@ -1,4 +1,12 @@
-export const postData = async (url = "", data = {}) => {
+import { ACCESS_TOKEN_KEY } from "./constants/storageKeys";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useContext } from "react";
+import { UserContext } from "./contexts/userContext";
+
+const refreshToken = async () => {};
+
+export const postData = async (url = "", data = {}, isPrivate = true) => {
+  const accessToken = await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
   const response = await fetch(url, {
     method: "POST",
     mode: "cors",
@@ -9,7 +17,7 @@ export const postData = async (url = "", data = {}) => {
     },
     redirect: "follow",
     referrerPolicy: "no-referrer",
-    body: JSON.stringify(data),
+    body: JSON.stringify({ ...data, accessToken }),
   });
   return response.json();
 };

@@ -7,19 +7,12 @@ import {
   Section,
 } from "@customTypes/models";
 import { TimeBox } from "../../components/TimeBox";
-// import { TimeBox } from "@mycomponents/TimeBox";
 import { RouteProp } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { Alert, Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { API_URL } from "../../constants/urls";
-import {
-  dayCharToInt,
-  debounce,
-  getData,
-  meetingDayChar,
-  postData,
-} from "../../util";
+import { dayCharToInt, debounce, getData, meetingDayChar } from "../../util";
 import { UserContext } from "../../contexts/userContext";
 import { MainTabParamList } from "../../navigation/MainTab";
 import { EXAMDATE_OFFSET } from "../../constants/numbers";
@@ -96,7 +89,7 @@ const TimeTable = ({
     (async () => {
       if (selectedClass) {
         const data = await getData(
-          API_URL + "class/getClass/" + selectedClass.id
+          API_URL + "course/class/getClass/" + selectedClass.id
         );
         if (data?.ok) {
           setClassData(data?.classData);
@@ -167,7 +160,7 @@ const TimeTable = ({
               }}
             />
           ))}
-          {enrolledClasses.map((cls) =>
+          {enrolledClasses?.map((cls) =>
             cls.sections.map((section) =>
               section.classMeetings.map((meeting) =>
                 meeting.meetingType !== "EXAM"
@@ -306,7 +299,10 @@ const TimeTable = ({
                         </Pressable>
                         {selectedClass?.id === cls.id && classData
                           ? classData.sections.map((section) => (
-                              <View style={{ marginBottom: 10 }}>
+                              <View
+                                key={section.id}
+                                style={{ marginBottom: 10 }}
+                              >
                                 <Text>
                                   {section.type} {section.sectionNumber}
                                 </Text>

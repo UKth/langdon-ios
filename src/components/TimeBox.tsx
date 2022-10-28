@@ -23,7 +23,7 @@ export const TimeBox = ({
   }
 
   const duration = meeting.meetingTimeEnd - meeting.meetingTimeStart;
-  console.log("TIMEBOX", day);
+
   return (
     <View
       style={{

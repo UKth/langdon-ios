@@ -119,3 +119,57 @@ export type Instructor = {
   lastName: string | null;
   email: string | null;
 };
+
+/**
+ * Model Board
+ *
+ */
+export type Board = {
+  id: number;
+  title: string;
+  type: BoardType;
+  collegeId: number;
+  userId: number | null;
+  createdAt: Date;
+};
+
+/**
+ * Model Post
+ *
+ */
+export type Post = {
+  id: number;
+  boardId: number;
+  title: string;
+  content: string;
+  userId: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Model Comment
+ *
+ */
+export type Comment = {
+  id: number;
+  content: string;
+  userId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  postId: number;
+};
+
+/**
+ * Enums
+ */
+
+// Based on
+// https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
+
+export const BoardType = {
+  class: "class",
+  general: "general",
+};
+
+export type BoardType = typeof BoardType[keyof typeof BoardType];

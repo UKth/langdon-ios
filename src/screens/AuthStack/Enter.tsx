@@ -170,14 +170,16 @@ const Enter = ({
                 if (data?.ok) {
                   if (data.refreshToken && data.accessToken && data.user) {
                     console.log("RES:", data.accessToken);
-                    await AsyncStorage.setItem(
-                      ACCESS_TOKEN_KEY,
-                      data.accessToken
-                    );
-                    await AsyncStorage.setItem(
-                      REFRESH_TOKEN_KEY,
-                      data.refreshToken
-                    );
+                    accessToken = data.accessToken;
+                    refreshToken = data.refreshToken;
+                    // await AsyncStorage.setItem(
+                    //   ACCESS_TOKEN_KEY,
+                    //   data.accessToken
+                    // );
+                    // await AsyncStorage.setItem(
+                    //   REFRESH_TOKEN_KEY,
+                    //   data.refreshToken
+                    // );
                     setUser(data.user);
                   }
                 } else {

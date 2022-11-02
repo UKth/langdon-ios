@@ -27,7 +27,7 @@ export const sendPostRequest = async (url = "", data = {}) => {
 };
 
 const refreshAccessToken = async (ctx: userContextType) => {
-  const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
+  // const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
   const res = await sendPostRequest(API_URL + "user/refreshAccessToken", {
     refreshToken: refreshToken,
   });
@@ -39,9 +39,11 @@ const refreshAccessToken = async (ctx: userContextType) => {
     return;
   }
   if (res.accessToken) {
+    accessToken = res.accessToken;
     AsyncStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
   }
   if (res.refreshToken) {
+    refreshToken = res.refreshToken;
     AsyncStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
   }
   return res;
@@ -53,11 +55,11 @@ export const postData: any = async (
   data = {}
 ) => {
   try {
-    const accessToken = (await AsyncStorage.getItem(ACCESS_TOKEN_KEY)) ?? "";
+    // const accessToken = (await AsyncStorage.getItem(ACCESS_TOKEN_KEY)) ?? "";
 
     const res = await sendPostRequest(url, {
       ...data,
-      accessToken: accessToken,
+      accessToken,
     });
 
     if (res?.tokenExpired) {
@@ -66,7 +68,7 @@ export const postData: any = async (
       if (refreshResponse?.ok) {
         const res = await sendPostRequest(url, {
           ...data,
-          accessToken: refreshResponse.accessToken,
+          accessToken,
         });
         console.log("RETURN:", res);
         return res;

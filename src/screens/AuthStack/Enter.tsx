@@ -5,13 +5,18 @@ import tw from "twrnc";
 import { Keyboard, Pressable, Text, TextInput, View } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "../../navigation/AuthStack";
-import { getData, postData } from "../../util";
+import { sendPostRequest } from "../../util";
 import { API_URL } from "../../constants/urls";
 import { Alert } from "react-native";
 import { UserContext } from "../../contexts/userContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  ACCESS_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+} from "../../constants/storageKeys";
 
 const sendCode = async (email: string) => {
-  const data = await postData(API_URL + "user/sendCode", { email });
+  const data = await sendPostRequest(API_URL + "user/sendCode", { email });
   if (!data?.ok) {
     Alert.alert(data?.error);
   }
@@ -25,7 +30,7 @@ const getTokens = async (registerData: {
   code: number;
   userId?: number;
 }) => {
-  const data = await postData(API_URL + "user/enter", registerData);
+  const data = await sendPostRequest(API_URL + "user/enter", registerData);
 
   return data;
 };
@@ -43,7 +48,7 @@ const Enter = ({
   const [code, setCode] = useState("");
   const [userId, setUserId] = useState();
 
-  const { setAccessToken, setRefreshToken, setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   return (
     <View style={{ paddingTop: 100, display: "flex", alignItems: "center" }}>
@@ -163,10 +168,16 @@ const Enter = ({
                     : { firstName, lastName }),
                 });
                 if (data?.ok) {
-                  console.log("GOT TOKEN:", data, "\n\n########");
                   if (data.refreshToken && data.accessToken && data.user) {
-                    setAccessToken(data.accessToken);
-                    setRefreshToken(data.refreshToken);
+                    console.log("RES:", data.accessToken);
+                    await AsyncStorage.setItem(
+                      ACCESS_TOKEN_KEY,
+                      data.accessToken
+                    );
+                    await AsyncStorage.setItem(
+                      REFRESH_TOKEN_KEY,
+                      data.refreshToken
+                    );
                     setUser(data.user);
                   }
                 } else {

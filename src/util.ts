@@ -1,13 +1,16 @@
-import { ACCESS_TOKEN_KEY } from "./constants/storageKeys";
+import { userContextType } from "./contexts/userContext";
+import { API_URL } from "./constants/urls";
+import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useContext } from "react";
-import { UserContext } from "./contexts/userContext";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "./constants/storageKeys";
 
-const refreshToken = async () => {};
+const logout = (ctx: userContextType) => {
+  ctx.setUser(undefined);
+};
 
-export const postData = async (url = "", data = {}, isPrivate = true) => {
-  const accessToken = await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
-  const response = await fetch(url, {
+export const sendPostRequest = async (url = "", data = {}) => {
+  console.log("URL:", url);
+  const rawResponse = await fetch(url, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
@@ -17,9 +20,67 @@ export const postData = async (url = "", data = {}, isPrivate = true) => {
     },
     redirect: "follow",
     referrerPolicy: "no-referrer",
-    body: JSON.stringify({ ...data, ...(isPrivate ? { accessToken } : {}) }),
+    body: JSON.stringify(data),
   });
-  return response.json();
+
+  return await rawResponse.json();
+};
+
+const refreshAccessToken = async (ctx: userContextType) => {
+  const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
+  const res = await sendPostRequest(API_URL + "user/refreshAccessToken", {
+    refreshToken: refreshToken,
+  });
+
+  if (!res?.ok) {
+    console.log("ERROR!", res.error);
+    Alert.alert(res.error);
+    logout(ctx);
+    return;
+  }
+  if (res.accessToken) {
+    AsyncStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
+  }
+  if (res.refreshToken) {
+    AsyncStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
+  }
+  return res;
+};
+
+export const postData: any = async (
+  ctx: userContextType,
+  url = "",
+  data = {}
+) => {
+  try {
+    const accessToken = (await AsyncStorage.getItem(ACCESS_TOKEN_KEY)) ?? "";
+
+    const res = await sendPostRequest(url, {
+      ...data,
+      accessToken: accessToken,
+    });
+
+    if (res?.tokenExpired) {
+      console.log("TOKEN EXPIRED, REFRESHING TOKEN...");
+      const refreshResponse = await refreshAccessToken(ctx);
+      if (refreshResponse?.ok) {
+        const res = await sendPostRequest(url, {
+          ...data,
+          accessToken: refreshResponse.accessToken,
+        });
+        console.log("RETURN:", res);
+        return res;
+      } else {
+        logout(ctx);
+        return;
+      }
+    }
+
+    return res;
+  } catch (err) {
+    console.log(err);
+    // logout(ctx);
+  }
 };
 
 export const getData = async (url: string) => {

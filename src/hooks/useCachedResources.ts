@@ -12,7 +12,7 @@ import {
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-  const { setUser, setAccessToken, setRefreshToken } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   // Load any resources or data that we need prior to rendering the app
   useEffect(() => {
@@ -20,17 +20,17 @@ export default function useCachedResources() {
       try {
         SplashScreen.preventAutoHideAsync();
 
-        const accessToken = await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
-        console.log("storage accessToken:", accessToken);
-        if (accessToken) {
-          setAccessToken(accessToken);
-        }
+        // const accessToken = await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
+        // console.log("storage accessToken:", accessToken);
+        // if (accessToken) {
+        //   setAccessToken(accessToken);
+        // }
 
-        const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
-        console.log("storage refreshToken:", refreshToken);
-        if (refreshToken) {
-          setRefreshToken(refreshToken);
-        }
+        // const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
+        // console.log("storage refreshToken:", refreshToken);
+        // if (refreshToken) {
+        //   setRefreshToken(refreshToken);
+        // }
 
         const userString = await AsyncStorage.getItem(USER_KEY);
         console.log("storage userString:", userString);

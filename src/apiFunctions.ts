@@ -1,9 +1,10 @@
 import { Alert } from "react-native";
 import { API_URL } from "./constants/urls";
+import { userContextType } from "./contexts/userContext";
 import { postData } from "./util";
 
-export const enrollClass = async (classId: number) => {
-  const data = await postData(API_URL + "course/class/enrollClass", {
+export const enrollClass = async (ctx: userContextType, classId: number) => {
+  const data = await postData(ctx, API_URL + "course/class/enrollClass", {
     classId,
   });
   if (!data?.ok) {
@@ -11,8 +12,8 @@ export const enrollClass = async (classId: number) => {
   }
 };
 
-export const dropClass = async (classId: number) => {
-  const data = await postData(API_URL + "course/class/dropClass", {
+export const dropClass = async (ctx: userContextType, classId: number) => {
+  const data = await postData(ctx, API_URL + "course/class/dropClass", {
     classId,
   });
   if (!data?.ok) {
@@ -20,8 +21,8 @@ export const dropClass = async (classId: number) => {
   }
 };
 
-export const getEnrolledClasses = async () => {
-  const data = await postData(API_URL + "course/class/getEnrolledClasses");
+export const getEnrolledClasses = async (ctx: userContextType) => {
+  const data = await postData(ctx, API_URL + "course/class/getEnrolledClasses");
   if (!data?.ok) {
     Alert.alert(data?.error);
   }

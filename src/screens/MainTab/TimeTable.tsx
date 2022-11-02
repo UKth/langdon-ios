@@ -49,8 +49,8 @@ const TimeTable = ({
 }: {
   route: RouteProp<MainTabParamList, "TimeTable">;
 }) => {
-  const { user, setUser, setAccessToken, setRefreshToken } =
-    useContext(UserContext);
+  const userContext = useContext(UserContext);
+  const user = userContext.user;
 
   const [searchedCourse, setSearchedCourse] =
     useState<(Course & { classes: classWithSections[] })[]>();
@@ -69,7 +69,7 @@ const TimeTable = ({
   >();
 
   const updateEnrolledClasses = async () => {
-    const data = await getEnrolledClasses();
+    const data = await getEnrolledClasses(userContext);
     setEnrolledClasses(data);
   };
 
@@ -80,10 +80,6 @@ const TimeTable = ({
   useEffect(() => {
     searchCourse(courseKeyword, setSearchedCourse);
   }, [courseKeyword]);
-
-  useEffect(() => {
-    console.log("enrolledClasses:", enrolledClasses, "\n\n\n");
-  }, [enrolledClasses]);
 
   useEffect(() => {
     (async () => {
@@ -272,9 +268,9 @@ const TimeTable = ({
                                 .map((cls) => cls.id)
                                 .includes(cls.id)
                             ) {
-                              await dropClass(cls.id);
+                              await dropClass(userContext, cls.id);
                             } else {
-                              await enrollClass(cls.id);
+                              await enrollClass(userContext, cls.id);
                             }
                             updateEnrolledClasses();
                           }}
@@ -402,9 +398,7 @@ const TimeTable = ({
           },
         ]}
         onPress={() => {
-          setUser(undefined);
-          setAccessToken("");
-          setRefreshToken("");
+          userContext.setUser(undefined);
         }}
       >
         <Text>logout</Text>

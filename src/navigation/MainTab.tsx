@@ -5,8 +5,8 @@ import React from "react";
 import StackGenerator from "./StackGenerator";
 
 export type MainTabParamList = {
-  TimeTable: undefined;
-  Boards: undefined;
+  TimeTableStack: undefined;
+  BoardsStack: undefined;
 };
 
 const BottomTab = createBottomTabNavigator<MainTabParamList>();
@@ -14,19 +14,19 @@ const BottomTab = createBottomTabNavigator<MainTabParamList>();
 const MainTab = () => {
   return (
     <BottomTab.Navigator
-      initialRouteName="TimeTable"
+      initialRouteName="TimeTableStack"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <BottomTab.Screen name="TimeTable">
+      <BottomTab.Screen name="TimeTableStack">
         {() => {
-          return <StackGenerator screenName="TimeTable" />;
+          return <StackGenerator screenName="TimeTableStack" />;
         }}
       </BottomTab.Screen>
-      <BottomTab.Screen name="Boards">
+      <BottomTab.Screen name="BoardsStack">
         {() => {
-          return <StackGenerator screenName="Boards" />;
+          return <StackGenerator screenName="BoardsStack" />;
         }}
       </BottomTab.Screen>
     </BottomTab.Navigator>

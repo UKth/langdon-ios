@@ -12,11 +12,18 @@ import React, { useState, useEffect, useContext } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { API_URL } from "../../constants/urls";
-import { dayCharToInt, debounce, getData, meetingDayChar } from "../../util";
+import {
+  dayCharToInt,
+  debounce,
+  getData,
+  logout,
+  meetingDayChar,
+} from "../../util";
 import { UserContext } from "../../contexts/userContext";
 import { MainTabParamList } from "../../navigation/MainTab";
 import { EXAMDATE_OFFSET } from "../../constants/numbers";
 import { dropClass, enrollClass, getEnrolledClasses } from "../../apiFunctions";
+import { StackGeneratorParamList } from "src/navigation/StackGenerator";
 
 const searchCourse = debounce(
   async (
@@ -47,7 +54,7 @@ type classWithSections = Class & { sections: fullSection[] };
 const TimeTable = ({
   route,
 }: {
-  route: RouteProp<MainTabParamList, "TimeTable">;
+  route: RouteProp<StackGeneratorParamList, "TimeTable">;
 }) => {
   const userContext = useContext(UserContext);
   const user = userContext.user;
@@ -397,9 +404,7 @@ const TimeTable = ({
             marginBottom: 200,
           },
         ]}
-        onPress={() => {
-          userContext.setUser(undefined);
-        }}
+        onPress={() => logout(userContext)}
       >
         <Text>logout</Text>
       </Pressable>

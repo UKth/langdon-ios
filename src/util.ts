@@ -2,14 +2,18 @@ import { userContextType } from "./contexts/userContext";
 import { API_URL } from "./constants/urls";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "./constants/storageKeys";
+import {
+  ACCESS_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+  USER_KEY,
+} from "./constants/storageKeys";
 
-const logout = (ctx: userContextType) => {
+export const logout = (ctx: userContextType) => {
   ctx.setUser(undefined);
+  AsyncStorage.setItem(USER_KEY, "");
 };
 
 export const sendPostRequest = async (url = "", data = {}) => {
-  console.log("URL:", url);
   const rawResponse = await fetch(url, {
     method: "POST",
     mode: "cors",
@@ -33,7 +37,7 @@ const refreshAccessToken = async (ctx: userContextType) => {
   });
 
   if (!res?.ok) {
-    console.log("ERROR!", res.error);
+    console.log(res.error);
     Alert.alert(res.error);
     logout(ctx);
     return;
@@ -43,6 +47,7 @@ const refreshAccessToken = async (ctx: userContextType) => {
     AsyncStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
   }
   if (res.refreshToken) {
+    console.log("REFRESH TOKEN EXPIRED, REFRESHING TOKEN...");
     refreshToken = res.refreshToken;
     AsyncStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
   }
@@ -70,7 +75,6 @@ export const postData: any = async (
           ...data,
           accessToken,
         });
-        console.log("RETURN:", res);
         return res;
       } else {
         logout(ctx);

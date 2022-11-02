@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ACCESS_TOKEN_KEY,
   REFRESH_TOKEN_KEY,
+  USER_KEY,
 } from "../../constants/storageKeys";
 
 const sendCode = async (email: string) => {
@@ -169,17 +170,16 @@ const Enter = ({
                 });
                 if (data?.ok) {
                   if (data.refreshToken && data.accessToken && data.user) {
-                    console.log("RES:", data.accessToken);
                     accessToken = data.accessToken;
                     refreshToken = data.refreshToken;
-                    // await AsyncStorage.setItem(
-                    //   ACCESS_TOKEN_KEY,
-                    //   data.accessToken
-                    // );
-                    // await AsyncStorage.setItem(
-                    //   REFRESH_TOKEN_KEY,
-                    //   data.refreshToken
-                    // );
+                    await AsyncStorage.setItem(
+                      ACCESS_TOKEN_KEY,
+                      data.accessToken
+                    );
+                    await AsyncStorage.setItem(
+                      REFRESH_TOKEN_KEY,
+                      data.refreshToken
+                    );
                     setUser(data.user);
                   }
                 } else {

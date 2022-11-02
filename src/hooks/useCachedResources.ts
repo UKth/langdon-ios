@@ -20,17 +20,11 @@ export default function useCachedResources() {
       try {
         SplashScreen.preventAutoHideAsync();
 
-        // const accessToken = await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
         accessToken =
           (await AsyncStorage.getItem(ACCESS_TOKEN_KEY)) || undefined;
 
         refreshToken =
           (await AsyncStorage.getItem(REFRESH_TOKEN_KEY)) || undefined;
-
-        // console.log("storage refreshToken:", refreshToken);
-        // if (refreshToken) {
-        //   setRefreshToken(refreshToken);
-        // }
 
         const userString = await AsyncStorage.getItem(USER_KEY);
         console.log("storage userString:", userString);

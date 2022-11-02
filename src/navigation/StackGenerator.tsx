@@ -26,10 +26,10 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
 
   return (
     <Stack.Navigator>
-      {screenName === "TimeTable" ? (
+      {screenName === "TimeTableStack" ? (
         <Stack.Screen name="TimeTable" component={TimeTable} />
       ) : null}
-      {screenName === "Boards" ? (
+      {screenName === "BoardsStack" ? (
         <Stack.Screen name="Boards" component={Boards} />
       ) : null}
       <Stack.Screen name="Board" component={Board} />

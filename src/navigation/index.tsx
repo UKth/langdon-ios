@@ -32,14 +32,7 @@ const Navigation = () => {
       console.log("data changed,", user);
       if (user) {
         console.log("storing in storage...");
-        // AsyncStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-        // AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
         AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
-      }
-      if (!user) {
-        // AsyncStorage.setItem(ACCESS_TOKEN_KEY, "");
-        // AsyncStorage.setItem(REFRESH_TOKEN_KEY, "");
-        AsyncStorage.setItem(USER_KEY, "");
       }
     })();
   }, [user]);

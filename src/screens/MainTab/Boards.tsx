@@ -6,7 +6,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { API_URL } from "../../constants/urls";
 import { getData, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StackGeneratorParamList } from "src/navigation/StackGenerator";
+import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
 
 const Boards = () => {
@@ -42,13 +42,15 @@ const Boards = () => {
             {
               borderBottomColor: "#505050",
               borderBottomWidth: 1,
+              padding: 10,
+              marginBottom: 5,
             },
           ]}
           onPress={() =>
             navigation.push("Board", { id: board.id, title: board.title })
           }
         >
-          <Text>{board.title}</Text>
+          <Text style={{ fontSize: 20 }}>{board.title}</Text>
         </Pressable>
       ))}
     </KeyboardAwareScrollView>

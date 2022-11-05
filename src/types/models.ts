@@ -60,6 +60,8 @@ export type Class = {
   courseId: number;
 };
 
+export type classWithSections = Class & { sections: fullSection[] };
+
 /**
  * Model Section
  *
@@ -70,6 +72,11 @@ export type Section = {
   sectionNumber: string | null;
   classId: number;
   instructorId: number | null;
+};
+
+export type fullSection = Section & {
+  instructor: Instructor;
+  classMeetings: ClassMeetingWithBuilding[];
 };
 
 /**
@@ -91,6 +98,8 @@ export type ClassMeeting = {
   buildingId: number | null;
   sectionId: number;
 };
+
+export type ClassMeetingWithBuilding = ClassMeeting & { building: Building };
 
 /**
  * Model Building
@@ -145,6 +154,13 @@ export type Post = {
   userId: number;
   createdAt: Date;
   updatedAt: Date;
+  isAnonymous: Boolean;
+};
+
+export type fullPost = Post & {
+  createdBy: User;
+  comments: Comment[];
+  likedUsers: User[];
 };
 
 /**
@@ -158,6 +174,8 @@ export type Comment = {
   createdAt: Date;
   updatedAt: Date;
   postId: number;
+  isAnonymous: Boolean;
+  createdBy: User;
 };
 
 /**

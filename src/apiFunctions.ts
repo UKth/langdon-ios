@@ -25,6 +25,7 @@ export const getEnrolledClasses = async (ctx: userContextType) => {
   const data = await postData(ctx, API_URL + "course/class/getEnrolledClasses");
   if (!data?.ok) {
     Alert.alert(data?.error);
+    return [];
   }
   return data?.enrolledClasses;
 };

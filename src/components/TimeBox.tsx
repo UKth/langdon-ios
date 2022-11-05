@@ -1,7 +1,12 @@
 import { WI_GMT_DIFF } from "../constants/numbers";
-import { ClassMeeting } from "@customTypes/models";
+import {
+  Building,
+  ClassMeeting,
+  ClassMeetingWithBuilding,
+} from "@customTypes/models";
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, ViewStyle } from "react-native";
+import { Alert, Linking, Pressable, Text, View, ViewStyle } from "react-native";
+import { messages } from "../constants/messages";
 
 const getPixel = (duration: number) => {
   return (600 / (12 * 60 * 60 * 1000)) * duration;
@@ -15,7 +20,7 @@ export const TimeBox = ({
 }: {
   style?: ViewStyle;
   design: string;
-  meeting: ClassMeeting;
+  meeting: ClassMeetingWithBuilding;
   day: number;
 }) => {
   if (!meeting.meetingTimeStart || !meeting.meetingTimeEnd) {
@@ -25,7 +30,7 @@ export const TimeBox = ({
   const duration = meeting.meetingTimeEnd - meeting.meetingTimeStart;
 
   return (
-    <View
+    <Pressable
       style={{
         ...style,
         width: "20%",
@@ -37,8 +42,23 @@ export const TimeBox = ({
           meeting.meetingTimeStart + WI_GMT_DIFF - 9 * 60 * 60 * 1000
         ),
       }}
+      onPress={() => {
+        try {
+          if (meeting.building) {
+            Linking.openURL(
+              "https://maps.google.com/?q=@" +
+                meeting.building.latitude +
+                "," +
+                meeting.building.longitude
+            );
+          }
+        } catch {
+          Alert.alert(messages.errorMessages.timeTable.cantOpenGoogleMaps);
+        }
+      }}
     >
       <Text>{design}</Text>
-    </View>
+      {meeting.building ? <Text>{meeting.building.buildingName}</Text> : null}
+    </Pressable>
   );
 };

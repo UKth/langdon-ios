@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useContext } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ProgressProvider } from "./contexts/Progress";
 import { UserContext, UserProvider } from "./contexts/userContext";
 
 // import useCachedResources from './hooks/useCachedResources';
@@ -12,10 +13,12 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <UserProvider>
-        <Navigation />
-      </UserProvider>
-      <StatusBar />
+      <StatusBar style="dark" />
+      <ProgressProvider>
+        <UserProvider>
+          <Navigation />
+        </UserProvider>
+      </ProgressProvider>
     </SafeAreaProvider>
   );
 }

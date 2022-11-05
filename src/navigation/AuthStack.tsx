@@ -4,6 +4,8 @@ import { College } from "../types/models";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { SearchCollege, Enter } from "../screens/AuthStack/index";
+import { HeaderBackButton } from "../components/HeaderBackButton";
+import { colors } from "../constants/Colors";
 // import { SearchCollege, Enter } from "@screens/AuthStack";
 
 export type AuthStackParamList = {
@@ -17,8 +19,17 @@ const AuthStack = () => {
   return (
     <Stack.Navigator
       initialRouteName="SearchCollege"
-      screenOptions={{
-        headerTitleAlign: "center",
+      screenOptions={({ route, navigation }) => {
+        return {
+          headerTintColor: colors.themeColor,
+          headerTitleStyle: {
+            fontFamily: "Arial Rounded MT Bold",
+          },
+          headerLeft: () =>
+            navigation.getState().routes.length > 1 ? (
+              <HeaderBackButton onPress={() => navigation.pop()} />
+            ) : null,
+        };
       }}
     >
       <Stack.Screen

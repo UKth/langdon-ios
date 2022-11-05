@@ -15,6 +15,11 @@ import {
   REFRESH_TOKEN_KEY,
   USER_KEY,
 } from "../../constants/storageKeys";
+import ScreenContainer from "../../components/ScreenContainer";
+import { BoldText, BoldTextInput } from "../../components/StyledText";
+import { colors } from "../../constants/Colors";
+import { ProgressContext } from "../../contexts/Progress";
+import { messages } from "../../constants/messages";
 
 const sendCode = async (email: string) => {
   const data = await sendPostRequest(API_URL + "user/sendCode", { email });
@@ -50,149 +55,196 @@ const Enter = ({
   const [userId, setUserId] = useState();
 
   const { setUser } = useContext(UserContext);
+  const { spinner } = useContext(ProgressContext);
 
   return (
-    <View style={{ paddingTop: 100, display: "flex", alignItems: "center" }}>
+    <ScreenContainer>
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
-          backgroundColor: "#f0f0f0",
-          borderWidth: 1,
-          borderColor: "#808080",
-          borderRadius: 4,
-          padding: 5,
+          paddingHorizontal: 30,
+          paddingTop: "25%",
         }}
       >
-        <TextInput
-          style={{ width: 100 }}
-          onChangeText={(text) => setNetId(text.trim())}
-          autoCapitalize="none"
-        />
-        <Text style={{ fontSize: 18 }}>@{college.mailFooter}</Text>
-      </View>
-      <Pressable
-        style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
-          },
-          {
-            marginTop: 30,
-            padding: 10,
-          },
-        ]}
-        onPress={async () => {
-          if (netId.length) {
-            const data = await sendCode(netId + "@" + college.mailFooter);
-            if (data?.ok) {
-              setCodeSent(true);
-              if (data?.user) {
-                setUserId(data.user.id);
-              }
-              Keyboard.dismiss();
-            } else {
-              Alert.alert(data.error);
-            }
-          }
-        }}
-      >
-        <Text>Send Token</Text>
-      </Pressable>
-      {codeSent ? (
-        <View style={{ marginTop: 40 }}>
-          {!userId ? (
-            <TextInput
-              style={{
-                width: 180,
-                fontSize: 18,
-                marginBottom: 8,
-                borderWidth: 1,
-                borderColor: "#808080",
-                padding: 8,
-                borderRadius: 4,
-              }}
-              onChangeText={(text) => setFirstName(text.trim())}
-              placeholder="first name"
-              placeholderTextColor={"#a0a0a0"}
-            />
-          ) : null}
-          {!userId ? (
-            <TextInput
-              style={{
-                width: 180,
-                fontSize: 18,
-                marginBottom: 8,
-                borderWidth: 1,
-                borderColor: "#808080",
-                padding: 8,
-                borderRadius: 4,
-              }}
-              onChangeText={(text) => setLastName(text.trim())}
-              placeholder="last name"
-              placeholderTextColor={"#a0a0a0"}
-            />
-          ) : null}
-          <TextInput
+        <BoldText
+          style={{
+            fontSize: 24,
+            color: colors.themeColor,
+            marginBottom: "13%",
+          }}
+        >
+          Enter your email
+        </BoldText>
+        <View style={{ alignItems: "center" }}>
+          <View
             style={{
-              width: 180,
-              fontSize: 18,
-              marginBottom: 8,
-              borderWidth: 1,
-              borderColor: "#808080",
-              padding: 8,
-              borderRadius: 4,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 20,
+              backgroundColor: colors.lightThemeColor,
+              borderRadius: 50,
+              height: 50,
+              marginBottom: 30,
+              width: "80%",
             }}
-            onChangeText={(text) => setCode(text.trim())}
-            keyboardType="number-pad"
-            placeholder="Verification code"
-            placeholderTextColor={"#a0a0a0"}
-          />
+          >
+            <BoldTextInput
+              style={{
+                flex: 1,
+                fontSize: 20,
+                color: "white",
+                marginRight: 5,
+              }}
+              onChangeText={(text) => setNetId(text.trim())}
+              autoCapitalize="none"
+              textAlign="right"
+            />
+            <BoldText style={{ flex: 1, fontSize: 18, color: "white" }}>
+              @{college.mailFooter}
+            </BoldText>
+          </View>
+
           <Pressable
             style={({ pressed }) => [
               {
-                backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
+                opacity: pressed ? 0.5 : 0.8,
               },
               {
-                marginTop: 30,
+                backgroundColor: colors.themeColor,
                 padding: 10,
+                width: "40%",
+                borderRadius: 20,
+                alignItems: "center",
+                marginBottom: "20%",
               },
             ]}
             onPress={async () => {
               if (netId.length) {
-                const data = await getTokens({
-                  email: netId + "@" + college.mailFooter,
-                  code: +code,
-                  ...(userId
-                    ? {
-                        userId,
-                      }
-                    : { firstName, lastName }),
-                });
+                spinner.start();
+                const data = await sendCode(netId + "@" + college.mailFooter);
+                spinner.stop();
                 if (data?.ok) {
-                  if (data.refreshToken && data.accessToken && data.user) {
-                    accessToken = data.accessToken;
-                    refreshToken = data.refreshToken;
-                    await AsyncStorage.setItem(
-                      ACCESS_TOKEN_KEY,
-                      data.accessToken
-                    );
-                    await AsyncStorage.setItem(
-                      REFRESH_TOKEN_KEY,
-                      data.refreshToken
-                    );
-                    setUser(data.user);
+                  Alert.alert(messages.messages.login.mailSent);
+                  setCodeSent(true);
+                  if (data?.user) {
+                    setUserId(data.user.id);
                   }
+                  Keyboard.dismiss();
                 } else {
                   Alert.alert(data.error);
                 }
               }
             }}
           >
-            <Text>{userId ? "Enter" : "Register"}</Text>
+            <BoldText style={{ paddingHorizontal: 10 }}>Send Token</BoldText>
           </Pressable>
+
+          {codeSent ? (
+            <View style={{ alignItems: "center", width: "70%" }}>
+              {!userId ? (
+                <BoldTextInput
+                  style={{
+                    width: "100%",
+                    paddingHorizontal: 20,
+                    fontSize: 20,
+                    backgroundColor: colors.lightThemeColor,
+                    borderRadius: 50,
+                    height: 50,
+                    color: "white",
+                    marginBottom: 10,
+                  }}
+                  onChangeText={(text) => setFirstName(text.trim())}
+                  placeholder="first name"
+                  placeholderTextColor={colors.placeHolerTextColor}
+                />
+              ) : null}
+              {!userId ? (
+                <BoldTextInput
+                  style={{
+                    width: "100%",
+                    paddingHorizontal: 20,
+                    fontSize: 20,
+                    backgroundColor: colors.lightThemeColor,
+                    borderRadius: 50,
+                    height: 50,
+                    color: "white",
+                    marginBottom: 10,
+                  }}
+                  onChangeText={(text) => setLastName(text.trim())}
+                  placeholder="last name"
+                  placeholderTextColor={colors.placeHolerTextColor}
+                />
+              ) : null}
+              <BoldTextInput
+                style={{
+                  width: "100%",
+                  paddingHorizontal: 20,
+                  fontSize: 20,
+                  backgroundColor: colors.lightThemeColor,
+                  borderRadius: 50,
+                  height: 50,
+                  color: "white",
+                  marginBottom: 30,
+                }}
+                onChangeText={(text) => setCode(text.trim())}
+                keyboardType="number-pad"
+                placeholder="Verification code"
+                placeholderTextColor={colors.placeHolerTextColor}
+              />
+
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    opacity: pressed ? 0.5 : 0.8,
+                  },
+                  {
+                    backgroundColor: colors.themeColor,
+                    padding: 10,
+                    width: "50%",
+                    borderRadius: 20,
+                    alignItems: "center",
+                  },
+                ]}
+                onPress={async () => {
+                  if (netId.length) {
+                    spinner.start();
+                    const data = await getTokens({
+                      email: netId + "@" + college.mailFooter,
+                      code: +code,
+                      ...(userId
+                        ? {
+                            userId,
+                          }
+                        : { firstName, lastName }),
+                    });
+                    spinner.stop();
+                    if (data?.ok) {
+                      if (data.refreshToken && data.accessToken && data.user) {
+                        accessToken = data.accessToken;
+                        refreshToken = data.refreshToken;
+                        await AsyncStorage.setItem(
+                          ACCESS_TOKEN_KEY,
+                          data.accessToken
+                        );
+                        await AsyncStorage.setItem(
+                          REFRESH_TOKEN_KEY,
+                          data.refreshToken
+                        );
+                        setUser(data.user);
+                      }
+                    } else {
+                      Alert.alert(data.error);
+                    }
+                  }
+                }}
+              >
+                <BoldText>{userId ? "Enter" : "Register"}</BoldText>
+              </Pressable>
+            </View>
+          ) : null}
         </View>
-      ) : null}
-    </View>
+      </View>
+    </ScreenContainer>
   );
 };
 

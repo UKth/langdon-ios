@@ -9,6 +9,9 @@ import { AuthStackParamList } from "../../navigation/AuthStack";
 import { debounce, getData } from "../../util";
 import { API_URL } from "../../constants/urls";
 import { College } from "../../types/models";
+import ScreenContainer from "../../components/ScreenContainer";
+import { BoldText, BoldTextInput } from "../../components/StyledText";
+import { colors } from "../../constants/Colors";
 
 const searchCollege = debounce(
   async (
@@ -24,7 +27,7 @@ const searchCollege = debounce(
       }
     }
   },
-  400
+  220
 );
 
 const SearchCollege = () => {
@@ -38,43 +41,71 @@ const SearchCollege = () => {
   }, [keyword]);
 
   return (
-    <View>
-      <TextInput
+    <ScreenContainer>
+      <View
         style={{
-          marginTop: 200,
-          paddingVertical: 10,
-          backgroundColor: "#ffffff",
+          paddingHorizontal: 30,
+          paddingTop: "45%",
         }}
-        onChangeText={(text) => setKeyword(text.trim())}
-      />
-      {searchedCollege?.length ? (
-        <View
+      >
+        <BoldText
           style={{
-            marginTop: 20,
-            height: 500,
-            width: "100%",
-            backgroundColor: "#ffffff",
+            fontSize: 24,
+            color: colors.themeColor,
+            marginBottom: "13%",
           }}
         >
-          {searchedCollege.map((college) => (
-            <Pressable
-              key={college.id}
-              onPress={() => navigation.push("Enter", { college })}
-              style={({ pressed }) => [
-                {
-                  backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
-                },
-                {
-                  padding: 10,
-                },
-              ]}
-            >
-              <Text style={{ fontSize: 17 }}>{college.name}</Text>
-            </Pressable>
-          ))}
-        </View>
-      ) : null}
-    </View>
+          Search Your College
+        </BoldText>
+        <BoldTextInput
+          style={{
+            paddingHorizontal: 20,
+            fontSize: 20,
+            backgroundColor: colors.lightThemeColor,
+            borderRadius: 50,
+            height: 50,
+            color: "white",
+            marginBottom: 10,
+          }}
+          onChangeText={(text) => setKeyword(text.trim())}
+          placeholder="ex. University of Wisconsin - Madison"
+          placeholderTextColor={colors.placeHolerTextColor}
+        />
+        {searchedCollege?.length ? (
+          <View
+            style={{
+              backgroundColor: colors.lightThemeColor,
+              paddingVertical: 20,
+              borderRadius: 28,
+            }}
+          >
+            {searchedCollege.map((college) => (
+              <Pressable
+                key={college.id}
+                onPress={() => navigation.push("Enter", { college })}
+                style={({ pressed }) => [
+                  {
+                    opacity: pressed ? 0.5 : 1,
+                  },
+                  {
+                    paddingHorizontal: 20,
+                  },
+                ]}
+              >
+                <BoldText
+                  style={{
+                    fontSize: 17,
+                    color: "white",
+                  }}
+                >
+                  {college.name}
+                </BoldText>
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
+      </View>
+    </ScreenContainer>
   );
 };
 

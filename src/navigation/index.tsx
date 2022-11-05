@@ -1,24 +1,12 @@
-import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-} from "@react-navigation/native";
-// import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import { NavigationContainer } from "@react-navigation/native";
 import { useEffect, useContext } from "react";
 import { Text } from "react-native";
-import {
-  ACCESS_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-  USER_KEY,
-} from "../constants/storageKeys";
+import Spinner from "../components/Spinner";
+import { ProgressContext } from "../contexts/Progress";
+import { USER_KEY } from "../constants/storageKeys";
 import { UserContext } from "../contexts/userContext";
 import useCachedResources from "../hooks/useCachedResources";
-// import { ColorSchemeName, Pressable } from "react-native";
-
 import AuthStack from "./AuthStack";
 import LinkingConfiguration from "./LinkingConfiguration";
 import MainTab from "./MainTab";
@@ -26,32 +14,22 @@ import MainTab from "./MainTab";
 const Navigation = () => {
   const isLoadingComplete = useCachedResources();
   const { user } = useContext(UserContext);
+  const { inProgress } = useContext(ProgressContext);
 
   useEffect(() => {
     (async () => {
-      console.log("data changed,", user);
       if (user) {
-        console.log("storing in storage...");
         AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
       }
     })();
   }, [user]);
 
   return isLoadingComplete ? (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      // theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-    >
+    <NavigationContainer linking={LinkingConfiguration}>
       {user ? <MainTab /> : <AuthStack />}
+      {inProgress && <Spinner />}
     </NavigationContainer>
-  ) : (
-    <Text>Loading...</Text>
-  );
+  ) : null;
 };
 
 export default Navigation;
-
-/**
- * A root stack navigator is often used for displaying modals on top of all other content.
- * https://reactnavigation.org/docs/modal
- */

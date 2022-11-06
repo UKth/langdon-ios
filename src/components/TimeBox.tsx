@@ -1,27 +1,25 @@
-import { WI_GMT_DIFF } from "../constants/numbers";
-import {
-  Building,
-  ClassMeeting,
-  ClassMeetingWithBuilding,
-} from "@customTypes/models";
-import React, { useState, useEffect, useContext } from "react";
-import { Alert, Linking, Pressable, Text, View, ViewStyle } from "react-native";
-import { messages } from "../constants/messages";
+import { ClassMeetingWithBuilding } from "@customTypes/models";
+import React from "react";
+import { Pressable, ViewStyle } from "react-native";
+import { colors, WI_GMT_DIFF } from "../constants";
+import { BoldText } from "./StyledText";
 
 const getPixel = (duration: number) => {
   return (600 / (12 * 60 * 60 * 1000)) * duration;
 };
 
-export const TimeBox = ({
+const TimeBox = ({
   style,
   design,
   meeting,
   day,
+  onPress,
 }: {
   style?: ViewStyle;
   design: string;
   meeting: ClassMeetingWithBuilding;
   day: number;
+  onPress: () => void;
 }) => {
   if (!meeting.meetingTimeStart || !meeting.meetingTimeEnd) {
     return null;
@@ -31,34 +29,29 @@ export const TimeBox = ({
 
   return (
     <Pressable
-      style={{
-        ...style,
-        width: "20%",
-        height: getPixel(duration),
-        backgroundColor: "#a0a0a0",
-        position: "absolute",
-        left: 20 * day + "%",
-        top: getPixel(
-          meeting.meetingTimeStart + WI_GMT_DIFF - 9 * 60 * 60 * 1000
-        ),
-      }}
-      onPress={() => {
-        try {
-          if (meeting.building) {
-            Linking.openURL(
-              "https://maps.google.com/?q=@" +
-                meeting.building.latitude +
-                "," +
-                meeting.building.longitude
-            );
-          }
-        } catch {
-          Alert.alert(messages.errorMessages.timeTable.cantOpenGoogleMaps);
-        }
-      }}
+      style={({ pressed }) => [
+        {
+          opacity: pressed ? 0.5 : 1,
+        },
+        {
+          ...style,
+          width: "20%",
+          height: getPixel(duration),
+          backgroundColor: colors.lightThemeColor,
+          borderRadius: 3,
+          padding: 3,
+          position: "absolute",
+          left: 20 * day + "%",
+          top: getPixel(
+            (meeting.meetingTimeStart ?? 0) + WI_GMT_DIFF - 9 * 60 * 60 * 1000
+          ),
+        },
+      ]}
+      onPress={onPress}
     >
-      <Text>{design}</Text>
-      {meeting.building ? <Text>{meeting.building.buildingName}</Text> : null}
+      <BoldText style={{ fontSize: 13 }}>{design}</BoldText>
     </Pressable>
   );
 };
+
+export default TimeBox;

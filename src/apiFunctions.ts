@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { API_URL } from "./constants/urls";
+import { API_URL } from "./constants";
 import { userContextType } from "./contexts/userContext";
 import { postData } from "./util";
 

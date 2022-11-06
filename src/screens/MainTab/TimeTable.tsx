@@ -1,5 +1,10 @@
-import { classWithSections, Course } from "@customTypes/models";
-import { TimeBox } from "../../components/TimeBox";
+import {
+  Class,
+  ClassMeetingWithBuilding,
+  classWithSections,
+  Course,
+  fullSection,
+} from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
@@ -13,12 +18,14 @@ import {
   meetingDayChar,
 } from "../../util";
 import { UserContext } from "../../contexts/userContext";
-import { MainTabParamList } from "../../navigation/MainTab";
 import { EXAMDATE_OFFSET } from "../../constants/numbers";
 import { dropClass, enrollClass, getEnrolledClasses } from "../../apiFunctions";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
-import ScreenContainer from "../../components/ScreenContainer";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { colors } from "../../constants/Colors";
+import { BoldText, BoldTextInput } from "../../components/StyledText";
+import { ProgressContext } from "../../contexts/Progress";
+import { CoursePopUpBox, ScreenContainer, TimeBox } from "../../components";
 
 const searchCourse = debounce(
   async (
@@ -56,6 +63,16 @@ const TimeTable = ({
     (classWithSections & { course: Course })[]
   >([]);
   const [classData, setClassData] = useState<classWithSections>();
+  const [popUpBoxData, setPopUpBoxData] = useState<{
+    cls: Class & {
+      sections: fullSection[];
+    } & {
+      course: Course;
+    };
+    meeting: ClassMeetingWithBuilding;
+  }>();
+
+  const { spinner } = useContext(ProgressContext);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
@@ -66,6 +83,11 @@ const TimeTable = ({
   };
 
   useEffect(() => {
+    (async () => {
+      spinner.start();
+      await updateEnrolledClasses();
+      spinner.stop();
+    })();
     navigation.addListener("focus", updateEnrolledClasses);
     return () => navigation.removeListener("focus", updateEnrolledClasses);
   }, []);
@@ -88,43 +110,80 @@ const TimeTable = ({
   }, [selectedClass]);
 
   return (
-    <KeyboardAwareScrollView
-      style={{
-        paddingTop: 100,
-        display: "flex",
-        marginBottom: 10,
-      }}
-    >
-      <ScreenContainer>
-        <Pressable
-          style={{ backgroundColor: "#a0d9a0", width: 50, height: 50 }}
-          onPress={() => navigation.push("EnrollClasses")}
-        />
-        <Text>
-          login as {user?.firstName} {user?.lastName}
-        </Text>
+    <ScreenContainer>
+      <KeyboardAwareScrollView>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+          }}
+        >
+          <BoldText style={{ color: colors.mediumThemeColor }}>
+            logged in as {user?.firstName} {user?.lastName}
+          </BoldText>
+          <Pressable
+            style={({ pressed }) => [
+              {
+                opacity: pressed ? 0.5 : 1,
+              },
+              {
+                width: 20,
+                height: 20,
+                borderRadius: 30,
+                alignItems: "center",
+                justifyContent: "center",
+              },
+            ]}
+            onPress={() => navigation.push("EnrollClasses")}
+          >
+            <View
+              style={{
+                position: "absolute",
+                width: 20,
+                height: 2,
+                borderRadius: 2,
+                backgroundColor: colors.themeColor,
+              }}
+            />
+            <View
+              style={{
+                position: "absolute",
+                width: 2,
+                height: 20,
+                borderRadius: 2,
+                backgroundColor: colors.themeColor,
+              }}
+            />
+          </Pressable>
+        </View>
+
         <View
           style={{
             paddingHorizontal: 20,
           }}
         >
           {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => (
-            <Text
+            <BoldText
               key={i}
               style={{
                 position: "absolute",
-                top: i * 50,
+                top: i * 50 + 2,
                 borderTopWidth: 1,
+                color: "#808080",
               }}
             >
               {i + 9}
-            </Text>
+            </BoldText>
           ))}
 
           <View
             style={{
-              borderWidth: 1,
-              borderRadius: 2,
+              borderWidth: 2,
+              borderRadius: 5,
+              borderColor: "#808080",
               width: "100%",
               height: 600, // 9~9
               backgroundColor: "#ffffff",
@@ -158,23 +217,27 @@ const TimeTable = ({
               cls.sections.map((section) =>
                 section.classMeetings.map((meeting) =>
                   meeting.meetingType !== "EXAM"
-                    ? meeting.meetingDays
-                        ?.split("")
-                        .map((day) => (
-                          <TimeBox
-                            key={meeting.id + day}
-                            day={dayCharToInt(day as meetingDayChar)}
-                            design={cls.course.courseDesignation}
-                            meeting={meeting}
-                          />
-                        ))
+                    ? meeting.meetingDays?.split("").map((day) => (
+                        <TimeBox
+                          key={meeting.id + day}
+                          day={dayCharToInt(day as meetingDayChar)}
+                          design={cls.course.courseDesignation}
+                          meeting={meeting}
+                          onPress={() =>
+                            setPopUpBoxData({
+                              cls,
+                              meeting,
+                            })
+                          }
+                        />
+                      ))
                     : null
                 )
               )
             )}
           </View>
         </View>
-        <TextInput
+        <BoldTextInput
           style={{
             marginTop: 10,
             marginBottom: 10,
@@ -387,20 +450,32 @@ const TimeTable = ({
         <Pressable
           style={({ pressed }) => [
             {
-              backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
+              opacity: pressed ? 0.5 : 1,
             },
             {
               marginTop: 30,
               padding: 10,
-              marginBottom: 200,
+              borderRadius: 20,
+              backgroundColor: colors.lightThemeColor,
+              width: "30%",
+              alignSelf: "center",
+              alignItems: "center",
+              marginBottom: 30,
             },
           ]}
           onPress={() => logout(userContext)}
         >
-          <Text>logout</Text>
+          <BoldText>logout</BoldText>
         </Pressable>
-      </ScreenContainer>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+      {popUpBoxData ? (
+        <CoursePopUpBox
+          cls={popUpBoxData.cls}
+          meeting={popUpBoxData.meeting}
+          closePopUp={() => setPopUpBoxData(undefined)}
+        />
+      ) : null}
+    </ScreenContainer>
   );
 };
 

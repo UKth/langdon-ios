@@ -1,4 +1,4 @@
-export const messages = {
+const messages = {
   errorMessages: {
     timeTable: {
       cantOpenGoogleMaps: "Can't open Google Maps",
@@ -18,3 +18,5 @@ export const messages = {
     },
   },
 };
+
+export default messages;

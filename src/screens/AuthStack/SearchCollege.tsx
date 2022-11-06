@@ -7,11 +7,10 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "../../navigation/AuthStack";
 // import { debounce, getData } from "@util";
 import { debounce, getData } from "../../util";
-import { API_URL } from "../../constants/urls";
+import { API_URL, colors } from "../../constants";
 import { College } from "../../types/models";
-import ScreenContainer from "../../components/ScreenContainer";
+import { ScreenContainer } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
-import { colors } from "../../constants/Colors";
 
 const searchCollege = debounce(
   async (

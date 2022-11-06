@@ -1,25 +1,22 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 
-import { RouteProp, useNavigation } from "@react-navigation/core";
-import tw from "twrnc";
-import { Keyboard, Pressable, Text, TextInput, View } from "react-native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RouteProp } from "@react-navigation/core";
+import { Keyboard, Pressable, View } from "react-native";
 import { AuthStackParamList } from "../../navigation/AuthStack";
 import { sendPostRequest } from "../../util";
-import { API_URL } from "../../constants/urls";
 import { Alert } from "react-native";
 import { UserContext } from "../../contexts/userContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ACCESS_TOKEN_KEY,
+  API_URL,
+  colors,
+  messages,
   REFRESH_TOKEN_KEY,
-  USER_KEY,
-} from "../../constants/storageKeys";
-import ScreenContainer from "../../components/ScreenContainer";
-import { BoldText, BoldTextInput } from "../../components/StyledText";
-import { colors } from "../../constants/Colors";
+} from "../../constants";
 import { ProgressContext } from "../../contexts/Progress";
-import { messages } from "../../constants/messages";
+import { ScreenContainer } from "../../components";
+import { BoldText, BoldTextInput } from "../../components/StyledText";
 
 const sendCode = async (email: string) => {
   const data = await sendPostRequest(API_URL + "user/sendCode", { email });

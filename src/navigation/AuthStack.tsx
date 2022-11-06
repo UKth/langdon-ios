@@ -4,8 +4,8 @@ import { College } from "../types/models";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { SearchCollege, Enter } from "../screens/AuthStack/index";
-import { HeaderBackButton } from "../components/HeaderBackButton";
-import { colors } from "../constants/Colors";
+import { HeaderBackButton } from "../components";
+import { colors } from "../constants";
 // import { SearchCollege, Enter } from "@screens/AuthStack";
 
 export type AuthStackParamList = {

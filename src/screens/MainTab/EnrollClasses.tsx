@@ -1,7 +1,6 @@
 import { classWithSections, Course } from "@customTypes/models";
 import React, { useState, useEffect, useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { API_URL } from "../../constants/urls";
 import {
   debounce,
   getData,
@@ -14,12 +13,10 @@ import { dropClass, getEnrolledClasses } from "../../apiFunctions";
 import { UserContext } from "../../contexts/userContext";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { Alert, Pressable, View } from "react-native";
-import ScreenContainer from "../../components/ScreenContainer";
-import { colors } from "../../constants/Colors";
-import SectionsBox from "../../components/SectionBox";
 import { Ionicons } from "@expo/vector-icons";
 import { ProgressContext } from "../../contexts/Progress";
-import { messages } from "../../constants/messages";
+import { API_URL, colors, messages } from "../../constants";
+import { ScreenContainer, SectionBox } from "../../components";
 
 const searchCourse = debounce(
   async (
@@ -243,7 +240,7 @@ const EnrollClasses = () => {
                       }}
                     >
                       {mappedSections.map((mappedSection) => (
-                        <SectionsBox
+                        <SectionBox
                           key={mappedSection.code}
                           section={mappedSection}
                           onPress={(id: number) => {}}

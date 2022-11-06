@@ -2,14 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { useEffect, useContext } from "react";
 import { Text } from "react-native";
-import Spinner from "../components/Spinner";
 import { ProgressContext } from "../contexts/Progress";
-import { USER_KEY } from "../constants/storageKeys";
+import { USER_KEY } from "../constants";
 import { UserContext } from "../contexts/userContext";
 import useCachedResources from "../hooks/useCachedResources";
 import AuthStack from "./AuthStack";
 import LinkingConfiguration from "./LinkingConfiguration";
 import MainTab from "./MainTab";
+import { Spinner } from "../components";
 
 const Navigation = () => {
   const isLoadingComplete = useCachedResources();

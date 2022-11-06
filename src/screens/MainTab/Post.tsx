@@ -3,14 +3,13 @@ import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
 import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { API_URL } from "../../constants/urls";
+import { API_URL, messages } from "../../constants";
 import { postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
 import Checkbox from "expo-checkbox";
 import { Ionicons } from "@expo/vector-icons";
-import { messages } from "../../constants/messages";
 
 const PostScreen = ({
   route,

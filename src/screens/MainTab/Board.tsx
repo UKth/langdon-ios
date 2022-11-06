@@ -3,12 +3,13 @@ import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
 import { Pressable, Text } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { API_URL } from "../../constants/urls";
 import { postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
 import { Ionicons } from "@expo/vector-icons";
+import { MyPressable, ScreenContainer } from "../../components";
+import { API_URL, colors } from "../../constants";
 
 const BoardScreen = ({
   route,
@@ -36,54 +37,53 @@ const BoardScreen = ({
   }, []);
 
   return (
-    <KeyboardAwareScrollView
-      style={{
-        paddingTop: 100,
-        display: "flex",
-        marginBottom: 10,
-      }}
-    >
-      <Pressable
-        onPress={() => navigation.push("WritePost", { boardId })}
-        style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
-          },
-          {
-            position: "absolute",
-            right: 10,
-            top: -30,
-            borderRadius: 10,
-            width: 35,
-            height: 35,
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        ]}
+    <ScreenContainer>
+      <KeyboardAwareScrollView
+        style={{
+          paddingTop: 100,
+          display: "flex",
+          marginBottom: 10,
+        }}
       >
-        <Ionicons name="ios-create-outline" size={24} color="black" />
-      </Pressable>
-      <Text>board</Text>
-      {posts?.map((post) => (
-        <Pressable
-          key={post.id}
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
-            },
-            {
-              borderBottomColor: "#505050",
-              borderBottomWidth: 1,
-              padding: 10,
-              marginBottom: 5,
-            },
-          ]}
-          onPress={() => navigation.push("Post", { id: post.id })}
+        <MyPressable
+          onPress={() => navigation.push("WritePost", { boardId })}
+          style={{
+            width: "100%",
+            backgroundColor: colors.lightThemeColor,
+            marginBottom: 10,
+            borderRadius: 15,
+            height: 40,
+            paddingLeft: 20,
+            paddingRight: 8,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
         >
-          <Text>{post.title}</Text>
-        </Pressable>
-      ))}
-    </KeyboardAwareScrollView>
+          <Ionicons name="ios-create-outline" size={24} color="black" />
+        </MyPressable>
+        <Text>board</Text>
+        {posts?.map((post) => (
+          <Pressable
+            key={post.id}
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
+              },
+              {
+                borderBottomColor: "#505050",
+                borderBottomWidth: 1,
+                padding: 10,
+                marginBottom: 5,
+              },
+            ]}
+            onPress={() => navigation.push("Post", { id: post.id })}
+          >
+            <Text>{post.title}</Text>
+          </Pressable>
+        ))}
+      </KeyboardAwareScrollView>
+    </ScreenContainer>
   );
 };
 

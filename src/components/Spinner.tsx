@@ -1,6 +1,6 @@
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
-import { colors } from "../constants/Colors";
+import { colors } from "../constants";
 
 const Spinner = () => {
   // const theme = useContext(ThemeContext);

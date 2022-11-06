@@ -2,13 +2,12 @@ import { Class, Course, fullSection } from "@customTypes/models";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { useState } from "react";
-import { GestureResponderEvent, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { nestedSection } from "src/util";
-import { colors } from "../constants/Colors";
 import ClassInfoBox from "./ClassInfoBox";
 import { BoldText } from "./StyledText";
 
-const SectionsBox = ({
+const SectionBox = ({
   section,
   onPress,
   enrolledClasses,
@@ -59,7 +58,7 @@ const SectionsBox = ({
         Array.isArray(section.value) ? (
           <View style={{ paddingLeft: 20 }}>
             {section.value.map((sect) => (
-              <SectionsBox
+              <SectionBox
                 key={sect.code}
                 section={sect}
                 onPress={onPress}
@@ -82,4 +81,4 @@ const SectionsBox = ({
   );
 };
 
-export default SectionsBox;
+export default SectionBox;

@@ -4,11 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserContext } from "../contexts/userContext";
-import {
-  ACCESS_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-  USER_KEY,
-} from "../constants/storageKeys";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY } from "../constants";
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);

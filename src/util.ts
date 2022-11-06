@@ -1,13 +1,13 @@
 import { userContextType } from "./contexts/userContext";
-import { API_URL } from "./constants/urls";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { classWithSections } from "@customTypes/models";
 import {
   ACCESS_TOKEN_KEY,
+  API_URL,
   REFRESH_TOKEN_KEY,
   USER_KEY,
-} from "./constants/storageKeys";
-import { classWithSections } from "@customTypes/models";
+} from "./constants";
 
 export const logout = (ctx: userContextType) => {
   ctx.setUser(undefined);

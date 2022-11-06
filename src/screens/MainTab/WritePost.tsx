@@ -3,7 +3,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState, useEffect, useContext } from "react";
 import { Alert, Pressable, Text, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { API_URL } from "../../constants/urls";
+import { API_URL } from "../../constants";
 import { postData } from "../../util";
 import { UserContext } from "../../contexts/userContext";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";

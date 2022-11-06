@@ -13,13 +13,11 @@ import {
   View,
 } from "react-native";
 import { formatTimeString, getData, nestedSection } from "../util";
-import { colors } from "../constants/Colors";
-import { API_URL } from "../constants/urls";
 import { BoldText } from "./StyledText";
-import { EXAMDATE_OFFSET } from "../constants/numbers";
 import { dropClass, enrollClass } from "../apiFunctions";
 import { UserContext } from "../contexts/userContext";
 import { ProgressContext } from "../contexts/Progress";
+import { API_URL, colors, EXAMDATE_OFFSET } from "../constants";
 
 const ClassInfoBox = ({
   id,

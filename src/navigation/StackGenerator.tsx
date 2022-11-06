@@ -9,9 +9,9 @@ import {
 } from "../screens/MainTab/index";
 
 import React, { useContext, useEffect } from "react";
-import { HeaderBackButton } from "../components/HeaderBackButton";
-import { colors } from "../constants/Colors";
+import { colors } from "../constants";
 import EnrollClasses from "../screens/MainTab/EnrollClasses";
+import { HeaderBackButton } from "../components";
 
 export type StackGeneratorParamList = {
   TimeTable: undefined;

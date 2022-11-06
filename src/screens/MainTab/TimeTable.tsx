@@ -9,7 +9,6 @@ import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { API_URL } from "../../constants/urls";
 import {
   dayCharToInt,
   debounce,
@@ -18,11 +17,10 @@ import {
   meetingDayChar,
 } from "../../util";
 import { UserContext } from "../../contexts/userContext";
-import { EXAMDATE_OFFSET } from "../../constants/numbers";
 import { dropClass, enrollClass, getEnrolledClasses } from "../../apiFunctions";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { colors } from "../../constants/Colors";
+import { API_URL, colors, EXAMDATE_OFFSET } from "../../constants";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { ProgressContext } from "../../contexts/Progress";
 import { CoursePopUpBox, ScreenContainer, TimeBox } from "../../components";

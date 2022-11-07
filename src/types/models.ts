@@ -21,6 +21,11 @@ export type User = {
   college: College;
 };
 
+export type ShortUser = {
+  id: number;
+  netId: string;
+};
+
 /**
  * Model Token
  *
@@ -83,8 +88,6 @@ export type fullSection = Section & {
  * Model ClassMeeting
  *
  */
-
-export const WI_GMT_DIFF = 1;
 
 export type ClassMeeting = {
   id: number;
@@ -157,7 +160,15 @@ export type Post = {
   isAnonymous: Boolean;
 };
 
-export type fullPost = Post & {
+export type PostWithCounts = Post & {
+  _count: {
+    comments: number;
+    likedUsers: number;
+  };
+  createdBy: ShortUser;
+};
+
+export type fullPost = PostWithCounts & {
   createdBy: User;
   comments: Comment[];
   likedUsers: User[];
@@ -191,3 +202,20 @@ export const BoardType = {
 };
 
 export type BoardType = typeof BoardType[keyof typeof BoardType];
+
+export type Report = {
+  id: number;
+  content: string;
+  userId: number;
+  targetId: number;
+  targetType: ReportTargetType;
+};
+
+export const ReportTargetType = {
+  post: "post",
+  user: "user",
+  comment: "comment",
+};
+
+export type ReportTargetType =
+  typeof ReportTargetType[keyof typeof ReportTargetType];

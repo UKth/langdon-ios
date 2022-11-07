@@ -1,26 +1,49 @@
-import { Board } from "@customTypes/models";
+import { PostWithCounts } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { Pressable, Text } from "react-native";
+import { Pressable, RefreshControl, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { postData } from "../../util";
+import { getTimeDifferenceString, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
 import { Ionicons } from "@expo/vector-icons";
-import { MyPressable, ScreenContainer } from "../../components";
-import { API_URL, colors } from "../../constants";
+import {
+  LoadingComponent,
+  MyPressable,
+  ScreenContainer,
+} from "../../components";
+import { ANONYMOUS_USERNAME, API_URL, colors, styles } from "../../constants";
+import { BoldText } from "../../components/StyledText";
+import { ProgressContext } from "../../contexts/Progress";
 
 const BoardScreen = ({
   route,
 }: {
   route: RouteProp<StackGeneratorParamList, "Board">;
 }) => {
-  const [posts, setPosts] = useState<Board[]>([]);
+  const [posts, setPosts] = useState<PostWithCounts[]>();
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
   const userContext = useContext(UserContext);
   const boardId = route.params.id;
+  const [refreshing, setRefreshing] = useState(false);
+  const { spinner } = useContext(ProgressContext);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <MyPressable onPress={() => navigation.push("WritePost", { boardId })}>
+          <Ionicons
+            name="ios-create-outline"
+            size={26}
+            color={colors.themeColor}
+          />
+        </MyPressable>
+      ),
+      headerTitle: route.params.title,
+    });
+  }, []);
 
   const refetch = async () => {
     const data = await postData(userContext, API_URL + "board/post/getPosts", {
@@ -37,51 +60,125 @@ const BoardScreen = ({
   }, []);
 
   return (
-    <ScreenContainer>
+    <ScreenContainer style={{ backgroundColor: "rgba(255,255,255,1)" }}>
       <KeyboardAwareScrollView
         style={{
-          paddingTop: 100,
-          display: "flex",
-          marginBottom: 10,
+          paddingTop: "20%",
+          paddingHorizontal: "8%",
         }}
       >
-        <MyPressable
-          onPress={() => navigation.push("WritePost", { boardId })}
-          style={{
-            width: "100%",
-            backgroundColor: colors.lightThemeColor,
-            marginBottom: 10,
-            borderRadius: 15,
-            height: 40,
-            paddingLeft: 20,
-            paddingRight: 8,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Ionicons name="ios-create-outline" size={24} color="black" />
-        </MyPressable>
-        <Text>board</Text>
-        {posts?.map((post) => (
-          <Pressable
-            key={post.id}
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
-              },
-              {
-                borderBottomColor: "#505050",
-                borderBottomWidth: 1,
-                padding: 10,
-                marginBottom: 5,
-              },
-            ]}
-            onPress={() => navigation.push("Post", { id: post.id })}
+        {posts ? (
+          posts.length ? (
+            posts.map((post) => (
+              <MyPressable
+                key={post.id}
+                style={{
+                  paddingVertical: 10,
+                  paddingHorizontal: 15,
+                  maxHeight: "30%",
+                  backgroundColor: "white",
+
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowRadius: 2,
+                  shadowColor: `rgba(0,0,0,0.1)`,
+                  shadowOpacity: 1,
+
+                  borderColor: colors.themeColor,
+                  borderRadius: styles.borderRadius.md,
+                  marginBottom: 10,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+                onPress={() => navigation.push("Post", { id: post.id })}
+              >
+                <View style={{ maxWidth: "75%" }}>
+                  <BoldText
+                    numberOfLines={1}
+                    style={{
+                      color: colors.themeColor,
+                      fontSize: 14,
+                      marginBottom: 7,
+                    }}
+                  >
+                    {post.title}
+                  </BoldText>
+                  <BoldText
+                    style={{ color: colors.mediumThemeColor, fontSize: 12 }}
+                  >
+                    {post.content.substring(0, 30) +
+                      (post.content.length > 30 ? "..." : "")}
+                  </BoldText>
+                </View>
+                <View
+                  style={{
+                    height: "100%",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                    }}
+                  >
+                    <BoldText
+                      style={{
+                        color: colors.mediumThemeColor,
+                        fontSize: 11,
+                        alignSelf: "flex-end",
+                        marginRight: 4,
+                      }}
+                    >
+                      @
+                      {post.isAnonymous
+                        ? ANONYMOUS_USERNAME
+                        : post.createdBy?.netId}
+                    </BoldText>
+                    <View style={{ flexDirection: "row", width: 20 }}>
+                      <Ionicons
+                        style={{ marginRight: 3 }}
+                        name="chatbox-outline"
+                        color={colors.mediumThemeColor}
+                        size={10}
+                      />
+                      <BoldText
+                        style={{
+                          color: colors.mediumThemeColor,
+                          fontSize: 9,
+                        }}
+                      >
+                        {post._count.comments}
+                      </BoldText>
+                    </View>
+                  </View>
+
+                  <BoldText
+                    style={{
+                      color: colors.lightThemeColor,
+                      fontSize: 10,
+                      alignSelf: "flex-end",
+                    }}
+                  >
+                    {getTimeDifferenceString(post.createdAt)}
+                  </BoldText>
+                </View>
+              </MyPressable>
+            ))
+          ) : (
+            <BoldText style={{ color: colors.mediumThemeColor, fontSize: 20 }}>
+              The board is empty.
+            </BoldText>
+          )
+        ) : (
+          <View
+            style={{
+              height: 100,
+              justifyContent: "center",
+            }}
           >
-            <Text>{post.title}</Text>
-          </Pressable>
-        ))}
+            <LoadingComponent />
+          </View>
+        )}
       </KeyboardAwareScrollView>
     </ScreenContainer>
   );

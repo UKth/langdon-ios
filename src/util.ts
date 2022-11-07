@@ -104,7 +104,6 @@ export const getData = async (url: string) => {
   try {
     return res.json();
   } catch (error) {
-    console.log(res);
     console.log(error);
   }
 };
@@ -285,6 +284,57 @@ export const logJSON = (o: Object) => {
   console.log(JSON.stringify(o, null, 4));
 };
 
+const format2Digits = (n: number) => (n >= 10 ? "" : "0") + n;
+
 export const formatTimeString = (hour: number, min: number) => {
-  return (hour >= 10 ? "" : "0") + hour + ":" + (min >= 10 ? "" : "0") + min;
+  return format2Digits(hour) + ":" + format2Digits(min);
+};
+
+export const getTimeDifferenceString = (createdAt: Date) => {
+  const diff = new Date().valueOf() - createdAt.valueOf();
+
+  let value = 0;
+  let unit = "";
+  if (diff < 60 * 60 * 1000) {
+    value = Math.floor(diff / 60000);
+    unit = "min";
+    if (value === 0) {
+      return "now";
+    }
+    // return min !== 0 ? min + "min(s) ago" : "방금 전";
+  } else if (Math.floor(diff / (60 * 60000)) < 24) {
+    value = Math.floor(diff / (60 * 60000));
+    unit = "hour";
+  } else if (Math.floor(diff / (60 * 60000 * 24)) < 7) {
+    value = Math.floor(diff / (60 * 60000 * 24));
+    unit = "day";
+    // return Math.floor(diff / (60 * 60000 * 24)) + "day(s) ago";
+  } else if (diff / (60 * 60000 * 24) < 30) {
+    value = Math.floor(diff / (60 * 60000 * 24 * 7));
+    unit = "week";
+    // return Math.floor(diff / (60 * 60000 * 24 * 7)) + "week(s) ago";
+  } else if (diff / (60 * 60000 * 24) < 365) {
+    value = Math.floor(diff / (60 * 60000 * 24 * 30));
+    unit = "week";
+    // return Math.floor(diff / (60 * 60000 * 24 * 30)) + "month(s) ago";
+  } else {
+    value = Math.floor(diff / (60 * 60000 * 24 * 365));
+    unit = "year";
+    // return Math.floor(diff / (60 * 60000 * 24 * 365)) + "year(s) ago";
+  }
+  return value + " " + unit + (value > 1 ? "s" : "") + " ago";
+};
+
+export const getTimeString = (date: Date) => {
+  return (
+    date.getFullYear() +
+    "-" +
+    format2Digits(date.getMonth() + 1) +
+    "-" +
+    format2Digits(date.getDate()) +
+    " " +
+    format2Digits(date.getHours()) +
+    ":" +
+    format2Digits(date.getMinutes())
+  );
 };

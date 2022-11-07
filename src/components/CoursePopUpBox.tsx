@@ -89,12 +89,20 @@ const CoursePopUpBox = ({
           ]}
           onPress={() => {
             try {
-              if (meeting.building) {
+              if (
+                meeting.building &&
+                meeting.building.latitude &&
+                meeting.building.longitude
+              ) {
                 Linking.openURL(
                   "https://maps.google.com/?q=@" +
                     meeting.building.latitude +
                     "," +
                     meeting.building.longitude
+                );
+              } else {
+                Alert.alert(
+                  messages.errorMessages.timeTable.cantOpenGoogleMapsOfBuilding
                 );
               }
             } catch {

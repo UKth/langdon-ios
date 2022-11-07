@@ -18,6 +18,7 @@ import { dropClass, enrollClass } from "../apiFunctions";
 import { UserContext } from "../contexts/userContext";
 import { ProgressContext } from "../contexts/Progress";
 import { API_URL, colors, EXAMDATE_OFFSET } from "../constants";
+import MyPressable from "./MyPressable";
 
 const ClassInfoBox = ({
   id,
@@ -54,14 +55,18 @@ const ClassInfoBox = ({
     <View
       style={{
         padding: 10,
-        borderWidth: 1,
         borderRadius: 10,
-        borderColor: "white",
+        backgroundColor: "white",
+
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+        shadowColor: `rgba(0,0,0,0.1)`,
+        shadowOpacity: 1,
       }}
     >
       {classData?.sections.map((section) => (
         <View key={section.id} style={{ marginBottom: 15 }}>
-          <BoldText>
+          <BoldText style={{ color: colors.mediumThemeColor }}>
             {section.type} {section.sectionNumber}
           </BoldText>
           <View
@@ -84,23 +89,29 @@ const ClassInfoBox = ({
                   key={meeting.id}
                   style={{
                     borderWidth: 1,
-                    borderColor: "white",
+                    borderColor: colors.mediumThemeColor,
                     borderRadius: 5,
                     marginBottom: 5,
                     padding: 5,
                   }}
                 >
-                  <BoldText>{meeting.meetingType}</BoldText>
-                  {!isExam ? <BoldText>{meeting.meetingDays}</BoldText> : null}
+                  <BoldText style={{ color: colors.mediumThemeColor }}>
+                    {meeting.meetingType}
+                  </BoldText>
+                  {!isExam ? (
+                    <BoldText style={{ color: colors.mediumThemeColor }}>
+                      {meeting.meetingDays}
+                    </BoldText>
+                  ) : null}
                   {meeting.examDate ? (
-                    <BoldText>
+                    <BoldText style={{ color: colors.mediumThemeColor }}>
                       {new Date(
                         meeting.examDate + EXAMDATE_OFFSET || 0
                       ).toDateString()}
                     </BoldText>
                   ) : null}
                   {meetingTimeStart.valueOf() && meetingTimeEnd.valueOf() ? (
-                    <BoldText>
+                    <BoldText style={{ color: colors.mediumThemeColor }}>
                       {formatTimeString(
                         meetingTimeStart.getHours(),
                         meetingTimeStart.getMinutes()
@@ -114,15 +125,19 @@ const ClassInfoBox = ({
                   ) : null}
 
                   {meeting.building ? (
-                    <BoldText>{meeting.building.buildingName}</BoldText>
+                    <BoldText style={{ color: colors.mediumThemeColor }}>
+                      {meeting.building.buildingName}
+                    </BoldText>
                   ) : null}
                 </View>
               );
             })}
             {section.instructor ? (
               <View>
-                <BoldText>instructor:</BoldText>
-                <BoldText>
+                <BoldText style={{ color: colors.mediumThemeColor }}>
+                  instructor:
+                </BoldText>
+                <BoldText style={{ color: colors.mediumThemeColor }}>
                   {section.instructor.firstName +
                     " " +
                     section.instructor.lastName}
@@ -133,7 +148,7 @@ const ClassInfoBox = ({
         </View>
       ))}
       <View style={{ alignItems: "center", paddingBottom: 5 }}>
-        <Pressable
+        <MyPressable
           onPress={async () => {
             spinner.start();
             if (enrolledClasses.map((cls) => cls.id).includes(id)) {
@@ -144,26 +159,26 @@ const ClassInfoBox = ({
             updateEnrolledClasses();
             spinner.stop();
           }}
-          style={({ pressed }) => [
-            {
-              opacity: pressed ? 0.5 : 1,
-            },
-            {
-              backgroundColor: "white",
-              padding: 10,
-              width: "30%",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 20,
-            },
-          ]}
+          style={{
+            backgroundColor: colors.mediumThemeColor,
+            padding: 10,
+            width: "30%",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 20,
+
+            shadowOffset: { width: 0, height: 1 },
+            shadowRadius: 2,
+            shadowColor: `rgba(0,0,0,0.1)`,
+            shadowOpacity: 1,
+          }}
         >
-          <BoldText style={{ color: colors.themeColor }}>
+          <BoldText style={{ color: "white" }}>
             {enrolledClasses.map((cls) => cls.id).includes(id)
               ? "drop"
               : "enroll"}
           </BoldText>
-        </Pressable>
+        </MyPressable>
       </View>
     </View>
   );

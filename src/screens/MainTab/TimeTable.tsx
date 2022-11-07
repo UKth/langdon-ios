@@ -23,7 +23,12 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { API_URL, colors, EXAMDATE_OFFSET } from "../../constants";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { ProgressContext } from "../../contexts/Progress";
-import { CoursePopUpBox, ScreenContainer, TimeBox } from "../../components";
+import {
+  CoursePopUpBox,
+  MyPressable,
+  ScreenContainer,
+  TimeBox,
+} from "../../components";
 
 const searchCourse = debounce(
   async (
@@ -122,25 +127,25 @@ const TimeTable = ({
           <BoldText style={{ color: colors.mediumThemeColor }}>
             logged in as {user?.firstName} {user?.lastName}
           </BoldText>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                opacity: pressed ? 0.5 : 1,
-              },
-              {
-                width: 20,
-                height: 20,
-                borderRadius: 30,
-                alignItems: "center",
-                justifyContent: "center",
-              },
-            ]}
+          <MyPressable
+            style={{
+              borderRadius: 30,
+              padding: 15,
+              alignItems: "center",
+              justifyContent: "center",
+
+              backgroundColor: "white",
+              shadowOffset: { width: 0, height: 1 },
+              shadowRadius: 2,
+              shadowColor: `rgba(0,0,0,0.1)`,
+              shadowOpacity: 1,
+            }}
             onPress={() => navigation.push("EnrollClasses")}
           >
             <View
               style={{
                 position: "absolute",
-                width: 20,
+                width: 15,
                 height: 2,
                 borderRadius: 2,
                 backgroundColor: colors.themeColor,
@@ -150,12 +155,12 @@ const TimeTable = ({
               style={{
                 position: "absolute",
                 width: 2,
-                height: 20,
+                height: 15,
                 borderRadius: 2,
-                backgroundColor: colors.themeColor,
+                backgroundColor: colors.mediumThemeColor,
               }}
             />
-          </Pressable>
+          </MyPressable>
         </View>
 
         <View
@@ -445,26 +450,26 @@ const TimeTable = ({
             ))}
           </View>
         ) : null}
-        <Pressable
-          style={({ pressed }) => [
-            {
-              opacity: pressed ? 0.5 : 1,
-            },
-            {
-              marginTop: 30,
-              padding: 10,
-              borderRadius: 20,
-              backgroundColor: colors.lightThemeColor,
-              width: "30%",
-              alignSelf: "center",
-              alignItems: "center",
-              marginBottom: 30,
-            },
-          ]}
+        <MyPressable
+          style={{
+            marginTop: 30,
+            padding: 10,
+            borderRadius: 20,
+            backgroundColor: colors.lightThemeColor,
+            width: "30%",
+            alignSelf: "center",
+            alignItems: "center",
+            marginBottom: 30,
+
+            shadowOffset: { width: 0, height: 1 },
+            shadowRadius: 2,
+            shadowColor: `rgba(0,0,0,0.1)`,
+            shadowOpacity: 1,
+          }}
           onPress={() => logout(userContext)}
         >
           <BoldText>logout</BoldText>
-        </Pressable>
+        </MyPressable>
       </KeyboardAwareScrollView>
       {popUpBoxData ? (
         <CoursePopUpBox

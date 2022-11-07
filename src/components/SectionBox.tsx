@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Pressable, View } from "react-native";
 import { nestedSection } from "src/util";
 import ClassInfoBox from "./ClassInfoBox";
+import MyPressable from "./MyPressable";
 import { BoldText } from "./StyledText";
 
 const SectionBox = ({
@@ -30,17 +31,12 @@ const SectionBox = ({
       }}
     >
       <View style={{ flexDirection: "row" }}>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              opacity: pressed ? 0.5 : 1,
-            },
-            {
-              height: 22,
-              alignItems: "center",
-              flexDirection: "row",
-            },
-          ]}
+        <MyPressable
+          style={{
+            height: 22,
+            alignItems: "center",
+            flexDirection: "row",
+          }}
           onPress={() => setShowDetails(!showDetails)}
         >
           <BoldText style={{ marginRight: 5 }}>{section.code}</BoldText>
@@ -52,7 +48,7 @@ const SectionBox = ({
               transform: [{ rotate: showDetails ? "180deg" : "90deg" }],
             }}
           />
-        </Pressable>
+        </MyPressable>
       </View>
       {showDetails ? (
         Array.isArray(section.value) ? (

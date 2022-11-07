@@ -137,6 +137,11 @@ const EnrollClasses = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
+
+                shadowOffset: { width: 0, height: 1 },
+                shadowRadius: 2,
+                shadowColor: `rgba(0,0,0,0.1)`,
+                shadowOpacity: 1,
               }}
             >
               <BoldText>{cls.course.courseDesignation}</BoldText>
@@ -190,6 +195,11 @@ const EnrollClasses = () => {
               height: 50,
               color: "white",
               marginBottom: 10,
+
+              shadowOffset: { width: 0, height: 1 },
+              shadowRadius: 2,
+              shadowColor: `rgba(0,0,0,0.1)`,
+              shadowOpacity: 1,
             }}
             onChangeText={(text) => {
               setCourseKeyword(text.replace(/ /g, ""));
@@ -209,6 +219,11 @@ const EnrollClasses = () => {
                     paddingBottom: 10,
                     paddingTop: 5,
                     borderRadius: 15,
+
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowRadius: 2,
+                    shadowColor: `rgba(0,0,0,0.1)`,
+                    shadowOpacity: 1,
                   }}
                   key={course.id}
                 >

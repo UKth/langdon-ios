@@ -5,11 +5,17 @@ import { ViewStyle } from "react-native";
 
 const MyPressable = (
   props: PressableProps & {
-    style: ViewStyle;
+    style?: ViewStyle;
   }
 ) => {
   return (
     <Pressable
+      hitSlop={{
+        top: 10,
+        bottom: 10,
+        right: 10,
+        left: 10,
+      }}
       {...props}
       style={({ pressed }) => [
         {

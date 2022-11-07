@@ -1,6 +1,7 @@
 import { ClassMeetingWithBuilding } from "@customTypes/models";
 import React from "react";
 import { Pressable, ViewStyle } from "react-native";
+import { shadow } from "../constants/styles";
 import { colors, WI_GMT_DIFF } from "../constants";
 import { BoldText } from "./StyledText";
 
@@ -45,6 +46,8 @@ const TimeBox = ({
           top: getPixel(
             (meeting.meetingTimeStart ?? 0) + WI_GMT_DIFF - 9 * 60 * 60 * 1000
           ),
+
+          ...shadow.md,
         },
       ]}
       onPress={onPress}

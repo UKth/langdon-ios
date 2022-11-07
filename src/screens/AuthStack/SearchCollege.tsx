@@ -9,8 +9,9 @@ import { AuthStackParamList } from "../../navigation/AuthStack";
 import { debounce, getData } from "../../util";
 import { API_URL, colors } from "../../constants";
 import { College } from "../../types/models";
-import { ScreenContainer } from "../../components";
+import { MyPressable, ScreenContainer } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
+import { shadow } from "../../constants/styles";
 
 const searchCollege = debounce(
   async (
@@ -50,7 +51,7 @@ const SearchCollege = () => {
         <BoldText
           style={{
             fontSize: 24,
-            color: colors.themeColor,
+            color: colors.mediumThemeColor,
             marginBottom: "13%",
           }}
         >
@@ -64,7 +65,8 @@ const SearchCollege = () => {
             borderRadius: 50,
             height: 50,
             color: "white",
-            marginBottom: 10,
+            marginBottom: 15,
+            ...shadow.md,
           }}
           onChangeText={(text) => setKeyword(text.trim())}
           placeholder="ex. University of Wisconsin - Madison"
@@ -73,33 +75,30 @@ const SearchCollege = () => {
         {searchedCollege?.length ? (
           <View
             style={{
-              backgroundColor: colors.lightThemeColor,
+              backgroundColor: "white",
               paddingVertical: 20,
-              borderRadius: 28,
+              borderRadius: 15,
+
+              ...shadow.md,
             }}
           >
             {searchedCollege.map((college) => (
-              <Pressable
+              <MyPressable
                 key={college.id}
                 onPress={() => navigation.push("Enter", { college })}
-                style={({ pressed }) => [
-                  {
-                    opacity: pressed ? 0.5 : 1,
-                  },
-                  {
-                    paddingHorizontal: 20,
-                  },
-                ]}
+                style={{
+                  paddingHorizontal: 20,
+                }}
               >
                 <BoldText
                   style={{
                     fontSize: 17,
-                    color: "white",
+                    color: colors.mediumThemeColor,
                   }}
                 >
                   {college.name}
                 </BoldText>
-              </Pressable>
+              </MyPressable>
             ))}
           </View>
         ) : null}

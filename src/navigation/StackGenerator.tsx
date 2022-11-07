@@ -39,7 +39,7 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
     <Stack.Navigator
       screenOptions={({ route, navigation }) => {
         return {
-          headerTintColor: colors.themeColor,
+          headerTintColor: colors.mediumThemeColor,
           headerTitleStyle: {
             fontFamily: "Arial Rounded MT Bold",
           },
@@ -62,7 +62,11 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
       ) : null}
       <Stack.Screen name="Board" component={Board} />
       <Stack.Screen name="Post" component={Post} />
-      <Stack.Screen name="WritePost" component={WritePost} />
+      <Stack.Screen
+        name="WritePost"
+        component={WritePost}
+        options={{ title: "New post" }}
+      />
     </Stack.Navigator>
   );
 };

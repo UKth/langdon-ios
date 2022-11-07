@@ -1,7 +1,8 @@
 const messages = {
   errorMessages: {
     timeTable: {
-      cantOpenGoogleMaps: "Can't open Google Maps",
+      cantOpenGoogleMaps: "Can't open Google Maps.",
+      cantOpenGoogleMapsOfBuilding: "Can't open Google Maps of the building.",
     },
 
     loginRequired: "Login required.",
@@ -15,6 +16,12 @@ const messages = {
     },
     post: {
       postDeleted: "Post deleted.",
+    },
+    report: {
+      reportCreated: "Report sent.",
+    },
+    comment: {
+      commentDeleted: "Comment deleted.",
     },
   },
 };

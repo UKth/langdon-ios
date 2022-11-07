@@ -21,7 +21,7 @@ const AuthStack = () => {
       initialRouteName="SearchCollege"
       screenOptions={({ route, navigation }) => {
         return {
-          headerTintColor: colors.themeColor,
+          headerTintColor: colors.mediumThemeColor,
           headerTitleStyle: {
             fontFamily: "Arial Rounded MT Bold",
           },

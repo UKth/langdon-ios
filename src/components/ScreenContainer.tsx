@@ -12,7 +12,7 @@ const ScreenContainer = ({
   return (
     <View
       style={{
-        backgroundColor: "#ffffff",
+        backgroundColor: "white",
         flex: 1,
         ...style,
       }}

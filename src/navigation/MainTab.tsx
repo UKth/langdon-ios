@@ -20,7 +20,7 @@ const MainTab = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: colors.themeColor,
+        tabBarActiveTintColor: colors.mediumThemeColor,
         tabBarInactiveTintColor: "black",
       }}
     >

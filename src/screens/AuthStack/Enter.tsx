@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 
 import { RouteProp } from "@react-navigation/core";
-import { Keyboard, Pressable, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Pressable, View } from "react-native";
 import { AuthStackParamList } from "../../navigation/AuthStack";
 import { sendPostRequest } from "../../util";
 import { Alert } from "react-native";
@@ -17,6 +17,8 @@ import {
 import { ProgressContext } from "../../contexts/Progress";
 import { ScreenContainer } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
+import { shadow } from "../../constants/styles";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const sendCode = async (email: string) => {
   const data = await sendPostRequest(API_URL + "user/sendCode", { email });
@@ -56,7 +58,8 @@ const Enter = ({
 
   return (
     <ScreenContainer>
-      <View
+      <KeyboardAwareScrollView
+        extraScrollHeight={80}
         style={{
           paddingHorizontal: 30,
           paddingTop: "25%",
@@ -65,7 +68,7 @@ const Enter = ({
         <BoldText
           style={{
             fontSize: 24,
-            color: colors.themeColor,
+            color: colors.mediumThemeColor,
             marginBottom: "13%",
           }}
         >
@@ -83,6 +86,8 @@ const Enter = ({
               height: 50,
               marginBottom: 30,
               width: "80%",
+
+              ...shadow.md,
             }}
           >
             <BoldTextInput
@@ -107,12 +112,14 @@ const Enter = ({
                 opacity: pressed ? 0.5 : 0.8,
               },
               {
-                backgroundColor: colors.themeColor,
+                backgroundColor: colors.mediumThemeColor,
                 padding: 10,
                 width: "40%",
                 borderRadius: 20,
                 alignItems: "center",
                 marginBottom: "20%",
+
+                ...shadow.md,
               },
             ]}
             onPress={async () => {
@@ -149,6 +156,8 @@ const Enter = ({
                     height: 50,
                     color: "white",
                     marginBottom: 10,
+
+                    ...shadow.md,
                   }}
                   onChangeText={(text) => setFirstName(text.trim())}
                   placeholder="first name"
@@ -166,6 +175,8 @@ const Enter = ({
                     height: 50,
                     color: "white",
                     marginBottom: 10,
+
+                    ...shadow.md,
                   }}
                   onChangeText={(text) => setLastName(text.trim())}
                   placeholder="last name"
@@ -182,6 +193,8 @@ const Enter = ({
                   height: 50,
                   color: "white",
                   marginBottom: 30,
+
+                  ...shadow.md,
                 }}
                 onChangeText={(text) => setCode(text.trim())}
                 keyboardType="number-pad"
@@ -195,11 +208,15 @@ const Enter = ({
                     opacity: pressed ? 0.5 : 0.8,
                   },
                   {
-                    backgroundColor: colors.themeColor,
+                    backgroundColor: colors.mediumThemeColor,
                     padding: 10,
                     width: "50%",
                     borderRadius: 20,
                     alignItems: "center",
+
+                    marginBottom: 400,
+
+                    ...shadow.md,
                   },
                 ]}
                 onPress={async () => {
@@ -240,7 +257,7 @@ const Enter = ({
             </View>
           ) : null}
         </View>
-      </View>
+      </KeyboardAwareScrollView>
     </ScreenContainer>
   );
 };

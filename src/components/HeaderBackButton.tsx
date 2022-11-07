@@ -20,7 +20,7 @@ const HeaderBackButton = ({
       }}
       onPress={onPress}
     >
-      <Ionicons name="chevron-back" size={30} color={colors.themeColor} />
+      <Ionicons name="chevron-back" size={30} color={colors.mediumThemeColor} />
     </Pressable>
   );
 };

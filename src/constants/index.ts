@@ -4,6 +4,7 @@ import styles from "./styles";
 import { API_URL } from "./urls";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY } from "./storageKeys";
 import { EXAMDATE_OFFSET, WI_GMT_DIFF } from "./numbers";
+import { ANONYMOUS_USERNAME } from "./text";
 
 export {
   colors,
@@ -15,4 +16,5 @@ export {
   USER_KEY,
   EXAMDATE_OFFSET,
   WI_GMT_DIFF,
+  ANONYMOUS_USERNAME,
 };

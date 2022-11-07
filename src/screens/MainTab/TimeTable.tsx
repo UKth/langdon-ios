@@ -166,9 +166,10 @@ const TimeTable = ({
         <View
           style={{
             paddingHorizontal: 20,
+            marginBottom: 30,
           }}
         >
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => (
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((i) => (
             <BoldText
               key={i}
               style={{
@@ -178,7 +179,7 @@ const TimeTable = ({
                 color: "#808080",
               }}
             >
-              {i + 9}
+              {i + 8}
             </BoldText>
           ))}
 
@@ -188,11 +189,11 @@ const TimeTable = ({
               borderRadius: 5,
               borderColor: "#808080",
               width: "100%",
-              height: 600, // 9~9
+              height: 700, // 9~9
               backgroundColor: "#ffffff",
             }}
           >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((i) => (
               <View
                 key={i}
                 style={{
@@ -240,20 +241,6 @@ const TimeTable = ({
             )}
           </View>
         </View>
-        <BoldTextInput
-          style={{
-            marginTop: 10,
-            marginBottom: 10,
-            height: 30,
-            width: 200,
-            backgroundColor: "#ffffff",
-            borderRadius: 3,
-          }}
-          onChangeText={(text) => {
-            setCourseKeyword(text.replace(/ /g, ""));
-          }}
-          autoCapitalize="none"
-        />
         {searchedCourse ? (
           <View
             style={{ backgroundColor: "#ffffff", borderRadius: 2, padding: 4 }}

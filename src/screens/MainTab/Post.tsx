@@ -19,7 +19,7 @@ import {
   messages,
   styles,
 } from "../../constants";
-import { getTimeString, postData } from "../../util";
+import { getTimeDifferenceString, getTimeString, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
@@ -293,19 +293,34 @@ const PostScreen = ({
                     }}
                   >
                     <View style={{ width: "90%" }}>
-                      <BoldText
+                      <View
                         style={{
-                          fontSize: 13,
-                          color: colors.themeColor,
-
+                          flexDirection: "row",
                           marginBottom: 5,
+                          alignItems: "center",
                         }}
                       >
-                        @
-                        {comment.isAnonymous
-                          ? ANONYMOUS_USERNAME
-                          : comment.createdBy.netId}
-                      </BoldText>
+                        <BoldText
+                          style={{
+                            fontSize: 12,
+                            color: colors.mediumThemeColor,
+                            marginRight: 3,
+                          }}
+                        >
+                          @
+                          {comment.isAnonymous
+                            ? ANONYMOUS_USERNAME
+                            : comment.createdBy.netId}
+                        </BoldText>
+                        <BoldText
+                          style={{
+                            fontSize: 8,
+                            color: colors.lightThemeColor,
+                          }}
+                        >
+                          {getTimeDifferenceString(comment.createdAt)}
+                        </BoldText>
+                      </View>
                       <BoldText
                         style={{
                           color: colors.mediumThemeColor,
@@ -402,6 +417,12 @@ const PostScreen = ({
           }}
         >
           <Checkbox
+            hitSlop={{
+              top: 10,
+              bottom: 10,
+              right: 10,
+              left: 10,
+            }}
             value={isAnonymous}
             onValueChange={(newValue) => setIsAnonymous(newValue)}
             color={colors.mediumThemeColor}

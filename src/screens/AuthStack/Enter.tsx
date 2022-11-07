@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import { RouteProp } from "@react-navigation/core";
 import { Keyboard, KeyboardAvoidingView, Pressable, View } from "react-native";
@@ -19,6 +19,7 @@ import { ScreenContainer } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { shadow } from "../../constants/styles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as Notifications from "expo-notifications";
 
 const sendCode = async (email: string) => {
   const data = await sendPostRequest(API_URL + "user/sendCode", { email });
@@ -40,6 +41,14 @@ const getTokens = async (registerData: {
   return data;
 };
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
 const Enter = ({
   route,
 }: {
@@ -52,9 +61,17 @@ const Enter = ({
   const [lastName, setLastName] = useState("");
   const [code, setCode] = useState("");
   const [userId, setUserId] = useState();
+  const [pushToken, setPushToken] = useState("");
 
   const { setUser } = useContext(UserContext);
   const { spinner } = useContext(ProgressContext);
+
+  useEffect(() => {
+    (async () => {
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      setPushToken(token);
+    })();
+  }, []);
 
   return (
     <ScreenContainer>
@@ -159,7 +176,9 @@ const Enter = ({
 
                     ...shadow.md,
                   }}
-                  onChangeText={(text) => setFirstName(text.trim())}
+                  onChangeText={(text) =>
+                    setFirstName(text.trim().toLowerCase())
+                  }
                   placeholder="first name"
                   placeholderTextColor={colors.placeHolerTextColor}
                 />
@@ -178,7 +197,9 @@ const Enter = ({
 
                     ...shadow.md,
                   }}
-                  onChangeText={(text) => setLastName(text.trim())}
+                  onChangeText={(text) =>
+                    setLastName(text.trim().toLowerCase())
+                  }
                   placeholder="last name"
                   placeholderTextColor={colors.placeHolerTextColor}
                 />
@@ -229,7 +250,7 @@ const Enter = ({
                         ? {
                             userId,
                           }
-                        : { firstName, lastName }),
+                        : { firstName, lastName, pushToken }),
                     });
                     spinner.stop();
                     if (data?.ok) {

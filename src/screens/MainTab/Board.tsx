@@ -75,7 +75,6 @@ const BoardScreen = ({
                 style={{
                   paddingVertical: 10,
                   paddingHorizontal: 15,
-                  maxHeight: "30%",
                   backgroundColor: "white",
 
                   shadowOffset: { width: 0, height: 1 },

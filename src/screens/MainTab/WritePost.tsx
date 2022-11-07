@@ -12,6 +12,7 @@ import { MyPressable, ScreenContainer } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { Ionicons } from "@expo/vector-icons";
 import { ProgressContext } from "../../contexts/Progress";
+import { shadow } from "../../constants/styles";
 
 const WritePost = ({
   route,
@@ -88,6 +89,12 @@ const WritePost = ({
       >
         <View style={{ flexDirection: "row", marginBottom: "5%" }}>
           <Checkbox
+            hitSlop={{
+              top: 10,
+              bottom: 10,
+              right: 10,
+              left: 10,
+            }}
             value={isAnonymous}
             onValueChange={(newValue) => setIsAnonymous(newValue)}
             color={colors.mediumThemeColor}
@@ -104,6 +111,7 @@ const WritePost = ({
             padding: 10,
             borderRadius: 4,
             color: "white",
+            ...shadow.md,
           }}
           placeholder="title"
           multiline={true}
@@ -125,6 +133,7 @@ const WritePost = ({
               minHeight: 200,
               color: "white",
               paddingBottom: 25,
+              ...shadow.md,
             }}
             multiline={true}
             placeholder="content"

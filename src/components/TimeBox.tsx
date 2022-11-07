@@ -44,7 +44,7 @@ const TimeBox = ({
           position: "absolute",
           left: 20 * day + "%",
           top: getPixel(
-            (meeting.meetingTimeStart ?? 0) + WI_GMT_DIFF - 9 * 60 * 60 * 1000
+            (meeting.meetingTimeStart ?? 0) + WI_GMT_DIFF - 8 * 60 * 60 * 1000
           ),
 
           ...shadow.md,

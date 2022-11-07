@@ -6,6 +6,7 @@ import ScreenContainer from "./ScreenContainer";
 import SectionBox from "./SectionBox";
 import Spinner from "./Spinner";
 import TimeBox from "./TimeBox";
+import LoadingComponent from "./LoadingComponent";
 
 export {
   ClassInfoBox,
@@ -16,4 +17,5 @@ export {
   SectionBox,
   Spinner,
   TimeBox,
+  LoadingComponent,
 };

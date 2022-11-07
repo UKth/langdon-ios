@@ -78,7 +78,7 @@ const PostScreen = ({
       );
       spinner.stop();
       if (!data?.ok) {
-        Alert.alert(data?.error);
+        Alert.alert("Failed to create comment.\n" + data?.error);
       } else {
         setComment("");
         refresh();
@@ -96,7 +96,7 @@ const PostScreen = ({
     spinner.stop();
 
     if (!data?.ok) {
-      Alert.alert(data?.error);
+      Alert.alert("Failed to delete post.\n" + data?.error);
     } else {
       Alert.alert(messages.messages.post.postDeleted);
       navigation.pop();
@@ -113,7 +113,7 @@ const PostScreen = ({
     spinner.stop();
 
     if (!data?.ok) {
-      Alert.alert(data?.error);
+      Alert.alert("Failed to delete comment.\n" + data?.error);
     } else {
       Alert.alert(messages.messages.comment.commentDeleted);
       refresh();

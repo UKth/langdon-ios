@@ -4,7 +4,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import {
   debounce,
   getData,
-  logJSON,
   nestedSection,
   sectionMapper,
   sum,
@@ -71,7 +70,6 @@ const EnrollClasses = () => {
     if (selectedCourse) {
       const sectionMapperResult = sectionMapper(selectedCourse.classes);
       setMappedSections(sectionMapperResult);
-      logJSON(sectionMapperResult);
     }
   }, [selectedCourse]);
 
@@ -166,9 +164,7 @@ const EnrollClasses = () => {
                   onPress={async () => {
                     spinner.start();
                     await dropClass(userContext, cls.id);
-                    Alert.alert(messages.messages.class.dropped);
                     updateEnrolledClasses();
-
                     spinner.stop();
                   }}
                 >

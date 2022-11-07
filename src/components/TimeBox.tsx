@@ -2,11 +2,11 @@ import { ClassMeetingWithBuilding } from "@customTypes/models";
 import React from "react";
 import { Pressable, ViewStyle } from "react-native";
 import { shadow } from "../constants/styles";
-import { colors, WI_GMT_DIFF } from "../constants";
+import { colors, TIMEBOX_HOUR_HEIGHT, WI_GMT_DIFF } from "../constants";
 import { BoldText } from "./StyledText";
 
 const getPixel = (duration: number) => {
-  return (600 / (12 * 60 * 60 * 1000)) * duration;
+  return (TIMEBOX_HOUR_HEIGHT / (60 * 60 * 1000)) * duration;
 };
 
 const TimeBox = ({
@@ -15,12 +15,16 @@ const TimeBox = ({
   meeting,
   day,
   onPress,
+  isMine = true,
+  startTime,
 }: {
   style?: ViewStyle;
   design: string;
   meeting: ClassMeetingWithBuilding;
   day: number;
   onPress: () => void;
+  isMine?: boolean;
+  startTime: number;
 }) => {
   if (!meeting.meetingTimeStart || !meeting.meetingTimeEnd) {
     return null;
@@ -44,13 +48,15 @@ const TimeBox = ({
           position: "absolute",
           left: 20 * day + "%",
           top: getPixel(
-            (meeting.meetingTimeStart ?? 0) + WI_GMT_DIFF - 8 * 60 * 60 * 1000
+            (meeting.meetingTimeStart ?? 0) +
+              WI_GMT_DIFF -
+              startTime * 60 * 60 * 1000
           ),
 
           ...shadow.md,
         },
       ]}
-      onPress={onPress}
+      onPress={isMine ? onPress : () => {}}
     >
       <BoldText style={{ fontSize: 13 }}>{design}</BoldText>
     </Pressable>

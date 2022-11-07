@@ -49,7 +49,7 @@ const WritePost = ({
       if (data?.ok) {
         navigation.pop();
       } else {
-        Alert.alert(data?.error);
+        Alert.alert("Failed to create post.\n" + data?.error);
       }
     }
   };

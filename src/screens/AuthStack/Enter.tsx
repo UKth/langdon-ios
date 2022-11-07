@@ -24,7 +24,7 @@ import * as Notifications from "expo-notifications";
 const sendCode = async (email: string) => {
   const data = await sendPostRequest(API_URL + "user/sendCode", { email });
   if (!data?.ok) {
-    Alert.alert(data?.error);
+    Alert.alert("Failed to send verification code.\n" + data?.error);
   }
   return data;
 };

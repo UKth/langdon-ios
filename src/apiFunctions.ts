@@ -9,7 +9,9 @@ export const enrollClass = async (ctx: userContextType, classId: number) => {
     classId,
   });
   if (!data?.ok) {
-    Alert.alert(data?.error);
+    Alert.alert("Enroll failed.\n" + data?.error);
+  } else {
+    Alert.alert("Enrolled");
   }
 };
 
@@ -18,14 +20,16 @@ export const dropClass = async (ctx: userContextType, classId: number) => {
     classId,
   });
   if (!data?.ok) {
-    Alert.alert(data?.error);
+    Alert.alert("Drop failed.\n" + data?.error);
+  } else {
+    Alert.alert(messages.messages.class.dropped);
   }
 };
 
 export const getEnrolledClasses = async (ctx: userContextType) => {
   const data = await postData(ctx, API_URL + "course/class/getEnrolledClasses");
   if (!data?.ok) {
-    Alert.alert(data?.error);
+    Alert.alert("Failed with fetching enrolled classes.\n" + data?.error);
     return [];
   }
   return data?.enrolledClasses;
@@ -41,7 +45,7 @@ export const reportIssue = async (
 ) => {
   const data = await postData(ctx, API_URL + "report/createReport", params);
   if (!data?.ok) {
-    Alert.alert(data?.error);
+    Alert.alert("Failed to send report.\n" + data?.error);
     return;
   }
   Alert.alert(messages.messages.report.reportCreated);

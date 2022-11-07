@@ -1,5 +1,6 @@
+import { ReportTargetType } from "@customTypes/models";
 import { Alert } from "react-native";
-import { API_URL } from "./constants";
+import { API_URL, messages } from "./constants";
 import { userContextType } from "./contexts/userContext";
 import { postData } from "./util";
 
@@ -28,4 +29,20 @@ export const getEnrolledClasses = async (ctx: userContextType) => {
     return [];
   }
   return data?.enrolledClasses;
+};
+
+export const reportIssue = async (
+  ctx: userContextType,
+  params: {
+    content: string;
+    targetId: number;
+    targetType: ReportTargetType;
+  }
+) => {
+  const data = await postData(ctx, API_URL + "report/createReport", params);
+  if (!data?.ok) {
+    Alert.alert(data?.error);
+    return;
+  }
+  Alert.alert(messages.messages.report.reportCreated);
 };

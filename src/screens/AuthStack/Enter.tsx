@@ -35,6 +35,7 @@ const getTokens = async (registerData: {
   lastName?: string;
   code: number;
   userId?: number;
+  pushToken: string;
 }) => {
   const data = await sendPostRequest(API_URL + "user/enter", registerData);
 
@@ -246,11 +247,12 @@ const Enter = ({
                     const data = await getTokens({
                       email: netId + "@" + college.mailFooter,
                       code: +code,
+                      pushToken,
                       ...(userId
                         ? {
                             userId,
                           }
-                        : { firstName, lastName, pushToken }),
+                        : { firstName, lastName }),
                     });
                     spinner.stop();
                     if (data?.ok) {

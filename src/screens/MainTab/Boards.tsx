@@ -14,6 +14,8 @@ import {
   MyPressable,
   ScreenContainer,
 } from "../../components";
+import * as Notifications from "expo-notifications";
+import { handleNotification } from "./TimeTable";
 
 const Boards = () => {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -28,6 +30,10 @@ const Boards = () => {
         setBoards(data?.boards);
       }
     })();
+
+    Notifications.addNotificationResponseReceivedListener(({ notification }) =>
+      handleNotification({ navigation, notification })
+    );
   }, []);
 
   if (!userContext.user) {

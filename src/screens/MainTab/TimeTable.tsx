@@ -30,6 +30,7 @@ import {
   TimeBox,
   TimeTableComponent,
 } from "../../components";
+import * as Notifications from "expo-notifications";
 
 const searchCourse = debounce(
   async (
@@ -47,6 +48,28 @@ const searchCourse = debounce(
   },
   400
 );
+
+type pushNotificationData = {
+  route: string;
+  params: StackGeneratorParamList[keyof StackGeneratorParamList];
+};
+
+export const handleNotification = ({
+  navigation,
+  notification,
+}: {
+  navigation: NativeStackNavigationProp<StackGeneratorParamList>;
+  notification: Notifications.Notification;
+}) => {
+  const data = notification.request.content.data as pushNotificationData;
+
+  if (data.route && data.params) {
+    const params = data.params as StackGeneratorParamList["Post"];
+    if (["Post"].includes(data.route) && params.id) {
+      navigation.push("Post", params);
+    }
+  }
+};
 
 const TimeTable = ({
   route,
@@ -93,6 +116,15 @@ const TimeTable = ({
       spinner.stop();
     })();
     navigation.addListener("focus", updateEnrolledClasses);
+
+    // Notifications.addNotificationReceivedListener((notification) => {
+    //   console.log("rl\n");
+    //   logJSON(notification);
+    // });
+    Notifications.addNotificationResponseReceivedListener(({ notification }) =>
+      handleNotification({ navigation, notification })
+    );
+
     return () => navigation.removeListener("focus", updateEnrolledClasses);
   }, []);
 

@@ -23,7 +23,7 @@ export default function useCachedResources() {
           (await AsyncStorage.getItem(REFRESH_TOKEN_KEY)) || undefined;
 
         const userString = await AsyncStorage.getItem(USER_KEY);
-        console.log("storage userString:", userString);
+        // console.log("storage userString:", userString);
         if (userString) {
           setUser(JSON.parse(userString));
         }

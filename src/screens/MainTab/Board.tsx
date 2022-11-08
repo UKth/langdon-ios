@@ -111,7 +111,7 @@ const BoardScreen = ({
                 </View>
                 <View
                   style={{
-                    height: "100%",
+                    height: 40,
                     justifyContent: "space-between",
                   }}
                 >

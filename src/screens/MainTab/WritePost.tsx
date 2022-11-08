@@ -75,7 +75,7 @@ const WritePost = ({
         </MyPressable>
       ),
     });
-  }, [title, content]);
+  }, [title, content, isAnonymous]);
 
   return (
     <ScreenContainer>

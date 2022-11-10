@@ -13,12 +13,12 @@ export type User = {
   id: number;
   netId: string;
   email: string;
-  createdAt: Date;
-  updatedAt: Date;
   firstName: string;
   lastName: string;
   collegeId: number;
-  college: College;
+  createdAt: Date;
+  updatedAt: Date;
+  defaultTableId: number;
 };
 
 export type ShortUser = {

@@ -26,8 +26,15 @@ export const dropClass = async (ctx: userContextType, classId: number) => {
   }
 };
 
-export const getEnrolledClasses = async (ctx: userContextType) => {
-  const data = await postData(ctx, API_URL + "course/class/getEnrolledClasses");
+export const getEnrolledClasses = async (
+  ctx: userContextType,
+  targetId?: number
+) => {
+  const data = await postData(
+    ctx,
+    API_URL + "course/class/getEnrolledClasses",
+    targetId ? { targetId } : {}
+  );
   if (!data?.ok) {
     Alert.alert("Failed with fetching enrolled classes.\n" + data?.error);
     return [];

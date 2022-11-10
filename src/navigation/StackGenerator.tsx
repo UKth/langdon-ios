@@ -6,6 +6,8 @@ import {
   Post,
   TimeTable,
   WritePost,
+  Friends,
+  FriendTable,
 } from "../screens/MainTab/index";
 
 import React, { useContext, useEffect } from "react";
@@ -20,6 +22,8 @@ export type StackGeneratorParamList = {
   Post: { id: number };
   WritePost: { boardId: number };
   EnrollClasses: undefined;
+  Friends: undefined;
+  FriendTable: { id: number; nameString: string };
 };
 
 export interface StackGeneratorProps {
@@ -66,6 +70,12 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
         name="WritePost"
         component={WritePost}
         options={{ title: "New post" }}
+      />
+      <Stack.Screen name="Friends" component={Friends} />
+      <Stack.Screen
+        name="FriendTable"
+        component={FriendTable}
+        options={({ route }) => ({ title: route.params.nameString })}
       />
     </Stack.Navigator>
   );

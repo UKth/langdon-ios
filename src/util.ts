@@ -1,7 +1,7 @@
 import { userContextType } from "./contexts/userContext";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { classWithSections } from "@customTypes/models";
+import { classWithSections, User } from "@customTypes/models";
 import {
   ACCESS_TOKEN_KEY,
   API_URL,
@@ -143,6 +143,10 @@ const nestedSectionCompare = (a: nestedSection, b: nestedSection) =>
 
 export const sectionMapper = (classes: classWithSections[]) => {
   const level = classes[0].sections.length; // <= 3
+
+  if (![1, 2, 3].includes(level)) {
+    return [];
+  }
 
   // for level 1
   const primarySections: nestedSection[] = [];
@@ -337,4 +341,8 @@ export const getTimeString = (date: Date) => {
     ":" +
     format2Digits(date.getMinutes())
   );
+};
+
+export const getNameString = (user: User) => {
+  return user.firstName + " " + user.lastName;
 };

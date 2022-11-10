@@ -8,6 +8,7 @@ import {
   WritePost,
   Friends,
   FriendTable,
+  AddFriend,
 } from "../screens/MainTab/index";
 
 import React, { useContext, useEffect } from "react";
@@ -24,6 +25,7 @@ export type StackGeneratorParamList = {
   EnrollClasses: undefined;
   Friends: undefined;
   FriendTable: { id: number; nameString: string };
+  AddFriend: { targetId?: number; code?: number };
 };
 
 export interface StackGeneratorProps {
@@ -77,6 +79,7 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
         component={FriendTable}
         options={({ route }) => ({ title: route.params.nameString })}
       />
+      <Stack.Screen name="AddFriend" component={AddFriend} />
     </Stack.Navigator>
   );
 };

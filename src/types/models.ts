@@ -21,6 +21,10 @@ export type User = {
   defaultTableId: number;
 };
 
+export type UserWithCollege = User & {
+  college: College;
+};
+
 export type ShortUser = {
   id: number;
   netId: string;

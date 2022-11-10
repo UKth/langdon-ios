@@ -158,7 +158,7 @@ const Enter = ({
               }
             }}
           >
-            <BoldText style={{ paddingHorizontal: 10 }}>Send Token</BoldText>
+            <BoldText style={{ paddingHorizontal: 10 }}>Send Code</BoldText>
           </Pressable>
 
           {codeSent ? (

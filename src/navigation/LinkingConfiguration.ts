@@ -6,29 +6,30 @@
 
 import { LinkingOptions } from "@react-navigation/native";
 import * as Linking from "expo-linking";
+import { MainTabParamList } from "./MainTab";
+import { StackGeneratorParamList } from "./StackGenerator";
 
-import { RootStackParamList } from "../types";
-
-const linking: LinkingOptions<RootStackParamList> = {
+const linking: LinkingOptions<MainTabParamList> = {
   prefixes: [Linking.createURL("/")],
   config: {
     screens: {
-      Root: {
+      TimeTableStack: {
         screens: {
-          TabOne: {
-            screens: {
-              TabOneScreen: "one",
+          AddFriend: {
+            path: "addFriend/:targetId/:code",
+            parse: {
+              targetId: (targetId) => +targetId ?? 0,
+              code: (code) => +code ?? 0,
             },
           },
-          TabTwo: {
-            screens: {
-              TabTwoScreen: "two",
+          Post: {
+            path: "post/:id",
+            parse: {
+              id: (id) => +id ?? 0,
             },
           },
         },
       },
-      Modal: "modal",
-      NotFound: "*",
     },
   },
 };

@@ -2,12 +2,13 @@ import { User } from "@customTypes/models";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import TimeTable from "../screens/MainTab/TimeTable";
 import React from "react";
-import StackGenerator from "./StackGenerator";
+import StackGenerator, { StackGeneratorParamList } from "./StackGenerator";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../constants";
+import { NavigatorScreenParams } from "@react-navigation/native";
 
 export type MainTabParamList = {
-  TimeTableStack: undefined;
+  TimeTableStack: NavigatorScreenParams<StackGeneratorParamList>;
   BoardsStack: undefined;
 };
 

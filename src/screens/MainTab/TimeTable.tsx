@@ -7,7 +7,7 @@ import {
 } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { debounce, getData, getNameString, logout } from "../../util";
 import { UserContext } from "../../contexts/userContext";
@@ -27,6 +27,8 @@ import * as Notifications from "expo-notifications";
 import { Ionicons } from "@expo/vector-icons";
 import { shadow } from "../../constants/styles";
 import ErrorComponent from "../../components/ErrorComponent";
+import * as Linking from "expo-linking";
+import { EventType } from "expo-linking";
 
 export type pushNotificationData = {
   route: string;
@@ -96,6 +98,8 @@ const TimeTable = ({
     //   console.log("rl\n");
     //   logJSON(notification);
     // });
+    console.log(Linking.createURL("path"));
+
     Notifications.addNotificationResponseReceivedListener(({ notification }) =>
       handleNotification({ navigation, notification })
     );

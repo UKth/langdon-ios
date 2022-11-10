@@ -1,9 +1,9 @@
-import { User } from "@customTypes/models";
+import { UserWithCollege } from "@customTypes/models";
 import React, { useState, createContext, useEffect } from "react";
 
 export type userContextType = {
-  user: User | undefined;
-  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  user: UserWithCollege | undefined;
+  setUser: React.Dispatch<React.SetStateAction<UserWithCollege | undefined>>;
 };
 
 const UserContext = createContext<userContextType>({
@@ -12,7 +12,7 @@ const UserContext = createContext<userContextType>({
 });
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserWithCollege>();
 
   const value = {
     user,

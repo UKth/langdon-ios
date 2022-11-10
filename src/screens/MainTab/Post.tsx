@@ -121,6 +121,10 @@ const PostScreen = ({
   };
 
   useEffect(() => {
+    refresh();
+  }, []);
+
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => {
         const isMine = post?.userId === userContext.user?.id;
@@ -157,7 +161,6 @@ const PostScreen = ({
         );
       },
     });
-    refresh();
   }, [post, userContext]);
 
   const onPressMenu = () =>

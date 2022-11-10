@@ -76,7 +76,7 @@ const ClassInfoBox = ({
             }}
           >
             <BoldText
-              style={{ marginBottom: 5, colors: colors.mediumThemeColor }}
+              style={{ marginBottom: 5, color: colors.mediumThemeColor }}
             >
               meetings
             </BoldText>

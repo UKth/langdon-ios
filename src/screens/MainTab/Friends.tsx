@@ -50,7 +50,7 @@ const Friends = () => {
       if (code) {
         try {
           const result = await Share.share({
-            url: WEB_URL + "addFriend?targetId" + user.id + "&code=" + code,
+            url: WEB_URL + "addFriend?targetId=" + user.id + "&code=" + code,
           });
 
           // if (result.action === Share.sharedAction) {

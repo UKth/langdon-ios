@@ -123,7 +123,7 @@ const TimeTable = ({
             logged in as {getNameString(user)}
           </BoldText>
           <View style={{ flexDirection: "row" }}>
-            <MyPressable
+            {/* <MyPressable
               style={{
                 marginRight: 10,
                 backgroundColor: "white",
@@ -141,7 +141,7 @@ const TimeTable = ({
                 size={20}
                 color={colors.mediumThemeColor}
               />
-            </MyPressable>
+            </MyPressable> */}
             <MyPressable
               style={{
                 borderRadius: 30,

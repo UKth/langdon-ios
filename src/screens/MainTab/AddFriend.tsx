@@ -40,7 +40,9 @@ const AddFriend = ({
   }, []);
 
   return (
-    <ScreenContainer>
+    <ScreenContainer
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+    >
       <LoadingComponent />
     </ScreenContainer>
   );

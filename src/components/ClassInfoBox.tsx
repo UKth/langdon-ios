@@ -75,7 +75,11 @@ const ClassInfoBox = ({
               paddingVertical: 5,
             }}
           >
-            <BoldText style={{ marginBottom: 5 }}>meetings</BoldText>
+            <BoldText
+              style={{ marginBottom: 5, colors: colors.mediumThemeColor }}
+            >
+              meetings
+            </BoldText>
             {section.classMeetings.map((meeting) => {
               const isExam = meeting.meetingType === "EXAM";
               const meetingTimeStart = new Date(

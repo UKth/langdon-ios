@@ -17,6 +17,7 @@ const TimeBox = ({
   onPress,
   isMine = true,
   startTime,
+  color = colors.lightThemeColor,
 }: {
   style?: ViewStyle;
   design: string;
@@ -25,6 +26,7 @@ const TimeBox = ({
   onPress: () => void;
   isMine?: boolean;
   startTime: number;
+  color?: string;
 }) => {
   if (!meeting.meetingTimeStart || !meeting.meetingTimeEnd) {
     return null;
@@ -42,7 +44,7 @@ const TimeBox = ({
           ...style,
           width: "20%",
           height: getPixel(duration),
-          backgroundColor: colors.lightThemeColor,
+          backgroundColor: color,
           borderRadius: 3,
           padding: 3,
           position: "absolute",

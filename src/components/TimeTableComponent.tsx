@@ -141,12 +141,13 @@ const TimeTableComponent = ({
             }}
           />
         ))}
-        {enrolledClasses?.map((cls) =>
+        {enrolledClasses?.map((cls, idx) =>
           cls.sections.map((section) =>
             section.classMeetings.map((meeting) =>
               meeting.meetingType !== "EXAM"
                 ? meeting.meetingDays?.split("").map((day) => (
                     <TimeBox
+                      color={colors.courseBoxColors[idx]}
                       startTime={startTime}
                       key={meeting.id + day}
                       day={dayCharToInt(day as meetingDayChar)}

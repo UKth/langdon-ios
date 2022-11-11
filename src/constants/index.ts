@@ -2,7 +2,12 @@ import { colors } from "./Colors";
 import messages from "./messages";
 import styles from "./styles";
 import { API_URL, WEB_URL } from "./urls";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY } from "./storageKeys";
+import {
+  ACCESS_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+  USER_KEY,
+  ENROLLED_CLASSES_KEY,
+} from "./storageKeys";
 import {
   EXAMDATE_OFFSET,
   MIN_TS,
@@ -20,6 +25,7 @@ export {
   ACCESS_TOKEN_KEY,
   REFRESH_TOKEN_KEY,
   USER_KEY,
+  ENROLLED_CLASSES_KEY,
   EXAMDATE_OFFSET,
   MIN_TS,
   HOUR_TS,

@@ -14,7 +14,7 @@ import { UserContext } from "../../contexts/userContext";
 import { getEnrolledClasses } from "../../apiFunctions";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { API_URL, colors } from "../../constants";
+import { API_URL, colors, ENROLLED_CLASSES_KEY } from "../../constants";
 import { BoldText } from "../../components/StyledText";
 import { ProgressContext } from "../../contexts/Progress";
 import {
@@ -29,6 +29,7 @@ import { shadow } from "../../constants/styles";
 import ErrorComponent from "../../components/ErrorComponent";
 import * as Linking from "expo-linking";
 import { EventType } from "expo-linking";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type pushNotificationData = {
   route: string;
@@ -84,11 +85,17 @@ const TimeTable = ({
   const updateEnrolledClasses = async () => {
     const data = await getEnrolledClasses(userContext);
     setEnrolledClasses(data);
+    AsyncStorage.setItem(ENROLLED_CLASSES_KEY, JSON.stringify(data));
   };
 
   useEffect(() => {
     (async () => {
-      spinner.start();
+      const cachedClasses = await AsyncStorage.getItem(ENROLLED_CLASSES_KEY);
+      if (!cachedClasses) {
+        spinner.start();
+      } else {
+        setEnrolledClasses(JSON.parse(cachedClasses)); // may produce error
+      }
       await updateEnrolledClasses();
       spinner.stop();
     })();

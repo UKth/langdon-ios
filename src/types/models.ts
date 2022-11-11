@@ -194,6 +194,34 @@ export type Comment = {
 };
 
 /**
+ * Model Chatroom
+ *
+ */
+export type Chatroom = {
+  id: number;
+  postId: number | null;
+  lastMessageId: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type ChatroomWithLastMessage = Chatroom & {
+  lastMessage?: Message;
+};
+
+/**
+ * Model Message
+ *
+ */
+export type Message = {
+  id: number;
+  chatroomId: number | null;
+  userId: number;
+  content: string;
+  createdAt: Date;
+};
+
+/**
  * Enums
  */
 

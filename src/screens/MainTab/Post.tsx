@@ -166,7 +166,7 @@ const PostScreen = ({
   const onPressMenu = () =>
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ["Cancel", "Report the post"],
+        options: ["Cancel", "Report the post", "Send message to writer."],
         destructiveButtonIndex: 1,
         cancelButtonIndex: 0,
         // userInterfaceStyle: 'dark',
@@ -180,6 +180,14 @@ const PostScreen = ({
             targetId: post?.id ?? 0,
             targetType: "post",
           });
+        } else if (buttonIndex === 2 && post?.createdBy.id) {
+          if (post?.createdBy.id) {
+            navigation.push("SendFirstMessage", {
+              targetId: post?.createdBy.id,
+            });
+          } else {
+            Alert.alert("Something's wrong. Please try again."); // TODO
+          }
         }
       }
     );
@@ -343,6 +351,7 @@ const PostScreen = ({
                               isMine
                                 ? "Delete the comment"
                                 : "Report the comment",
+                              ...(isMine ? [] : ["Send message to writer."]),
                             ],
                             destructiveButtonIndex: 1,
                             cancelButtonIndex: 0,
@@ -374,6 +383,10 @@ const PostScreen = ({
                                   targetType: "comment",
                                 });
                               }
+                            } else if (!isMine && buttonIndex === 2) {
+                              navigation.push("SendFirstMessage", {
+                                targetId: comment.createdBy.id,
+                              });
                             }
                           }
                         );

@@ -9,7 +9,9 @@ import { NavigatorScreenParams } from "@react-navigation/native";
 
 export type MainTabParamList = {
   TimeTableStack: NavigatorScreenParams<StackGeneratorParamList>;
-  BoardsStack: undefined;
+  BoardsStack: NavigatorScreenParams<StackGeneratorParamList>;
+  MessageStack: NavigatorScreenParams<StackGeneratorParamList>;
+  ProfileStack: NavigatorScreenParams<StackGeneratorParamList>;
 };
 
 const BottomTab = createBottomTabNavigator<MainTabParamList>();
@@ -51,6 +53,38 @@ const MainTab = () => {
       >
         {() => {
           return <StackGenerator screenName="BoardsStack" />;
+        }}
+      </BottomTab.Screen>
+      <BottomTab.Screen
+        name="MessageStack"
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "ios-chatbubble" : "ios-chatbubble-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      >
+        {() => {
+          return <StackGenerator screenName="MessageStack" />;
+        }}
+      </BottomTab.Screen>
+      <BottomTab.Screen
+        name="ProfileStack"
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "ios-person" : "ios-person-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      >
+        {() => {
+          return <StackGenerator screenName="ProfileStack" />;
         }}
       </BottomTab.Screen>
     </BottomTab.Navigator>

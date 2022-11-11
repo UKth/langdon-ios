@@ -6,6 +6,9 @@ import WritePost from "./WritePost";
 import Friends from "./Friends";
 import FriendTable from "./FriendTable";
 import AddFriend from "./AddFriend";
+import Profile from "./Profile";
+import SendFirstMessage from "./SendFirstMessage";
+import Chatrooms from "./Chatrooms";
 
 export {
   Board,
@@ -16,4 +19,7 @@ export {
   Friends,
   FriendTable,
   AddFriend,
+  Profile,
+  SendFirstMessage,
+  Chatrooms,
 };

@@ -256,13 +256,13 @@ export const sectionMapper = (classes: classWithSections[]) => {
 
     if (Array.isArray(secondarySection.value)) {
       secondarySection.value.push({
-        code: cls.sections[1].type + " " + cls.sections[1].sectionNumber,
+        code: cls.sections[2].type + " " + cls.sections[2].sectionNumber,
         value: cls,
       });
     } else {
       secondarySection.value = [
         {
-          code: cls.sections[1].type + " " + cls.sections[1].sectionNumber,
+          code: cls.sections[2].type + " " + cls.sections[2].sectionNumber,
           value: cls,
         },
       ];

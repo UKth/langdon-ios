@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { API_URL, colors, styles } from "../../constants";
-import { getData, postData } from "../../util";
+import { getData, getTimeString, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
@@ -16,6 +16,7 @@ import {
 } from "../../components";
 import * as Notifications from "expo-notifications";
 import { handleNotification } from "./TimeTable";
+import { shadow } from "../../constants/styles";
 
 const Chatrooms = () => {
   const [chatrooms, setChatrooms] = useState<ChatroomWithLastMessage[]>();
@@ -63,32 +64,33 @@ const Chatrooms = () => {
                 style={{
                   paddingVertical: 15,
                   paddingHorizontal: 18,
-
                   backgroundColor: "white",
-
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowRadius: 2,
-                  shadowColor: `rgba(0,0,0,0.1)`,
-                  shadowOpacity: 1,
-
                   borderColor: colors.themeColor,
                   borderRadius: styles.borderRadius.md,
                   marginBottom: 15,
+                  ...shadow.md,
+
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
                 }}
-                onPress={() => {}}
+                onPress={() => navigation.push("Chatroom", { id: chatroom.id })}
               >
                 <BoldText
-                  style={{ fontSize: 24, color: colors.mediumThemeColor }}
+                  style={{
+                    fontSize: 15,
+                    color: colors.mediumThemeColor,
+                    maxWidth: "75%",
+                    marginRight: 3,
+                  }}
+                  numberOfLines={1}
                 >
-                  {chatroom.lastMessage?.content}
+                  {chatroom.lastMessage.content}
                 </BoldText>
                 <BoldText
-                  style={{ fontSize: 24, color: colors.mediumThemeColor }}
+                  style={{ fontSize: 10, color: colors.lightThemeColor }}
                 >
-                  aaa{chatroom.id}
+                  {getTimeString(chatroom.lastMessage.createdAt)}
                 </BoldText>
               </MyPressable>
             ))

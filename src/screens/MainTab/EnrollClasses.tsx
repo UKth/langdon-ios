@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ProgressContext } from "../../contexts/Progress";
 import { API_URL, colors, messages } from "../../constants";
 import { ScreenContainer, SectionBox } from "../../components";
+import { shadow } from "../../constants/styles";
 
 const searchCourse = debounce(
   async (
@@ -126,7 +127,7 @@ const EnrollClasses = () => {
               key={cls.id}
               style={{
                 width: "100%",
-                backgroundColor: colors.lightThemeColor,
+                backgroundColor: "white",
                 marginBottom: 10,
                 borderRadius: 15,
                 height: 40,
@@ -136,15 +137,16 @@ const EnrollClasses = () => {
                 alignItems: "center",
                 justifyContent: "space-between",
 
-                shadowOffset: { width: 0, height: 1 },
-                shadowRadius: 2,
-                shadowColor: `rgba(0,0,0,0.1)`,
-                shadowOpacity: 1,
+                ...shadow.md,
               }}
             >
-              <BoldText>{cls.course.courseDesignation}</BoldText>
+              <BoldText style={{ color: colors.mediumThemeColor }}>
+                {cls.course.courseDesignation}
+              </BoldText>
               <View style={{ flexDirection: "row" }}>
-                <BoldText style={{ marginRight: 5 }}>
+                <BoldText
+                  style={{ color: colors.mediumThemeColor, marginRight: 5 }}
+                >
                   {cls.sections
                     .map((section) => section.type + "" + section.sectionNumber)
                     .join("/")}
@@ -168,7 +170,11 @@ const EnrollClasses = () => {
                     spinner.stop();
                   }}
                 >
-                  <Ionicons name="trash" size={15} color={"white"} />
+                  <Ionicons
+                    name="trash"
+                    size={15}
+                    color={colors.mediumThemeColor}
+                  />
                 </Pressable>
               </View>
             </View>
@@ -186,23 +192,20 @@ const EnrollClasses = () => {
               width: "100%",
               paddingHorizontal: 20,
               fontSize: 20,
-              backgroundColor: colors.lightThemeColor,
+              backgroundColor: "white",
               borderRadius: 50,
               height: 50,
-              color: "white",
+              color: colors.mediumThemeColor,
               marginBottom: 10,
 
-              shadowOffset: { width: 0, height: 1 },
-              shadowRadius: 2,
-              shadowColor: `rgba(0,0,0,0.1)`,
-              shadowOpacity: 1,
+              ...shadow.md,
             }}
             onChangeText={(text) => {
               setCourseKeyword(text.replace(/ /g, ""));
             }}
             autoCapitalize="none"
             placeholder="ex. COMP SCI 200"
-            placeholderTextColor={colors.placeHolerTextColor}
+            placeholderTextColor={colors.lightThemeColor}
           />
           {searchedCourse ? (
             <View style={{ width: "100%" }}>
@@ -216,10 +219,7 @@ const EnrollClasses = () => {
                     paddingTop: 5,
                     borderRadius: 15,
 
-                    shadowOffset: { width: 0, height: 1 },
-                    shadowRadius: 2,
-                    shadowColor: `rgba(0,0,0,0.1)`,
-                    shadowOpacity: 1,
+                    ...shadow.md,
                   }}
                   key={course.id}
                 >
@@ -229,17 +229,34 @@ const EnrollClasses = () => {
                         opacity: pressed ? 0.5 : 1,
                       },
                     ]}
-                    onPress={() => setSelectedCourse(course)}
+                    onPress={() => {
+                      if (selectedCourse?.id === course.id) {
+                        setSearchedCourse(undefined);
+                      } else {
+                        setSelectedCourse(course);
+                      }
+                    }}
                   >
-                    <BoldText style={{ alignSelf: "flex-end" }}>
+                    <BoldText
+                      style={{
+                        alignSelf: "flex-end",
+                        color: "white",
+                      }}
+                    >
                       credit: {course.minimumCredits}
                       {course.minimumCredits !== course.maximumCredits
                         ? " ~ " + course.maximumCredits
                         : ""}
                     </BoldText>
-                    <BoldText>{course.title}</BoldText>
-                    <BoldText>{course.courseDesignation}</BoldText>
-                    <BoldText>{course.fullCourseDesignation}</BoldText>
+                    <BoldText style={{ color: "white" }}>
+                      {course.title}
+                    </BoldText>
+                    <BoldText style={{ color: "white" }}>
+                      {course.courseDesignation}
+                    </BoldText>
+                    <BoldText style={{ color: "white" }}>
+                      {course.fullCourseDesignation}
+                    </BoldText>
                   </Pressable>
                   {selectedCourse?.id === course.id ? (
                     <View

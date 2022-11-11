@@ -19,6 +19,7 @@ import { BoldText } from "../../components/StyledText";
 import { ProgressContext } from "../../contexts/Progress";
 import {
   CoursePopUpBox,
+  ErrorComponent,
   MyPressable,
   ScreenContainer,
   TimeTableComponent,
@@ -26,7 +27,6 @@ import {
 import * as Notifications from "expo-notifications";
 import { Ionicons } from "@expo/vector-icons";
 import { shadow } from "../../constants/styles";
-import ErrorComponent from "../../components/ErrorComponent";
 import * as Linking from "expo-linking";
 import { EventType } from "expo-linking";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -45,10 +45,14 @@ export const handleNotification = ({
 }) => {
   const data = notification.request.content.data as pushNotificationData;
 
-  if (data.route && data.params) {
-    const params = data.params as StackGeneratorParamList["Post"];
-    if (["Post"].includes(data.route) && params.id) {
-      navigation.push("Post", params);
+  if (["Post", "Chatrooms"].includes(data.route)) {
+    if (data.route === "Post") {
+      const params = data.params as StackGeneratorParamList["Post"];
+      if (params.id) {
+        navigation.push("Post", params);
+      }
+    } else if (data.route === "Chatrooms") {
+      navigation.push("Chatrooms");
     }
   }
 };
@@ -155,12 +159,8 @@ const TimeTable = ({
                 padding: 15,
                 alignItems: "center",
                 justifyContent: "center",
-
                 backgroundColor: "white",
-                shadowOffset: { width: 0, height: 1 },
-                shadowRadius: 2,
-                shadowColor: `rgba(0,0,0,0.1)`,
-                shadowOpacity: 1,
+                ...shadow.md,
               }}
               onPress={() => navigation.push("EnrollClasses")}
             >
@@ -189,26 +189,6 @@ const TimeTable = ({
           enrolledClasses={enrolledClasses}
           setPopUpBoxData={setPopUpBoxData}
         />
-        <MyPressable
-          style={{
-            marginTop: 30,
-            padding: 10,
-            borderRadius: 20,
-            backgroundColor: colors.lightThemeColor,
-            width: "30%",
-            alignSelf: "center",
-            alignItems: "center",
-            marginBottom: 30,
-
-            shadowOffset: { width: 0, height: 1 },
-            shadowRadius: 2,
-            shadowColor: `rgba(0,0,0,0.1)`,
-            shadowOpacity: 1,
-          }}
-          onPress={() => logout(userContext)}
-        >
-          <BoldText>logout</BoldText>
-        </MyPressable>
       </KeyboardAwareScrollView>
       {popUpBoxData ? (
         <CoursePopUpBox

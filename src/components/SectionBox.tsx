@@ -39,7 +39,9 @@ const SectionBox = ({
           }}
           onPress={() => setShowDetails(!showDetails)}
         >
-          <BoldText style={{ marginRight: 5 }}>{section.code}</BoldText>
+          <BoldText style={{ marginRight: 5, color: "white" }}>
+            {section.code}
+          </BoldText>
           <Ionicons
             name="triangle"
             size={14}

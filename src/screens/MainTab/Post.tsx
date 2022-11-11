@@ -38,6 +38,7 @@ import { reportIssue } from "../../apiFunctions";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { ProgressContext } from "../../contexts/Progress";
 import { useRef } from "react";
+import { shadow } from "../../constants/styles";
 
 const PostScreen = ({
   route,
@@ -183,7 +184,8 @@ const PostScreen = ({
         } else if (buttonIndex === 2 && post?.createdBy.id) {
           if (post?.createdBy.id) {
             navigation.push("SendFirstMessage", {
-              targetId: post?.createdBy.id,
+              targetId: post.createdBy.id,
+              postId: post.id,
             });
           } else {
             Alert.alert("Something's wrong. Please try again."); // TODO
@@ -229,7 +231,7 @@ const PostScreen = ({
                     marginBottom: 10,
                   }}
                 >
-                  {getTimeString(new Date(post.createdAt))}
+                  {getTimeString(post.createdAt)}
                 </BoldText>
                 <BoldText
                   style={{
@@ -291,10 +293,7 @@ const PostScreen = ({
                       justifyContent: "space-between",
                       alignItems: "center",
 
-                      shadowOffset: { width: 0, height: 1 },
-                      shadowRadius: 2,
-                      shadowColor: `rgba(0,0,0,0.1)`,
-                      shadowOpacity: 1,
+                      ...shadow.md,
                       backgroundColor: "white",
 
                       borderRadius: styles.borderRadius.sm,
@@ -386,6 +385,7 @@ const PostScreen = ({
                             } else if (!isMine && buttonIndex === 2) {
                               navigation.push("SendFirstMessage", {
                                 targetId: comment.createdBy.id,
+                                postId: post.id,
                               });
                             }
                           }
@@ -422,14 +422,11 @@ const PostScreen = ({
             borderRadius: 30,
             flexDirection: "row",
             alignItems: "center",
-            backgroundColor: colors.lightThemeColor,
+            backgroundColor: "white",
             marginHorizontal: 10,
             marginBottom: 5,
 
-            shadowOffset: { width: 0, height: 1 },
-            shadowRadius: 2,
-            shadowColor: `rgba(0,0,0,0.1)`,
-            shadowOpacity: 1,
+            ...shadow.md,
           }}
         >
           <Checkbox
@@ -444,18 +441,18 @@ const PostScreen = ({
             color={colors.mediumThemeColor}
             style={{ width: 15, height: 15, marginRight: 5 }}
           />
-          <BoldText>Anon.</BoldText>
+          <BoldText style={{ color: colors.mediumThemeColor }}>Anon.</BoldText>
           <BoldTextInput
             style={{
               flex: 1,
-              color: "white",
+              color: colors.mediumThemeColor,
               fontSize: 18,
               padding: 8,
               borderRadius: 4,
               marginRight: 10,
             }}
             placeholder="comment"
-            placeholderTextColor={colors.placeHolerTextColor}
+            placeholderTextColor={colors.lightThemeColor}
             value={comment}
             multiline={true}
             maxLength={200}
@@ -466,7 +463,7 @@ const PostScreen = ({
               borderLeftWidth: 1,
               borderColor: "white",
               width: 80,
-              height: 40,
+              height: 35,
               alignItems: "center",
               justifyContent: "center",
             }}

@@ -16,6 +16,7 @@ import {
 } from "../../components";
 import * as Notifications from "expo-notifications";
 import { handleNotification } from "./TimeTable";
+import { shadow } from "../../constants/styles";
 
 const Boards = () => {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -67,10 +68,7 @@ const Boards = () => {
                 maxHeight: "30%",
                 backgroundColor: "white",
 
-                shadowOffset: { width: 0, height: 1 },
-                shadowRadius: 2,
-                shadowColor: `rgba(0,0,0,0.1)`,
-                shadowOpacity: 1,
+                ...shadow.md,
 
                 borderColor: colors.themeColor,
                 borderRadius: styles.borderRadius.md,

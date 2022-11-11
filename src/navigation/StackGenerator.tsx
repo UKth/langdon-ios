@@ -12,6 +12,7 @@ import {
   Profile,
   SendFirstMessage,
   Chatrooms,
+  Chatroom,
 } from "../screens/MainTab";
 
 import React, { useContext, useEffect } from "react";
@@ -32,6 +33,7 @@ export type StackGeneratorParamList = {
   AddFriend: { targetId?: number; code?: number };
   SendFirstMessage: { targetId: number; postId?: number };
   Chatrooms: undefined;
+  Chatroom: { id: number };
   Profile: undefined;
 };
 
@@ -42,6 +44,15 @@ export interface StackGeneratorProps {
     | "MessageStack"
     | "ProfileStack";
 }
+
+const initialRouteMapper: {
+  [key: string]: keyof StackGeneratorParamList;
+} = {
+  TimeTableStack: "TimeTable",
+  BoardsStack: "Boards",
+  MessageStack: "Chatrooms",
+  ProfileStack: "Profile",
+};
 
 const Stack = createNativeStackNavigator<StackGeneratorParamList>();
 
@@ -66,24 +77,15 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
             ) : null,
         };
       }}
+      initialRouteName={initialRouteMapper[screenName]}
     >
       <Stack.Group>
-        {screenName === "TimeTableStack" ? (
-          <Stack.Screen name="TimeTable" component={TimeTable} />
-        ) : null}
-        {screenName === "TimeTableStack" ? (
-          <Stack.Screen name="EnrollClasses" component={EnrollClasses} />
-        ) : null}
-
-        {screenName === "BoardsStack" ? (
-          <Stack.Screen name="Boards" component={Boards} />
-        ) : null}
-        {screenName === "MessageStack" ? (
-          <Stack.Screen name="Chatrooms" component={Chatrooms} /> // TODO
-        ) : null}
-        {screenName === "ProfileStack" ? (
-          <Stack.Screen name="Profile" component={Profile} />
-        ) : null}
+        <Stack.Screen name="TimeTable" component={TimeTable} />
+        <Stack.Screen name="EnrollClasses" component={EnrollClasses} />
+        <Stack.Screen name="Boards" component={Boards} />
+        <Stack.Screen name="Chatrooms" component={Chatrooms} />
+        <Stack.Screen name="Chatroom" component={Chatroom} />
+        <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Board" component={Board} />
         <Stack.Screen name="Post" component={Post} />
         <Stack.Screen

@@ -8,6 +8,7 @@ import Spinner from "./Spinner";
 import TimeBox from "./TimeBox";
 import LoadingComponent from "./LoadingComponent";
 import TimeTableComponent from "./TimeTableComponent";
+import ErrorComponent from "./ErrorComponent";
 
 export {
   ClassInfoBox,
@@ -20,4 +21,5 @@ export {
   TimeBox,
   LoadingComponent,
   TimeTableComponent,
+  ErrorComponent,
 };

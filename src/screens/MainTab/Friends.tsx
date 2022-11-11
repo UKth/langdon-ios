@@ -7,6 +7,7 @@ import { getNameString, postData } from "../../util";
 import { UserContext } from "../../contexts/userContext";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import {
+  ErrorComponent,
   LoadingComponent,
   MyPressable,
   ScreenContainer,
@@ -16,7 +17,6 @@ import { BoldText } from "../../components/StyledText";
 import { Alert, Share, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import styles, { shadow } from "../../constants/styles";
-import ErrorComponent from "../../components/ErrorComponent";
 
 const Friends = () => {
   const [friends, setFriends] = useState<User[]>();
@@ -100,10 +100,7 @@ const Friends = () => {
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: "white",
-              shadowOffset: { width: 0, height: 1 },
-              shadowRadius: 2,
-              shadowColor: `rgba(0,0,0,0.1)`,
-              shadowOpacity: 1,
+              ...shadow.md,
             }}
             onPress={createFriendRequest}
           >

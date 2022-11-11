@@ -1,13 +1,14 @@
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { useState, useEffect, useContext } from "react";
-import { Alert } from "react-native";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { ActivityIndicator, Alert, TextInput, View } from "react-native";
 import { API_URL, colors } from "../../constants";
 import { postData } from "../../util";
 import {
   LoadingComponent,
   MyPressable,
   ScreenContainer,
+  Spinner,
 } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { UserContext } from "../../contexts/userContext";
@@ -25,10 +26,11 @@ const SendFirstMessage = ({
 
   const { targetId, postId } = route.params;
   const [content, setContent] = useState("");
+  const textInputRef = useRef<TextInput>();
 
-  const { spinner } = useContext(ProgressContext);
+  const { inProgress, spinner } = useContext(ProgressContext);
 
-  const sendFirstMessage = async () => {
+  const sendFirstMessage = async (text: string) => {
     if (content.length >= 2) {
       spinner.start();
       const data = await postData(
@@ -36,7 +38,7 @@ const SendFirstMessage = ({
         API_URL + "chat/createChatroom",
         {
           targetId,
-          content,
+          content: text,
           ...(postId ? { postId } : {}),
         }
       );
@@ -60,9 +62,10 @@ const SendFirstMessage = ({
             style={{
               backgroundColor: colors.mediumThemeColor,
               borderRadius: 20,
-              padding: 5,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
             }}
-            onPress={sendFirstMessage}
+            onPress={() => sendFirstMessage(content.trim())}
           >
             <BoldText>Send</BoldText>
           </MyPressable>
@@ -76,19 +79,29 @@ const SendFirstMessage = ({
       style={{
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
-        paddingHorizontal: "5%",
       }}
     >
-      <BoldTextInput
+      <View
         style={{
-          backgroundColor: colors.lightThemeColor,
+          paddingHorizontal: "5%",
           width: "100%",
-          minHeight: "20%",
         }}
-        multiline={true}
-        onChangeText={(text) => setContent(text.trim())}
-      />
+      >
+        <BoldTextInput
+          autoFocus={true}
+          style={{
+            width: "100%",
+            minHeight: "20%",
+            fontSize: 18,
+            color: colors.mediumThemeColor,
+          }}
+          multiline={true}
+          onChangeText={(text) => setContent(text)}
+        />
+      </View>
+      {inProgress && (
+        <ActivityIndicator size={"large"} color={colors.lightThemeColor} />
+      )}
     </ScreenContainer>
   );
 };

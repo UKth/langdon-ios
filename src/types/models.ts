@@ -206,7 +206,7 @@ export type Chatroom = {
 };
 
 export type ChatroomWithLastMessage = Chatroom & {
-  lastMessage?: Message;
+  lastMessage: Message;
 };
 
 /**

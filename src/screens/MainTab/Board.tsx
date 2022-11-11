@@ -16,6 +16,7 @@ import {
 import { ANONYMOUS_USERNAME, API_URL, colors, styles } from "../../constants";
 import { BoldText } from "../../components/StyledText";
 import { ProgressContext } from "../../contexts/Progress";
+import { shadow } from "../../constants/styles";
 
 const BoardScreen = ({
   route,
@@ -77,10 +78,7 @@ const BoardScreen = ({
                   paddingHorizontal: 15,
                   backgroundColor: "white",
 
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowRadius: 2,
-                  shadowColor: `rgba(0,0,0,0.1)`,
-                  shadowOpacity: 1,
+                  ...shadow.md,
 
                   borderColor: colors.themeColor,
                   borderRadius: styles.borderRadius.md,

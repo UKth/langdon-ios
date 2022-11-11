@@ -9,6 +9,7 @@ import AddFriend from "./AddFriend";
 import Profile from "./Profile";
 import SendFirstMessage from "./SendFirstMessage";
 import Chatrooms from "./Chatrooms";
+import Chatroom from "./Chatroom";
 
 export {
   Board,
@@ -22,4 +23,5 @@ export {
   Profile,
   SendFirstMessage,
   Chatrooms,
+  Chatroom,
 };

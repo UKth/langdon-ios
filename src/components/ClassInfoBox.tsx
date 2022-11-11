@@ -19,6 +19,7 @@ import { UserContext } from "../contexts/userContext";
 import { ProgressContext } from "../contexts/Progress";
 import { API_URL, colors, EXAMDATE_OFFSET } from "../constants";
 import MyPressable from "./MyPressable";
+import { shadow } from "../constants/styles";
 
 const ClassInfoBox = ({
   id,
@@ -58,10 +59,7 @@ const ClassInfoBox = ({
         borderRadius: 10,
         backgroundColor: "white",
 
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-        shadowColor: `rgba(0,0,0,0.1)`,
-        shadowOpacity: 1,
+        ...shadow.md,
       }}
     >
       {classData?.sections.map((section) => (
@@ -171,10 +169,7 @@ const ClassInfoBox = ({
             justifyContent: "center",
             borderRadius: 20,
 
-            shadowOffset: { width: 0, height: 1 },
-            shadowRadius: 2,
-            shadowColor: `rgba(0,0,0,0.1)`,
-            shadowOpacity: 1,
+            ...shadow.md,
           }}
         >
           <BoldText style={{ color: "white" }}>

@@ -329,7 +329,8 @@ export const getTimeDifferenceString = (createdAt: Date) => {
   return value + " " + unit + (value > 1 ? "s" : "") + " ago";
 };
 
-export const getTimeString = (date: Date) => {
+export const getTimeString = (dateValue: Date | number) => {
+  const date = new Date(dateValue.valueOf());
   return (
     date.getFullYear() +
     "-" +

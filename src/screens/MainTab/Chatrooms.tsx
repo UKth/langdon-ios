@@ -23,19 +23,24 @@ const Chatrooms = () => {
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
   const userContext = useContext(UserContext);
 
+  const refetch = async () => {
+    const data = await postData(userContext, API_URL + "chat/getChatrooms");
+    if (data?.ok && data?.chatrooms) {
+      setChatrooms(data?.chatrooms);
+    } else {
+      Alert.alert(data?.error ?? "Failed to get chatrooms.");
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      const data = await postData(userContext, API_URL + "chat/getChatrooms");
-      if (data?.ok && data?.chatrooms) {
-        setChatrooms(data?.chatrooms);
-      } else {
-        Alert.alert(data?.error ?? "Failed to get chatrooms.");
-      }
-    })();
+    refetch();
+
+    navigation.addListener("focus", refetch);
 
     Notifications.addNotificationResponseReceivedListener(({ notification }) =>
       handleNotification({ navigation, notification })
     );
+    return () => navigation.removeListener("focus", refetch);
   }, []);
 
   if (!userContext.user) {
@@ -58,7 +63,7 @@ const Chatrooms = () => {
                 style={{
                   paddingVertical: 15,
                   paddingHorizontal: 18,
-                  maxHeight: "30%",
+
                   backgroundColor: "white",
 
                   shadowOffset: { width: 0, height: 1 },
@@ -79,6 +84,11 @@ const Chatrooms = () => {
                   style={{ fontSize: 24, color: colors.mediumThemeColor }}
                 >
                   {chatroom.lastMessage?.content}
+                </BoldText>
+                <BoldText
+                  style={{ fontSize: 24, color: colors.mediumThemeColor }}
+                >
+                  aaa{chatroom.id}
                 </BoldText>
               </MyPressable>
             ))

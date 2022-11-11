@@ -30,7 +30,7 @@ export type StackGeneratorParamList = {
   Friends: undefined;
   FriendTable: { id: number; nameString: string };
   AddFriend: { targetId?: number; code?: number };
-  SendFirstMessage: { targetId: number };
+  SendFirstMessage: { targetId: number; postId?: number };
   Chatrooms: undefined;
   Profile: undefined;
 };
@@ -104,8 +104,7 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
           name="SendFirstMessage"
           component={SendFirstMessage}
           options={({ navigation }) => ({
-            headerLeft: () => null,
-            headerRight: () => (
+            headerLeft: () => (
               <MyPressable onPress={() => navigation.pop()}>
                 <Ionicons name="close" size={20} />
               </MyPressable>

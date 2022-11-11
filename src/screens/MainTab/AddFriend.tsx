@@ -28,12 +28,14 @@ const AddFriend = ({
           code,
         });
         if (data?.ok) {
+          navigation.replace("TimeTable");
           Alert.alert("Friend added.");
-          navigation.pop();
         } else {
+          navigation.replace("TimeTable");
           Alert.alert(data?.error ?? "Friend add failed.");
         }
       } else {
+        navigation.replace("TimeTable");
         Alert.alert("Invalid access");
       }
     })();

@@ -11,7 +11,7 @@ import { API_URL, colors } from "../../constants";
 import { College } from "../../types/models";
 import { MyPressable, ScreenContainer } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
-import { shadow } from "../../constants/styles";
+import styles, { shadow } from "../../constants/styles";
 
 const searchCollege = debounce(
   async (
@@ -52,7 +52,16 @@ const SearchCollege = () => {
           style={{
             fontSize: 24,
             color: colors.mediumThemeColor,
-            marginBottom: "13%",
+            marginBottom: 1,
+          }}
+        >
+          Welcome,
+        </BoldText>
+        <BoldText
+          style={{
+            fontSize: 24,
+            color: colors.mediumThemeColor,
+            marginBottom: "20%",
           }}
         >
           Search Your College
@@ -60,9 +69,9 @@ const SearchCollege = () => {
         <BoldTextInput
           style={{
             paddingHorizontal: 20,
-            fontSize: 20,
+            fontSize: 18,
             backgroundColor: colors.lightThemeColor,
-            borderRadius: 50,
+            borderRadius: styles.borderRadius.md,
             height: 50,
             color: "white",
             marginBottom: 15,

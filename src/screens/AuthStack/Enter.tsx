@@ -59,6 +59,7 @@ const Enter = ({
   const [netId, setNetId] = useState("");
   const [codeSent, setCodeSent] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
   const [code, setCode] = useState("");
   const [userId, setUserId] = useState();
@@ -162,13 +163,13 @@ const Enter = ({
           </Pressable>
 
           {codeSent ? (
-            <View style={{ alignItems: "center", width: "70%" }}>
+            <View style={{ alignItems: "center", width: "75%" }}>
               {!userId ? (
                 <BoldTextInput
                   style={{
                     width: "100%",
                     paddingHorizontal: 20,
-                    fontSize: 20,
+                    fontSize: 17,
                     backgroundColor: colors.lightThemeColor,
                     borderRadius: 50,
                     height: 50,
@@ -180,7 +181,7 @@ const Enter = ({
                   onChangeText={(text) =>
                     setFirstName(text.trim().toLowerCase())
                   }
-                  placeholder="first name"
+                  placeholder="First name"
                   placeholderTextColor={colors.placeHolerTextColor}
                 />
               ) : null}
@@ -189,7 +190,28 @@ const Enter = ({
                   style={{
                     width: "100%",
                     paddingHorizontal: 20,
-                    fontSize: 20,
+                    fontSize: 17,
+                    backgroundColor: colors.lightThemeColor,
+                    borderRadius: 50,
+                    height: 50,
+                    color: "white",
+                    marginBottom: 10,
+
+                    ...shadow.md,
+                  }}
+                  onChangeText={(text) =>
+                    setMiddleName(text.trim().toLowerCase())
+                  }
+                  placeholder="Middle name(optional)"
+                  placeholderTextColor={colors.placeHolerTextColor}
+                />
+              ) : null}
+              {!userId ? (
+                <BoldTextInput
+                  style={{
+                    width: "100%",
+                    paddingHorizontal: 20,
+                    fontSize: 17,
                     backgroundColor: colors.lightThemeColor,
                     borderRadius: 50,
                     height: 50,
@@ -201,7 +223,7 @@ const Enter = ({
                   onChangeText={(text) =>
                     setLastName(text.trim().toLowerCase())
                   }
-                  placeholder="last name"
+                  placeholder="Last name"
                   placeholderTextColor={colors.placeHolerTextColor}
                 />
               ) : null}
@@ -209,7 +231,7 @@ const Enter = ({
                 style={{
                   width: "100%",
                   paddingHorizontal: 20,
-                  fontSize: 20,
+                  fontSize: 17,
                   backgroundColor: colors.lightThemeColor,
                   borderRadius: 50,
                   height: 50,
@@ -252,7 +274,7 @@ const Enter = ({
                         ? {
                             userId,
                           }
-                        : { firstName, lastName }),
+                        : { firstName, middleName, lastName }),
                     });
                     spinner.stop();
                     if (data?.ok) {

@@ -15,6 +15,12 @@ export const shadow = {
     shadowColor: `rgba(0,0,0,0.1)`,
     shadowOpacity: 1,
   },
+  hard: {
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 3,
+    shadowColor: `rgba(0,0,0,0.2)`,
+    shadowOpacity: 1,
+  },
 };
 
 export default styles;

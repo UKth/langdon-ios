@@ -10,6 +10,7 @@ import { Alert, Linking, Pressable, View } from "react-native";
 import { BoldText } from "./StyledText";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, messages } from "../constants";
+import { shadow } from "../constants/styles";
 
 const CoursePopUpBox = ({
   cls,
@@ -48,23 +49,60 @@ const CoursePopUpBox = ({
       />
       <View
         style={{
-          backgroundColor: colors.lightThemeColor,
+          backgroundColor: "white",
           borderRadius: 10,
           width: "70%",
           height: "25%",
-          padding: 10,
+          padding: 15,
+          ...shadow.hard,
         }}
       >
-        <BoldText>{cls.course.fullCourseDesignation}</BoldText>
-        <BoldText>{cls.course.courseDesignation}</BoldText>
-        <BoldText>{cls.course.title}</BoldText>
-        <BoldText style={{ marginBottom: 10 }}>
+        <BoldText style={{ color: colors.mediumThemeColor, opacity: 0.8 }}>
+          {cls.course.fullCourseDesignation}
+        </BoldText>
+        <BoldText
+          style={{
+            color: colors.mediumThemeColor,
+            opacity: 0.8,
+            marginBottom: 2,
+          }}
+        >
+          {cls.course.courseDesignation}
+        </BoldText>
+        <View
+          style={{
+            backgroundColor: colors.lightThemeColor,
+            height: 1,
+            opacity: 0.4,
+            marginBottom: 2,
+          }}
+        />
+        <BoldText
+          style={{
+            fontSize: 12,
+            color: colors.mediumThemeColor,
+            opacity: 0.8,
+            marginBottom: 2,
+          }}
+        >
+          {cls.course.title}
+        </BoldText>
+        <BoldText
+          style={{
+            fontSize: 11,
+            color: colors.mediumThemeColor,
+            opacity: 0.8,
+            marginBottom: 10,
+          }}
+        >
           credit: {cls.course.minimumCredits}
           {cls.course.minimumCredits !== cls.course.maximumCredits
             ? " ~ " + cls.course.maximumCredits
             : ""}
         </BoldText>
-        <BoldText>
+        <BoldText
+          style={{ fontSize: 12, color: colors.mediumThemeColor, opacity: 0.8 }}
+        >
           {cls.sections.map(
             (sec) =>
               (sec.instructor.firstName ?? "") + " " + sec.instructor.lastName
@@ -76,7 +114,7 @@ const CoursePopUpBox = ({
               opacity: pressed ? 0.5 : 1,
             },
             {
-              backgroundColor: colors.mediumThemeColor,
+              backgroundColor: colors.lightThemeColor,
               paddingHorizontal: 5,
               paddingVertical: 3,
               borderRadius: 5,
@@ -85,6 +123,7 @@ const CoursePopUpBox = ({
               bottom: 10,
               flexDirection: "row",
               alignItems: "center",
+              ...shadow.md,
             },
           ]}
           onPress={() => {
@@ -111,10 +150,10 @@ const CoursePopUpBox = ({
           }}
         >
           <View style={{ marginRight: 10 }}>
-            <BoldText style={{ fontSize: 12 }}>
+            <BoldText style={{ color: "white", fontSize: 12 }}>
               {meeting.building.buildingName}
             </BoldText>
-            <BoldText style={{ fontSize: 12 }}>
+            <BoldText style={{ color: "white", fontSize: 12 }}>
               {meeting.building.streetAddress}
             </BoldText>
           </View>

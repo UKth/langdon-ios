@@ -9,9 +9,14 @@ import { AuthStackParamList } from "../../navigation/AuthStack";
 import { debounce, getData } from "../../util";
 import { API_URL, colors } from "../../constants";
 import { College } from "../../types/models";
-import { MyPressable, ScreenContainer } from "../../components";
+import {
+  LoadingComponent,
+  MyPressable,
+  ScreenContainer,
+} from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import styles, { shadow } from "../../constants/styles";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const searchCollege = debounce(
   async (
@@ -37,12 +42,16 @@ const SearchCollege = () => {
   const [searchedCollege, setSearchedCollege] = useState<College[]>();
 
   useEffect(() => {
-    searchCollege(keyword, setSearchedCollege);
+    if (keyword.length) {
+      searchCollege(keyword, setSearchedCollege);
+    } else {
+      setSearchedCollege(undefined);
+    }
   }, [keyword]);
 
   return (
     <ScreenContainer>
-      <View
+      <KeyboardAwareScrollView
         style={{
           paddingHorizontal: 30,
           paddingTop: "45%",
@@ -68,50 +77,94 @@ const SearchCollege = () => {
         </BoldText>
         <BoldTextInput
           style={{
+            backgroundColor: "white",
+            color: colors.mediumThemeColor,
             paddingHorizontal: 20,
-            fontSize: 18,
-            backgroundColor: colors.lightThemeColor,
-            borderRadius: styles.borderRadius.md,
+            fontSize: 15,
+            borderRadius: 50,
             height: 50,
-            color: "white",
             marginBottom: 15,
             ...shadow.md,
           }}
           onChangeText={(text) => setKeyword(text.trim())}
           placeholder="ex. University of Wisconsin - Madison"
-          placeholderTextColor={colors.placeHolerTextColor}
+          placeholderTextColor={colors.lightThemeColor}
         />
-        {searchedCollege?.length ? (
-          <View
-            style={{
-              backgroundColor: "white",
-              paddingVertical: 20,
-              borderRadius: 15,
-
-              ...shadow.md,
-            }}
-          >
-            {searchedCollege.map((college) => (
-              <MyPressable
-                key={college.id}
-                onPress={() => navigation.push("Enter", { college })}
+        {keyword.length ? (
+          searchedCollege ? (
+            searchedCollege.length ? (
+              <View
                 style={{
-                  paddingHorizontal: 20,
+                  backgroundColor: "white",
+                  paddingVertical: 20,
+                  borderRadius: styles.borderRadius.large,
+
+                  ...shadow.md,
                 }}
               >
+                {searchedCollege.map((college) => (
+                  <MyPressable
+                    key={college.id}
+                    onPress={() => navigation.push("Enter", { college })}
+                    style={{
+                      paddingHorizontal: 20,
+                    }}
+                  >
+                    <BoldText
+                      style={{
+                        fontSize: 17,
+                        color: colors.mediumThemeColor,
+                      }}
+                    >
+                      {college.name}
+                    </BoldText>
+                  </MyPressable>
+                ))}
+              </View>
+            ) : (
+              <View style={{ marginTop: "40%", alignItems: "center" }}>
                 <BoldText
                   style={{
-                    fontSize: 17,
+                    fontSize: 15,
                     color: colors.mediumThemeColor,
+                    opacity: 0.8,
                   }}
                 >
-                  {college.name}
+                  Can't find your college?
                 </BoldText>
-              </MyPressable>
-            ))}
-          </View>
+                <View style={{ flexDirection: "row" }}>
+                  <MyPressable
+                    onPress={() => navigation.push("RequestCollegeSupport")}
+                  >
+                    <BoldText
+                      style={{
+                        fontSize: 15,
+                        color: colors.themeColor,
+                      }}
+                    >
+                      Request your college
+                    </BoldText>
+                  </MyPressable>
+                  <BoldText
+                    style={{
+                      fontSize: 15,
+                      color: colors.mediumThemeColor,
+                      opacity: 0.8,
+                    }}
+                  >
+                    {" "}
+                    to support
+                  </BoldText>
+                </View>
+              </View>
+            )
+          ) : (
+            <View style={{ paddingTop: 10 }}>
+              <LoadingComponent />
+            </View>
+          )
         ) : null}
-      </View>
+      </KeyboardAwareScrollView>
     </ScreenContainer>
   );
 };

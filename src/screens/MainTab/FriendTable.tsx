@@ -1,9 +1,9 @@
 import {
   Class,
   ClassMeetingWithBuilding,
-  classWithSections,
+  ClassWithSections,
   Course,
-  fullSection,
+  FullSection,
 } from "@customTypes/models";
 import { RouteProp } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
@@ -27,11 +27,11 @@ const FriendTable = ({
   const targetId = route.params.id;
 
   const [enrolledClasses, setEnrolledClasses] = useState<
-    (classWithSections & { course: Course })[]
+    (ClassWithSections & { course: Course })[]
   >([]);
   const [popUpBoxData, setPopUpBoxData] = useState<{
     cls: Class & {
-      sections: fullSection[];
+      sections: FullSection[];
     } & {
       course: Course;
     };

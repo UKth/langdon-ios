@@ -1,9 +1,9 @@
 import {
   Class,
   ClassMeetingWithBuilding,
-  classWithSections,
+  ClassWithSections,
   Course,
-  fullSection,
+  FullSection,
 } from "@customTypes/models";
 import React from "react";
 import { useState } from "react";
@@ -22,12 +22,12 @@ const TimeTableComponent = ({
   enrolledClasses,
   setPopUpBoxData,
 }: {
-  enrolledClasses: (classWithSections & { course: Course })[];
+  enrolledClasses: (ClassWithSections & { course: Course })[];
   setPopUpBoxData: React.Dispatch<
     React.SetStateAction<
       | {
           cls: Class & {
-            sections: fullSection[];
+            sections: FullSection[];
           } & {
             course: Course;
           };

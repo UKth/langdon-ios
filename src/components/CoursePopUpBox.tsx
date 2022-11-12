@@ -3,7 +3,7 @@ import {
   ClassMeeting,
   ClassMeetingWithBuilding,
   Course,
-  fullSection,
+  FullSection,
 } from "@customTypes/models";
 import React from "react";
 import { Alert, Linking, Pressable, View } from "react-native";
@@ -18,7 +18,7 @@ const CoursePopUpBox = ({
   closePopUp,
 }: {
   cls: Class & {
-    sections: fullSection[];
+    sections: FullSection[];
   } & {
     course: Course;
   };

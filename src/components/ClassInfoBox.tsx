@@ -1,8 +1,8 @@
 import {
   Class,
-  classWithSections,
+  ClassWithSections,
   Course,
-  fullSection,
+  FullSection,
 } from "@customTypes/models";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
@@ -28,13 +28,13 @@ const ClassInfoBox = ({
 }: {
   id: number;
   enrolledClasses: (Class & {
-    sections: fullSection[];
+    sections: FullSection[];
   } & {
     course: Course;
   })[];
   updateEnrolledClasses: () => void;
 }) => {
-  const [classData, setClassData] = useState<classWithSections>();
+  const [classData, setClassData] = useState<ClassWithSections>();
 
   const userContext = useContext(UserContext);
   const { spinner } = useContext(ProgressContext);

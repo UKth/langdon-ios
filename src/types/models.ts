@@ -60,6 +60,8 @@ export type Course = {
   collegeId: number;
 };
 
+export type CourseWithClasses = Course & { classes: ClassWithSections[] };
+
 /**
  * Model Class
  *
@@ -69,7 +71,7 @@ export type Class = {
   courseId: number;
 };
 
-export type classWithSections = Class & { sections: fullSection[] };
+export type ClassWithSections = Class & { sections: FullSection[] };
 
 /**
  * Model Section
@@ -83,7 +85,7 @@ export type Section = {
   instructorId: number | null;
 };
 
-export type fullSection = Section & {
+export type FullSection = Section & {
   instructor: Instructor;
   classMeetings: ClassMeetingWithBuilding[];
 };

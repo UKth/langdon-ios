@@ -1,9 +1,9 @@
 import {
   Class,
   ClassMeetingWithBuilding,
-  classWithSections,
+  ClassWithSections,
   Course,
-  fullSection,
+  FullSection,
 } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
@@ -70,11 +70,11 @@ const TimeTable = ({
   }
 
   const [enrolledClasses, setEnrolledClasses] = useState<
-    (classWithSections & { course: Course })[]
+    (ClassWithSections & { course: Course })[]
   >([]);
   const [popUpBoxData, setPopUpBoxData] = useState<{
     cls: Class & {
-      sections: fullSection[];
+      sections: FullSection[];
     } & {
       course: Course;
     };

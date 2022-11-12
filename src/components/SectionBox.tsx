@@ -1,4 +1,4 @@
-import { Class, Course, fullSection } from "@customTypes/models";
+import { Class, Course, FullSection } from "@customTypes/models";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { useState } from "react";
@@ -17,7 +17,7 @@ const SectionBox = ({
   section: nestedSection;
   onPress: (id: number) => void;
   enrolledClasses: (Class & {
-    sections: fullSection[];
+    sections: FullSection[];
   } & {
     course: Course;
   })[];

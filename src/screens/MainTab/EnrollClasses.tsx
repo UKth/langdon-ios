@@ -1,15 +1,19 @@
-import { classWithSections, Course } from "@customTypes/models";
+import {
+  ClassWithSections,
+  Course,
+  CourseWithClasses,
+} from "@customTypes/models";
 import React, { useState, useEffect, useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   debounce,
-  getData,
   nestedSection,
+  postData,
   sectionMapper,
   sum,
 } from "../../util";
 import { dropClass, getEnrolledClasses } from "../../apiFunctions";
-import { UserContext } from "../../contexts/userContext";
+import { UserContext, userContextType } from "../../contexts/userContext";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { Alert, Pressable, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,17 +22,22 @@ import { API_URL, colors, messages } from "../../constants";
 import { ScreenContainer, SectionBox } from "../../components";
 import { shadow } from "../../constants/styles";
 
-const searchCourse = debounce(
-  async (
-    keyword: string,
-    setSearchedCourse: React.Dispatch<
-      React.SetStateAction<Course[] | undefined>
-    >
-  ) => {
+type searchCourseParams = {
+  keyword: string;
+  setSearchedCourses: React.Dispatch<
+    React.SetStateAction<CourseWithClasses[] | undefined>
+  >;
+  userContext: userContextType;
+};
+
+const searchCourse: (params: searchCourseParams) => any = debounce(
+  async ({ keyword, setSearchedCourses, userContext }: searchCourseParams) => {
     if (keyword !== "") {
-      const data = await getData(API_URL + "course/getCourse/" + keyword);
+      const data = await postData(userContext, API_URL + "course/getCourse", {
+        keyword,
+      });
       if (data?.ok) {
-        setSearchedCourse(data.courseData);
+        setSearchedCourses(data.courses);
       }
     }
   },
@@ -37,25 +46,26 @@ const searchCourse = debounce(
 
 const EnrollClasses = () => {
   const [enrolledClasses, setEnrolledClasses] = useState<
-    (classWithSections & { course: Course })[]
+    (ClassWithSections & { course: Course })[]
   >([]);
 
   const userContext = useContext(UserContext);
 
   const [courseKeyword, setCourseKeyword] = useState("");
 
-  const [searchedCourse, setSearchedCourse] =
-    useState<(Course & { classes: classWithSections[] })[]>();
+  const [searchedCourses, setSearchedCourses] = useState<CourseWithClasses[]>();
 
-  const [selectedCourse, setSelectedCourse] = useState<
-    Course & { classes: classWithSections[] }
-  >();
+  const [selectedCourse, setSelectedCourse] = useState<CourseWithClasses>();
 
   const [mappedSections, setMappedSections] = useState<nestedSection[]>([]);
   const { spinner } = useContext(ProgressContext);
 
   useEffect(() => {
-    searchCourse(courseKeyword, setSearchedCourse);
+    searchCourse({
+      keyword: courseKeyword,
+      setSearchedCourses,
+      userContext,
+    });
   }, [courseKeyword]);
 
   const updateEnrolledClasses = async () => {
@@ -80,8 +90,6 @@ const EnrollClasses = () => {
   const maxCredSum = sum(
     enrolledClasses.map((cls) => cls.course.maximumCredits)
   );
-
-  // console.log(searchedCourse);
 
   return (
     <ScreenContainer>
@@ -201,15 +209,15 @@ const EnrollClasses = () => {
               ...shadow.md,
             }}
             onChangeText={(text) => {
-              setCourseKeyword(text.replace(/ /g, ""));
+              setCourseKeyword(text.trim());
             }}
             autoCapitalize="none"
             placeholder="ex. COMP SCI 200"
             placeholderTextColor={colors.lightThemeColor}
           />
-          {searchedCourse ? (
+          {searchedCourses ? (
             <View style={{ width: "100%" }}>
-              {searchedCourse.map((course) => (
+              {searchedCourses.map((course) => (
                 <View
                   style={{
                     backgroundColor: colors.mediumThemeColor,
@@ -231,7 +239,7 @@ const EnrollClasses = () => {
                     ]}
                     onPress={() => {
                       if (selectedCourse?.id === course.id) {
-                        setSearchedCourse(undefined);
+                        setSearchedCourses(undefined);
                       } else {
                         setSelectedCourse(course);
                       }

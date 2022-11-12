@@ -1,7 +1,7 @@
 import { userContextType } from "./contexts/userContext";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { classWithSections, User } from "@customTypes/models";
+import { ClassWithSections, User } from "@customTypes/models";
 import {
   ACCESS_TOKEN_KEY,
   API_URL,
@@ -28,10 +28,9 @@ export const sendPostRequest = async (url = "", data = {}) => {
       referrerPolicy: "no-referrer",
       body: JSON.stringify(data),
     });
-    // console.log(rawResponse);
     return await rawResponse.json();
   } catch (error) {
-    console.log("Error in sendPostRequest:", url, data, error);
+    console.error("Error in sendPostRequest:", url, data, error);
   }
 };
 
@@ -59,11 +58,7 @@ const refreshAccessToken = async (ctx: userContextType) => {
   return res;
 };
 
-export const postData: any = async (
-  ctx: userContextType,
-  url = "",
-  data = {}
-) => {
+export const postData = async (ctx: userContextType, url = "", data = {}) => {
   try {
     // const accessToken = (await AsyncStorage.getItem(ACCESS_TOKEN_KEY)) ?? "";
 
@@ -89,7 +84,7 @@ export const postData: any = async (
 
     return res;
   } catch (err) {
-    console.log(err);
+    console.error("Error in postData: ", err);
     // logout(ctx);
   }
 };
@@ -135,13 +130,13 @@ export const sum = (arr: number[]) => {
 
 export type nestedSection = {
   code: string;
-  value: classWithSections | nestedSection[];
+  value: ClassWithSections | nestedSection[];
 };
 
 const nestedSectionCompare = (a: nestedSection, b: nestedSection) =>
   a.code.localeCompare(b.code);
 
-export const sectionMapper = (classes: classWithSections[]) => {
+export const sectionMapper = (classes: ClassWithSections[]) => {
   const level = classes[0].sections.length; // <= 3
 
   if (![1, 2, 3].includes(level)) {

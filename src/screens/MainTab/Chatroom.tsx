@@ -118,7 +118,7 @@ const Chatroom = ({
             >
               <BoldText
                 style={{
-                  fontSize: 16,
+                  fontSize: 14,
                   marginBottom: 5,
                   color: colors.mediumThemeColor,
                 }}
@@ -128,7 +128,7 @@ const Chatroom = ({
               </BoldText>
               <BoldText
                 style={{
-                  fontSize: 13,
+                  fontSize: 11,
                   color: colors.mediumThemeColor,
                 }}
                 numberOfLines={1}
@@ -152,7 +152,7 @@ const Chatroom = ({
             >
               <BoldText
                 style={{
-                  fontSize: 16,
+                  fontSize: 13,
                   marginBottom: 5,
                   color: colors.mediumThemeColor,
                 }}

@@ -103,7 +103,6 @@ const Profile = ({
                 style={{
                   color: colors.mediumThemeColor,
                   fontSize: 15,
-                  // maxWidth: "100%",
                 }}
               >
                 {user.email}

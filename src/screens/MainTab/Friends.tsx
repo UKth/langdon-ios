@@ -96,36 +96,38 @@ const Friends = () => {
             paddingHorizontal: 10,
           }}
         >
-          <MyPressable
-            style={{
-              borderRadius: 30,
-              padding: 20,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "white",
-              ...shadow.md,
-            }}
-            onPress={createFriendRequest}
-          >
-            <View
+          {friends ? (
+            <MyPressable
               style={{
-                position: "absolute",
-                width: 15,
-                height: 2,
-                borderRadius: 2,
-                backgroundColor: colors.themeColor,
+                borderRadius: 30,
+                padding: 20,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "white",
+                ...shadow.md,
               }}
-            />
-            <View
-              style={{
-                position: "absolute",
-                width: 2,
-                height: 15,
-                borderRadius: 2,
-                backgroundColor: colors.mediumThemeColor,
-              }}
-            />
-          </MyPressable>
+              onPress={createFriendRequest}
+            >
+              <View
+                style={{
+                  position: "absolute",
+                  width: 15,
+                  height: 2,
+                  borderRadius: 2,
+                  backgroundColor: colors.themeColor,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  width: 2,
+                  height: 15,
+                  borderRadius: 2,
+                  backgroundColor: colors.mediumThemeColor,
+                }}
+              />
+            </MyPressable>
+          ) : null}
         </View>
         {friends ? (
           friends?.length ? (

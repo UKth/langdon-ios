@@ -32,6 +32,19 @@ export type ShortUser = {
 };
 
 /**
+ * Model Table
+ *
+ */
+export type Table = {
+  id: number;
+  userId: number | null;
+  termCode: number;
+  title: string;
+  collegeId: number;
+  enrolledClasses: (ClassWithSections & { course: Course })[];
+};
+
+/**
  * Model Token
  *
  */
@@ -203,6 +216,7 @@ export type Comment = {
 export type Chatroom = {
   id: number;
   postId: number | null;
+  isAnonymous: boolean;
   lastMessageId: number;
   createdAt: Date;
   updatedAt: Date;
@@ -210,6 +224,13 @@ export type Chatroom = {
 
 export type ChatroomWithLastMessage = Chatroom & {
   lastMessage: Message;
+  members: ShortUser[];
+};
+
+export type FullChatroom = Chatroom & {
+  members: ShortUser[];
+  messages: Message[];
+  post: Post;
 };
 
 /**
@@ -219,6 +240,7 @@ export type ChatroomWithLastMessage = Chatroom & {
 export type Message = {
   id: number;
   chatroomId: number | null;
+  user: ShortUser;
   userId: number;
   content: string;
   createdAt: Date;

@@ -1,4 +1,4 @@
-import { ReportTargetType } from "@customTypes/models";
+import { ReportTargetType, Table } from "@customTypes/models";
 import { Alert } from "react-native";
 import { API_URL, messages } from "./constants";
 import { userContextType } from "./contexts/userContext";
@@ -40,6 +40,22 @@ export const getEnrolledClasses = async (
     return [];
   }
   return data?.enrolledClasses;
+};
+
+export const getTable = async (
+  ctx: userContextType,
+  params?: { targetId?: number; tableId?: number }
+): Promise<Table | undefined> => {
+  const { targetId, tableId } = params ?? {};
+  const data = await postData(ctx, API_URL + "table/getTable", {
+    ...(targetId ? { targetId } : {}),
+    ...(tableId ? { tableId } : {}),
+  });
+  if (data?.ok) {
+    return data?.table;
+  } else {
+    Alert.alert("Failed with fetching table.\n" + data?.error);
+  }
 };
 
 export const reportIssue = async (

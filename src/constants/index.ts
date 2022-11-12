@@ -7,6 +7,7 @@ import {
   REFRESH_TOKEN_KEY,
   USER_KEY,
   ENROLLED_CLASSES_KEY,
+  TABLE_KEY,
 } from "./storageKeys";
 import {
   EXAMDATE_OFFSET,
@@ -26,6 +27,7 @@ export {
   REFRESH_TOKEN_KEY,
   USER_KEY,
   ENROLLED_CLASSES_KEY,
+  TABLE_KEY,
   EXAMDATE_OFFSET,
   MIN_TS,
   HOUR_TS,

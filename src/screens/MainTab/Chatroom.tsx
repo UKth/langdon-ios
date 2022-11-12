@@ -1,6 +1,7 @@
 import {
   Board,
   ChatroomWithLastMessage,
+  FullChatroom,
   Message,
   Post,
 } from "@customTypes/models";
@@ -31,8 +32,8 @@ import {
 import * as Notifications from "expo-notifications";
 import { handleNotification } from "./TimeTable";
 import { shadow } from "../../constants/styles";
-import { ProgressContext } from "../../contexts/progressContext";
 import { Ionicons } from "@expo/vector-icons";
+import { ProgressContext } from "../../contexts/progressContext";
 
 const Chatroom = ({
   route,
@@ -46,24 +47,24 @@ const Chatroom = ({
   const user = userContext.user;
   const chatroomId = route.params.id;
   const [msgText, setMsgText] = useState("");
-  const [post, setPost] = useState<Post>();
+  const [chatroom, setChatroom] = useState<FullChatroom>();
 
   const { spinner } = useContext(ProgressContext);
 
   const refetch = async () => {
-    const data = await postData(
-      userContext,
-      API_URL + "chat/message/getChatroomMessages",
-      { chatroomId }
-    );
+    // const data = await postData(
+    //   userContext,
+    //   API_URL + "chat/message/getChatroomMessages",
+    //   { chatroomId }
+    // );
+    const data = await postData(userContext, API_URL + "chat/getChatroom", {
+      chatroomId,
+    });
 
-    if (data?.ok && data?.messages) {
-      setMessages(data?.messages);
+    if (data?.ok && data?.chatroom) {
+      setChatroom(data.chatroom);
     } else {
-      Alert.alert(data?.error ?? "Failed to get chatrooms.");
-    }
-    if (data?.post) {
-      setPost(data.post);
+      Alert.alert(data?.error ?? "Failed to get chatroom.");
     }
   };
 
@@ -102,7 +103,7 @@ const Chatroom = ({
         keyboardVerticalOffset={90}
         style={{ flex: 1 }}
       >
-        {post ? (
+        {chatroom?.post ? (
           <View style={{ paddingTop: 10, paddingHorizontal: 10 }}>
             <MyPressable
               style={{
@@ -113,7 +114,7 @@ const Chatroom = ({
                 marginBottom: 3,
                 ...shadow.md,
               }}
-              onPress={() => navigation.push("Post", { id: post.id })}
+              onPress={() => navigation.push("Post", { id: chatroom.post.id })}
             >
               <BoldText
                 style={{
@@ -132,14 +133,43 @@ const Chatroom = ({
                 }}
                 numberOfLines={1}
               >
-                {post.title}
+                {chatroom.post.title}
+              </BoldText>
+            </MyPressable>
+          </View>
+        ) : chatroom && !chatroom.isAnonymous ? (
+          <View style={{ paddingTop: 10, paddingHorizontal: 10 }}>
+            <MyPressable
+              style={{
+                backgroundColor: "white",
+                borderRadius: styles.borderRadius.md,
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+                marginBottom: 3,
+                ...shadow.md,
+              }}
+              onPress={() => navigation.push("Post", { id: chatroom.post.id })}
+            >
+              <BoldText
+                style={{
+                  fontSize: 16,
+                  marginBottom: 5,
+                  color: colors.mediumThemeColor,
+                }}
+                numberOfLines={1}
+              >
+                Personal chat with @
+                {
+                  chatroom.members[chatroom.members[0].id === user.id ? 1 : 0]
+                    .netId
+                }
               </BoldText>
             </MyPressable>
           </View>
         ) : null}
         <FlatList
           style={{ paddingHorizontal: "5%", paddingTop: "10%" }}
-          data={messages}
+          data={chatroom?.messages}
           inverted={true}
           renderItem={({ item: message }) => {
             const isMine = message.userId === user.id;

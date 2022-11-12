@@ -24,7 +24,7 @@ const SendFirstMessage = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
 
-  const { targetId, postId } = route.params;
+  const { targetId, postId, isAnonymous } = route.params;
   const [content, setContent] = useState("");
   const textInputRef = useRef<TextInput>();
 
@@ -33,6 +33,7 @@ const SendFirstMessage = ({
   const sendFirstMessage = async (text: string) => {
     if (content.length >= 2) {
       spinner.start();
+
       const data = await postData(
         userContext,
         API_URL + "chat/createChatroom",
@@ -40,6 +41,7 @@ const SendFirstMessage = ({
           targetId,
           content: text,
           ...(postId ? { postId } : {}),
+          ...(isAnonymous !== undefined ? { isAnonymous } : {}),
         }
       );
       spinner.stop();

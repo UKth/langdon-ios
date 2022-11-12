@@ -106,7 +106,7 @@ const Profile = ({
                   // maxWidth: "100%",
                 }}
               >
-                {user.email}ajfjkdsfbjksdnfjknsdkfnjksdnjk
+                {user.email}
               </BoldText>
             </View>
           </View>

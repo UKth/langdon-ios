@@ -4,17 +4,17 @@ import {
   ClassWithSections,
   Course,
   FullSection,
+  Table,
 } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { debounce, getData, getNameString, logout } from "../../util";
 import { UserContext } from "../../contexts/userContext";
-import { getEnrolledClasses } from "../../apiFunctions";
+import { getTable } from "../../apiFunctions";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { API_URL, colors, ENROLLED_CLASSES_KEY } from "../../constants";
+import { colors, TABLE_KEY } from "../../constants";
 import { BoldText } from "../../components/StyledText";
 import { ProgressContext } from "../../contexts/progressContext";
 import {
@@ -28,7 +28,6 @@ import * as Notifications from "expo-notifications";
 import { Ionicons } from "@expo/vector-icons";
 import { shadow } from "../../constants/styles";
 import * as Linking from "expo-linking";
-import { EventType } from "expo-linking";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type pushNotificationData = {
@@ -57,11 +56,7 @@ export const handleNotification = ({
   }
 };
 
-const TimeTable = ({
-  route,
-}: {
-  route: RouteProp<StackGeneratorParamList, "TimeTable">;
-}) => {
+const TimeTable = () => {
   const userContext = useContext(UserContext);
   const user = userContext.user;
 
@@ -69,9 +64,6 @@ const TimeTable = ({
     return <ErrorComponent />;
   }
 
-  const [enrolledClasses, setEnrolledClasses] = useState<
-    (ClassWithSections & { course: Course })[]
-  >([]);
   const [popUpBoxData, setPopUpBoxData] = useState<{
     cls: Class & {
       sections: FullSection[];
@@ -80,42 +72,44 @@ const TimeTable = ({
     };
     meeting: ClassMeetingWithBuilding;
   }>();
+  const [table, setTable] = useState<Table>();
 
   const { spinner } = useContext(ProgressContext);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
 
-  const updateEnrolledClasses = async () => {
-    const data = await getEnrolledClasses(userContext);
-    setEnrolledClasses(data);
-    AsyncStorage.setItem(ENROLLED_CLASSES_KEY, JSON.stringify(data));
+  const updateTable = async () => {
+    const data = await getTable(userContext);
+    if (data) {
+      setTable(data);
+      AsyncStorage.setItem(TABLE_KEY, JSON.stringify(data));
+    }
   };
 
   useEffect(() => {
     (async () => {
-      const cachedClasses = await AsyncStorage.getItem(ENROLLED_CLASSES_KEY);
-      if (!cachedClasses) {
+      const cachedTable = await AsyncStorage.getItem(TABLE_KEY);
+      if (!cachedTable) {
         spinner.start();
       } else {
-        setEnrolledClasses(JSON.parse(cachedClasses)); // may produce error
+        setTable(JSON.parse(cachedTable)); // may produce error
       }
-      await updateEnrolledClasses();
+      await updateTable();
       spinner.stop();
     })();
-    navigation.addListener("focus", updateEnrolledClasses);
+    navigation.addListener("focus", updateTable);
 
     // Notifications.addNotificationReceivedListener((notification) => {
     //   console.log("rl\n");
     //   logJSON(notification);
     // });
-    console.log(Linking.createURL("path"));
 
     Notifications.addNotificationResponseReceivedListener(({ notification }) =>
       handleNotification({ navigation, notification })
     );
 
-    return () => navigation.removeListener("focus", updateEnrolledClasses);
+    return () => navigation.removeListener("focus", updateTable);
   }, []);
 
   return (
@@ -124,12 +118,15 @@ const TimeTable = ({
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
             paddingHorizontal: 20,
             paddingVertical: 10,
           }}
         >
+          <BoldText style={{ fontSize: 17, color: colors.mediumThemeColor }}>
+            {table?.title}
+          </BoldText>
           <View style={{ flexDirection: "row" }}>
             <MyPressable
               style={{
@@ -184,7 +181,7 @@ const TimeTable = ({
           </View>
         </View>
         <TimeTableComponent
-          enrolledClasses={enrolledClasses}
+          enrolledClasses={table?.enrolledClasses ?? []}
           setPopUpBoxData={setPopUpBoxData}
         />
       </KeyboardAwareScrollView>

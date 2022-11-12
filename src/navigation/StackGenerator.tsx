@@ -31,7 +31,11 @@ export type StackGeneratorParamList = {
   Friends: undefined;
   FriendTable: { id: number; nameString: string };
   AddFriend: { targetId?: number; code?: number };
-  SendFirstMessage: { targetId: number; postId?: number };
+  SendFirstMessage: {
+    targetId: number;
+    postId?: number;
+    isAnonymous?: boolean;
+  };
   Chatrooms: undefined;
   Chatroom: { id: number };
   Profile: undefined;

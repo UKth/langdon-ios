@@ -10,6 +10,7 @@ import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
 import { BoldText } from "../../components/StyledText";
 import {
+  ErrorComponent,
   LoadingComponent,
   MyPressable,
   ScreenContainer,
@@ -23,6 +24,10 @@ const Chatrooms = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
   const userContext = useContext(UserContext);
+  const { user } = userContext;
+  if (!user) {
+    return <ErrorComponent />;
+  }
 
   const refetch = async () => {
     const data = await postData(userContext, API_URL + "chat/getChatrooms");
@@ -87,11 +92,29 @@ const Chatrooms = () => {
                 >
                   {chatroom.lastMessage.content}
                 </BoldText>
-                <BoldText
-                  style={{ fontSize: 10, color: colors.lightThemeColor }}
-                >
-                  {getTimeString(chatroom.lastMessage.createdAt)}
-                </BoldText>
+                <View style={{ alignItems: "flex-end" }}>
+                  <BoldText
+                    style={{ fontSize: 10, color: colors.lightThemeColor }}
+                  >
+                    {getTimeString(chatroom.lastMessage.createdAt)}
+                  </BoldText>
+                  {!chatroom.isAnonymous ? (
+                    <BoldText
+                      style={{
+                        fontSize: 10,
+                        color: colors.mediumThemeColor,
+                        marginTop: 2,
+                      }}
+                    >
+                      @
+                      {
+                        chatroom.members[
+                          chatroom.members[0].id === user.id ? 1 : 0
+                        ].netId
+                      }
+                    </BoldText>
+                  ) : null}
+                </View>
               </MyPressable>
             ))
           ) : (

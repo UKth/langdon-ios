@@ -37,7 +37,7 @@ type searchCourseParams = {
 const searchCourse: (params: searchCourseParams) => any = debounce(
   async ({ keyword, setSearchedCourses, userContext }: searchCourseParams) => {
     if (keyword !== "") {
-      const data = await postData(userContext, API_URL + "course/getCourse", {
+      const data = await postData(userContext, API_URL + "course/getCourses", {
         keyword,
       });
       if (data?.ok) {

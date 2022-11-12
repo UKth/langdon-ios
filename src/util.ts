@@ -340,5 +340,10 @@ export const getTimeString = (dateValue: Date | number) => {
 };
 
 export const getNameString = (user: User) => {
-  return user.firstName + " " + user.lastName;
+  return (
+    user.firstName +
+    " " +
+    (user.middleName ? user.middleName + " " : "") +
+    user.lastName
+  );
 };

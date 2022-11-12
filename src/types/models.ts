@@ -14,6 +14,7 @@ export type User = {
   netId: string;
   email: string;
   firstName: string;
+  middleName: string;
   lastName: string;
   collegeId: number;
   createdAt: Date;

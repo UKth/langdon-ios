@@ -32,6 +32,7 @@ import * as Notifications from "expo-notifications";
 import { handleNotification } from "./TimeTable";
 import { shadow } from "../../constants/styles";
 import { ProgressContext } from "../../contexts/Progress";
+import { Ionicons } from "@expo/vector-icons";
 
 const Chatroom = ({
   route,
@@ -67,14 +68,16 @@ const Chatroom = ({
   };
 
   const sendMessage = async (text: string) => {
-    setMsgText("");
-    spinner.start();
-    await postData(userContext, API_URL + "chat/message/sendMessage", {
-      chatroomId,
-      content: text,
-    });
-    await refetch();
-    spinner.stop();
+    if (text.length > 0) {
+      setMsgText("");
+      spinner.start();
+      await postData(userContext, API_URL + "chat/message/sendMessage", {
+        chatroomId,
+        content: text,
+      });
+      await refetch();
+      spinner.stop();
+    }
   };
 
   useEffect(() => {
@@ -208,8 +211,8 @@ const Chatroom = ({
               borderRadius: 4,
               marginRight: 10,
             }}
-            placeholder="..."
-            placeholderTextColor={colors.placeHolerTextColor}
+            placeholder="type message..."
+            placeholderTextColor={colors.lightThemeColor}
             value={msgText}
             multiline={true}
             maxLength={200}
@@ -217,18 +220,20 @@ const Chatroom = ({
           />
           <MyPressable
             style={{
-              borderLeftWidth: 1,
-              borderColor: colors.lightThemeColor,
-              width: 80,
-              height: 20,
+              // borderLeftWidth: 1,
+              // borderColor: colors.lightThemeColor,
+              width: 50,
+              height: 30,
               alignItems: "center",
               justifyContent: "center",
             }}
             onPress={() => sendMessage(msgText.trim())}
           >
-            <BoldText style={{ fontSize: 16, color: colors.mediumThemeColor }}>
-              upload
-            </BoldText>
+            <Ionicons
+              name="paper-plane"
+              size={23}
+              color={colors.mediumThemeColor}
+            />
           </MyPressable>
         </View>
       </KeyboardAvoidingView>

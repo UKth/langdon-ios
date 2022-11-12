@@ -120,7 +120,7 @@ const TimeTable = ({
 
   return (
     <ScreenContainer>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView style={{ paddingHorizontal: "1%" }}>
         <View
           style={{
             flexDirection: "row",

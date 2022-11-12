@@ -42,13 +42,13 @@ const getTokens = async (registerData: {
   return data;
 };
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//   }),
+// });
 
 const Enter = ({
   route,
@@ -147,7 +147,10 @@ const Enter = ({
                 const data = await sendCode(netId + "@" + college.mailFooter);
                 spinner.stop();
                 if (data?.ok) {
-                  Alert.alert(messages.messages.login.mailSent);
+                  Alert.alert(
+                    messages.messages.login.mailSent[0],
+                    messages.messages.login.mailSent[1]
+                  );
                   setCodeSent(true);
                   if (data?.user) {
                     setUserId(data.user.id);

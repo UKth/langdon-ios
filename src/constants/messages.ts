@@ -9,7 +9,7 @@ const messages = {
   },
   messages: {
     login: {
-      mailSent: "Email sent! Please check your email.",
+      mailSent: ["Email sent.", " Please check your email."],
     },
     class: {
       dropped: "Dropped the class.",

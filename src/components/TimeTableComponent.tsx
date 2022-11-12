@@ -72,7 +72,8 @@ const TimeTableComponent = ({
   return (
     <View
       style={{
-        paddingHorizontal: 20,
+        paddingLeft: 20,
+        paddingRight: 10,
         marginBottom: 30,
       }}
     >

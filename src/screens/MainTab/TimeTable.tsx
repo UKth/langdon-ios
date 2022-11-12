@@ -124,23 +124,20 @@ const TimeTable = ({
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             alignItems: "center",
             paddingHorizontal: 20,
             paddingVertical: 10,
           }}
         >
-          <BoldText style={{ color: colors.mediumThemeColor }}>
-            logged in as {getNameString(user)}
-          </BoldText>
           <View style={{ flexDirection: "row" }}>
             <MyPressable
               style={{
                 marginRight: 10,
                 backgroundColor: "white",
-                width: 30,
-                height: 30,
-                borderRadius: 30,
+                width: 35,
+                height: 35,
+                borderRadius: 35,
                 alignItems: "center",
                 justifyContent: "center",
                 ...shadow.md,
@@ -155,8 +152,9 @@ const TimeTable = ({
             </MyPressable>
             <MyPressable
               style={{
-                borderRadius: 30,
-                padding: 15,
+                borderRadius: 35,
+                width: 35,
+                height: 35,
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: "white",

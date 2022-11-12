@@ -73,14 +73,14 @@ const Profile = ({
           style={{
             backgroundColor: "white",
             borderRadius: styles.borderRadius.md,
-            padding: 30,
+            padding: 25,
             marginBottom: 50,
             ...shadow.md,
           }}
         >
           <View style={{ flexDirection: "row", marginBottom: 20 }}>
             <ProfileIcon size={50} style={{ marginRight: 10 }} />
-            <View>
+            <View style={{ paddingRight: 50 }}>
               <BoldText
                 style={{
                   color: colors.mediumThemeColor,
@@ -89,7 +89,6 @@ const Profile = ({
                 }}
               >
                 {getNameString(user)}
-
                 <BoldText
                   style={{
                     color: colors.lightThemeColor,
@@ -104,9 +103,10 @@ const Profile = ({
                 style={{
                   color: colors.mediumThemeColor,
                   fontSize: 15,
+                  // maxWidth: "100%",
                 }}
               >
-                {user.email}
+                {user.email}ajfjkdsfbjksdnfjknsdkfnjksdnjk
               </BoldText>
             </View>
           </View>

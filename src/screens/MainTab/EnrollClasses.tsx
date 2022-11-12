@@ -19,7 +19,11 @@ import { Alert, Pressable, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ProgressContext } from "../../contexts/progressContext";
 import { API_URL, colors, messages } from "../../constants";
-import { ScreenContainer, SectionBox } from "../../components";
+import {
+  LoadingComponent,
+  ScreenContainer,
+  SectionBox,
+} from "../../components";
 import { shadow } from "../../constants/styles";
 
 type searchCourseParams = {
@@ -61,11 +65,15 @@ const EnrollClasses = () => {
   const { spinner } = useContext(ProgressContext);
 
   useEffect(() => {
-    searchCourse({
-      keyword: courseKeyword,
-      setSearchedCourses,
-      userContext,
-    });
+    if (courseKeyword.length) {
+      searchCourse({
+        keyword: courseKeyword,
+        setSearchedCourses,
+        userContext,
+      });
+    } else {
+      setSearchedCourses(undefined);
+    }
   }, [courseKeyword]);
 
   const updateEnrolledClasses = async () => {
@@ -204,7 +212,7 @@ const EnrollClasses = () => {
               borderRadius: 50,
               height: 50,
               color: colors.mediumThemeColor,
-              marginBottom: 10,
+              marginBottom: 20,
 
               ...shadow.md,
             }}
@@ -215,80 +223,90 @@ const EnrollClasses = () => {
             placeholder="ex. COMP SCI 200"
             placeholderTextColor={colors.lightThemeColor}
           />
-          {searchedCourses ? (
-            <View style={{ width: "100%" }}>
-              {searchedCourses.map((course) => (
-                <View
-                  style={{
-                    backgroundColor: colors.mediumThemeColor,
-                    marginBottom: 5,
-                    paddingHorizontal: 10,
-                    paddingBottom: 10,
-                    paddingTop: 5,
-                    borderRadius: 15,
-
-                    ...shadow.md,
-                  }}
-                  key={course.id}
-                >
-                  <Pressable
-                    style={({ pressed }) => [
-                      {
-                        opacity: pressed ? 0.5 : 1,
-                      },
-                    ]}
-                    onPress={() => {
-                      if (selectedCourse?.id === course.id) {
-                        setSearchedCourses(undefined);
-                      } else {
-                        setSelectedCourse(course);
-                      }
-                    }}
-                  >
-                    <BoldText
-                      style={{
-                        alignSelf: "flex-end",
-                        color: "white",
-                      }}
-                    >
-                      credit: {course.minimumCredits}
-                      {course.minimumCredits !== course.maximumCredits
-                        ? " ~ " + course.maximumCredits
-                        : ""}
-                    </BoldText>
-                    <BoldText style={{ color: "white" }}>
-                      {course.title}
-                    </BoldText>
-                    <BoldText style={{ color: "white" }}>
-                      {course.courseDesignation}
-                    </BoldText>
-                    <BoldText style={{ color: "white" }}>
-                      {course.fullCourseDesignation}
-                    </BoldText>
-                  </Pressable>
-                  {selectedCourse?.id === course.id ? (
+          {courseKeyword.length ? (
+            searchedCourses ? (
+              searchedCourses.length ? (
+                <View style={{ width: "100%" }}>
+                  {searchedCourses.map((course) => (
                     <View
                       style={{
-                        marginTop: 5,
-                        borderTopColor: "white",
-                        borderTopWidth: 1,
-                        padding: 5,
+                        backgroundColor: colors.mediumThemeColor,
+                        marginBottom: 5,
+                        paddingHorizontal: 10,
+                        paddingBottom: 10,
+                        paddingTop: 5,
+                        borderRadius: 15,
+
+                        ...shadow.md,
                       }}
+                      key={course.id}
                     >
-                      {mappedSections.map((mappedSection) => (
-                        <SectionBox
-                          key={mappedSection.code}
-                          section={mappedSection}
-                          onPress={(id: number) => {}}
-                          enrolledClasses={enrolledClasses}
-                          updateEnrolledClasses={updateEnrolledClasses}
-                        />
-                      ))}
+                      <Pressable
+                        style={({ pressed }) => [
+                          {
+                            opacity: pressed ? 0.5 : 1,
+                          },
+                        ]}
+                        onPress={() => {
+                          if (selectedCourse?.id === course.id) {
+                            setSearchedCourses(undefined);
+                          } else {
+                            setSelectedCourse(course);
+                          }
+                        }}
+                      >
+                        <BoldText
+                          style={{
+                            alignSelf: "flex-end",
+                            color: "white",
+                          }}
+                        >
+                          credit: {course.minimumCredits}
+                          {course.minimumCredits !== course.maximumCredits
+                            ? " ~ " + course.maximumCredits
+                            : ""}
+                        </BoldText>
+                        <BoldText style={{ color: "white" }}>
+                          {course.title}
+                        </BoldText>
+                        <BoldText style={{ color: "white" }}>
+                          {course.courseDesignation}
+                        </BoldText>
+                        <BoldText style={{ color: "white" }}>
+                          {course.fullCourseDesignation}
+                        </BoldText>
+                      </Pressable>
+                      {selectedCourse?.id === course.id ? (
+                        <View
+                          style={{
+                            marginTop: 5,
+                            borderTopColor: "white",
+                            borderTopWidth: 1,
+                            padding: 5,
+                          }}
+                        >
+                          {mappedSections.map((mappedSection) => (
+                            <SectionBox
+                              key={mappedSection.code}
+                              section={mappedSection}
+                              onPress={(id: number) => {}}
+                              enrolledClasses={enrolledClasses}
+                              updateEnrolledClasses={updateEnrolledClasses}
+                            />
+                          ))}
+                        </View>
+                      ) : null}
                     </View>
-                  ) : null}
+                  ))}
                 </View>
-              ))}
-            </View>
+              ) : (
+                <BoldText style={{ color: colors.mediumThemeColor }}>
+                  Data not found
+                </BoldText>
+              )
+            ) : (
+              <LoadingComponent />
+            )
           ) : null}
         </View>
       </KeyboardAwareScrollView>

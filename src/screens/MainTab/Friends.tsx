@@ -17,6 +17,7 @@ import { BoldText } from "../../components/StyledText";
 import { Alert, Share, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import styles, { shadow } from "../../constants/styles";
+import { ProgressContext } from "../../contexts/progressContext";
 
 const Friends = () => {
   const [friends, setFriends] = useState<User[]>();
@@ -25,17 +26,19 @@ const Friends = () => {
   const userContext = useContext(UserContext);
   const user = userContext.user;
   const [code, setCode] = useState();
+  const { spinner } = useContext(ProgressContext);
 
   if (!user) {
     return <ErrorComponent />;
   }
 
   const createFriendRequest = async () => {
+    spinner.start();
     const data = await postData(
       userContext,
       API_URL + "friend/createFriendRequest"
     );
-    console.log(data);
+    spinner.stop();
 
     if (!data?.ok) {
       Alert.alert(data?.error ?? "Failed with create friend request.");

@@ -16,7 +16,7 @@ import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { API_URL, colors, ENROLLED_CLASSES_KEY } from "../../constants";
 import { BoldText } from "../../components/StyledText";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 import {
   CoursePopUpBox,
   ErrorComponent,

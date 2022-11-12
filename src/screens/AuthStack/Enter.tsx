@@ -14,7 +14,7 @@ import {
   messages,
   REFRESH_TOKEN_KEY,
 } from "../../constants";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 import { ScreenContainer } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { shadow } from "../../constants/styles";

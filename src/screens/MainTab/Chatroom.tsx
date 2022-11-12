@@ -31,7 +31,7 @@ import {
 import * as Notifications from "expo-notifications";
 import { handleNotification } from "./TimeTable";
 import { shadow } from "../../constants/styles";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 import { Ionicons } from "@expo/vector-icons";
 
 const Chatroom = ({

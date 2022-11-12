@@ -13,7 +13,7 @@ import {
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { UserContext } from "../../contexts/userContext";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 
 const SendFirstMessage = ({
   route,

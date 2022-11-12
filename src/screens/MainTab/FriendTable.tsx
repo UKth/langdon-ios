@@ -11,7 +11,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { UserContext } from "../../contexts/userContext";
 import { getEnrolledClasses } from "../../apiFunctions";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 import {
   CoursePopUpBox,
   ScreenContainer,

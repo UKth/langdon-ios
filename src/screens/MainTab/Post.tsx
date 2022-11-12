@@ -36,7 +36,7 @@ import {
 } from "../../components";
 import { reportIssue } from "../../apiFunctions";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 import { useRef } from "react";
 import { shadow } from "../../constants/styles";
 

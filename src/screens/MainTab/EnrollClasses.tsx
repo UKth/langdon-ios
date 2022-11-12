@@ -17,7 +17,7 @@ import { UserContext, userContextType } from "../../contexts/userContext";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { Alert, Pressable, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 import { API_URL, colors, messages } from "../../constants";
 import { ScreenContainer, SectionBox } from "../../components";
 import { shadow } from "../../constants/styles";

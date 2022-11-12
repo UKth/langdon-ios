@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useContext } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { ProgressProvider } from "./contexts/Progress";
+import { ProgressProvider } from "./contexts/progressContext";
 import { UserContext, UserProvider } from "./contexts/userContext";
 import * as Notifications from "expo-notifications";
 

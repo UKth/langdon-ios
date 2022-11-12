@@ -16,7 +16,7 @@ import { formatTimeString, getData, nestedSection } from "../util";
 import { BoldText } from "./StyledText";
 import { dropClass, enrollClass } from "../apiFunctions";
 import { UserContext } from "../contexts/userContext";
-import { ProgressContext } from "../contexts/Progress";
+import { ProgressContext } from "../contexts/progressContext";
 import { API_URL, colors, EXAMDATE_OFFSET } from "../constants";
 import MyPressable from "./MyPressable";
 import { shadow } from "../constants/styles";

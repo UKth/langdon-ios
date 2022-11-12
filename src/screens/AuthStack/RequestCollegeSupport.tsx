@@ -6,7 +6,7 @@ import { AuthStackParamList } from "../../navigation/AuthStack";
 import { sendPostRequest } from "../../util";
 import { Alert } from "react-native";
 import { API_URL, colors, messages } from "../../constants";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 import { MyPressable, ScreenContainer } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { shadow } from "../../constants/styles";

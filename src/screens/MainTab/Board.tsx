@@ -15,7 +15,7 @@ import {
 } from "../../components";
 import { ANONYMOUS_USERNAME, API_URL, colors, styles } from "../../constants";
 import { BoldText } from "../../components/StyledText";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 import { shadow } from "../../constants/styles";
 
 const BoardScreen = ({

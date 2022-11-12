@@ -11,7 +11,7 @@ import Checkbox from "expo-checkbox";
 import { MyPressable, ScreenContainer } from "../../components";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { Ionicons } from "@expo/vector-icons";
-import { ProgressContext } from "../../contexts/Progress";
+import { ProgressContext } from "../../contexts/progressContext";
 import { shadow } from "../../constants/styles";
 
 const WritePost = ({

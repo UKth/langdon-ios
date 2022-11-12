@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { useEffect, useContext } from "react";
 import { Text } from "react-native";
-import { ProgressContext } from "../contexts/Progress";
+import { ProgressContext } from "../contexts/progressContext";
 import { USER_KEY } from "../constants";
 import { UserContext } from "../contexts/userContext";
 import useCachedResources from "../hooks/useCachedResources";

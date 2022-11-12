@@ -461,7 +461,7 @@ const PostScreen = ({
           <MyPressable
             style={{
               borderLeftWidth: 1,
-              borderColor: "white",
+              borderColor: colors.lightThemeColor,
               width: 80,
               height: 35,
               alignItems: "center",
@@ -469,7 +469,9 @@ const PostScreen = ({
             }}
             onPress={createComment}
           >
-            <BoldText style={{ fontSize: 16 }}>upload</BoldText>
+            <BoldText style={{ color: colors.mediumThemeColor, fontSize: 16 }}>
+              upload
+            </BoldText>
           </MyPressable>
         </View>
       </KeyboardAvoidingView>

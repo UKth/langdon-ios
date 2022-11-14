@@ -4,25 +4,25 @@ import { API_URL, messages } from "./constants";
 import { userContextType } from "./contexts/userContext";
 import { postData } from "./util";
 
-export const enrollClass = async (ctx: userContextType, classId: number) => {
+export const addClass = async (ctx: userContextType, classId: number) => {
   const data = await postData(ctx, API_URL + "course/class/enrollClass", {
     classId,
   });
   if (!data?.ok) {
-    Alert.alert("Enroll failed.\n" + data?.error);
+    Alert.alert("Add failed.\n" + data?.error);
   } else {
-    Alert.alert("Enrolled");
+    Alert.alert(messages.messages.class.added);
   }
 };
 
-export const dropClass = async (ctx: userContextType, classId: number) => {
+export const deleteClass = async (ctx: userContextType, classId: number) => {
   const data = await postData(ctx, API_URL + "course/class/dropClass", {
     classId,
   });
   if (!data?.ok) {
-    Alert.alert("Drop failed.\n" + data?.error);
+    Alert.alert("Delete failed.\n" + data?.error);
   } else {
-    Alert.alert(messages.messages.class.dropped);
+    Alert.alert(messages.messages.class.deleted);
   }
 };
 
@@ -54,7 +54,8 @@ export const getTable = async (
   if (data?.ok) {
     return data?.table;
   } else {
-    Alert.alert("Failed with fetching table.\n" + data?.error);
+    Alert.alert("Failed with fetching table.");
+    console.error(data?.error);
   }
 };
 

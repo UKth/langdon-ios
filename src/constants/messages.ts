@@ -12,7 +12,8 @@ const messages = {
       mailSent: ["Email sent.", " Please check your email."],
     },
     class: {
-      dropped: "Dropped the class.",
+      deleted: "Deleted the class.",
+      added: "Added the class.",
     },
     post: {
       postDeleted: "Post deleted.",

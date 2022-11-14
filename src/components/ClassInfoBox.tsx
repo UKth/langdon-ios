@@ -12,9 +12,14 @@ import {
   Pressable,
   View,
 } from "react-native";
-import { formatTimeString, getData, nestedSection } from "../util";
+import {
+  formatTimeString,
+  getData,
+  getMeetingTimeString,
+  nestedSection,
+} from "../util";
 import { BoldText } from "./StyledText";
-import { dropClass, enrollClass } from "../apiFunctions";
+import { deleteClass, addClass } from "../apiFunctions";
 import { UserContext } from "../contexts/userContext";
 import { ProgressContext } from "../contexts/progressContext";
 import { API_URL, colors, EXAMDATE_OFFSET } from "../constants";
@@ -80,12 +85,7 @@ const ClassInfoBox = ({
             </BoldText>
             {section.classMeetings.map((meeting) => {
               const isExam = meeting.meetingType === "EXAM";
-              const meetingTimeStart = new Date(
-                meeting.meetingTimeStart ? meeting.meetingTimeStart : 0
-              );
-              const meetingTimeEnd = new Date(
-                meeting.meetingTimeEnd ? meeting.meetingTimeEnd : 0
-              );
+
               return (
                 <View
                   key={meeting.id}
@@ -112,17 +112,9 @@ const ClassInfoBox = ({
                       ).toDateString()}
                     </BoldText>
                   ) : null}
-                  {meetingTimeStart.valueOf() && meetingTimeEnd.valueOf() ? (
+                  {meeting.meetingTimeStart && meeting.meetingTimeEnd ? (
                     <BoldText style={{ color: colors.mediumThemeColor }}>
-                      {formatTimeString(
-                        meetingTimeStart.getHours(),
-                        meetingTimeStart.getMinutes()
-                      ) +
-                        " ~ " +
-                        formatTimeString(
-                          meetingTimeEnd.getHours(),
-                          meetingTimeEnd.getMinutes()
-                        )}
+                      {getMeetingTimeString(meeting)}
                     </BoldText>
                   ) : null}
 
@@ -154,9 +146,9 @@ const ClassInfoBox = ({
           onPress={async () => {
             spinner.start();
             if (enrolledClasses.map((cls) => cls.id).includes(id)) {
-              await dropClass(userContext, id);
+              await deleteClass(userContext, id);
             } else {
-              await enrollClass(userContext, id);
+              await addClass(userContext, id);
             }
             updateEnrolledClasses();
             spinner.stop();
@@ -174,8 +166,8 @@ const ClassInfoBox = ({
         >
           <BoldText style={{ color: "white" }}>
             {enrolledClasses.map((cls) => cls.id).includes(id)
-              ? "drop"
-              : "enroll"}
+              ? "Delete"
+              : "Add"}
           </BoldText>
         </MyPressable>
       </View>

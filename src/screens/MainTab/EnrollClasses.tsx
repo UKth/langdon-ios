@@ -12,7 +12,7 @@ import {
   sectionMapper,
   sum,
 } from "../../util";
-import { dropClass, getEnrolledClasses } from "../../apiFunctions";
+import { deleteClass, getEnrolledClasses } from "../../apiFunctions";
 import { UserContext, userContextType } from "../../contexts/userContext";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { Alert, Pressable, View } from "react-native";
@@ -89,6 +89,16 @@ const EnrollClasses = () => {
     if (selectedCourse) {
       const sectionMapperResult = sectionMapper(selectedCourse.classes);
       setMappedSections(sectionMapperResult);
+      (async () => {
+        const data = await postData(userContext, API_URL + "course/getCourse", {
+          courseId: selectedCourse.id,
+        });
+
+        if (data?.course?.classes) {
+          const sectionMapperResult = sectionMapper(data.course.classes);
+          setMappedSections(sectionMapperResult);
+        }
+      })();
     }
   }, [selectedCourse]);
 
@@ -181,7 +191,7 @@ const EnrollClasses = () => {
                   }}
                   onPress={async () => {
                     spinner.start();
-                    await dropClass(userContext, cls.id);
+                    await deleteClass(userContext, cls.id);
                     updateEnrolledClasses();
                     spinner.stop();
                   }}
@@ -233,8 +243,8 @@ const EnrollClasses = () => {
                         backgroundColor: colors.mediumThemeColor,
                         marginBottom: 5,
                         paddingHorizontal: 10,
-                        paddingBottom: 10,
-                        paddingTop: 5,
+                        paddingBottom: 12,
+                        paddingTop: 12,
                         borderRadius: 15,
 
                         ...shadow.md,
@@ -255,24 +265,44 @@ const EnrollClasses = () => {
                           }
                         }}
                       >
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            marginBottom: 5,
+                          }}
+                        >
+                          <BoldText
+                            style={{
+                              fontSize: 13,
+                              color: "white",
+                              maxWidth: "80%",
+                            }}
+                          >
+                            {course.title}
+                          </BoldText>
+                          <BoldText
+                            style={{
+                              fontSize: 13,
+                              alignSelf: "flex-end",
+                              color: "white",
+                            }}
+                          >
+                            credit: {course.minimumCredits}
+                            {course.minimumCredits !== course.maximumCredits
+                              ? " ~ " + course.maximumCredits
+                              : ""}
+                          </BoldText>
+                        </View>
+                        <BoldText style={{ fontSize: 13, color: "white" }}>
+                          {course.courseDesignation}
+                        </BoldText>
                         <BoldText
                           style={{
-                            alignSelf: "flex-end",
+                            fontSize: 13,
                             color: "white",
                           }}
                         >
-                          credit: {course.minimumCredits}
-                          {course.minimumCredits !== course.maximumCredits
-                            ? " ~ " + course.maximumCredits
-                            : ""}
-                        </BoldText>
-                        <BoldText style={{ color: "white" }}>
-                          {course.title}
-                        </BoldText>
-                        <BoldText style={{ color: "white" }}>
-                          {course.courseDesignation}
-                        </BoldText>
-                        <BoldText style={{ color: "white" }}>
                           {course.fullCourseDesignation}
                         </BoldText>
                       </Pressable>
@@ -285,6 +315,18 @@ const EnrollClasses = () => {
                             padding: 5,
                           }}
                         >
+                          <BoldText
+                            style={{
+                              fontSize: 12,
+                              color: "white",
+                              marginBottom: 5,
+                            }}
+                            numberOfLines={
+                              selectedCourse?.id === course.id ? undefined : 1
+                            }
+                          >
+                            Prerequisites: {course.enrollmentPrerequisites}
+                          </BoldText>
                           {mappedSections.map((mappedSection) => (
                             <SectionBox
                               key={mappedSection.code}

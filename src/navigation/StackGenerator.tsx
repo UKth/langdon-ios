@@ -110,6 +110,7 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
           name="SendFirstMessage"
           component={SendFirstMessage}
           options={({ navigation }) => ({
+            title: "Send message",
             headerLeft: () => (
               <MyPressable onPress={() => navigation.pop()}>
                 <Ionicons name="close" size={20} />

@@ -1,7 +1,12 @@
 import { userContextType } from "./contexts/userContext";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ClassWithSections, TargetUser, User } from "@customTypes/models";
+import {
+  ClassMeeting,
+  ClassWithSections,
+  TargetUser,
+  User,
+} from "@customTypes/models";
 import {
   ACCESS_TOKEN_KEY,
   API_URL,
@@ -285,8 +290,22 @@ export const logJSON = (o: Object) => {
 
 const format2Digits = (n: number) => (n >= 10 ? "" : "0") + n;
 
-export const formatTimeString = (hour: number, min: number) => {
-  return format2Digits(hour) + ":" + format2Digits(min);
+export const getMeetingTimeString = (meeting: ClassMeeting) => {
+  if (!meeting.meetingTimeStart || !meeting.meetingTimeEnd) {
+    return "";
+  }
+  return (
+    formatTimeString(meeting.meetingTimeStart) +
+    " ~ " +
+    formatTimeString(meeting.meetingTimeEnd)
+  );
+};
+
+export const formatTimeString = (dateValue: Date | number) => {
+  const date = new Date(dateValue.valueOf());
+  return (
+    format2Digits(date.getHours()) + ":" + format2Digits(date.getMinutes())
+  );
 };
 
 export const getTimeDifferenceString = (createdAt: Date) => {

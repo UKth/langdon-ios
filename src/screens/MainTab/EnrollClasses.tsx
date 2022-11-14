@@ -21,6 +21,7 @@ import { ProgressContext } from "../../contexts/progressContext";
 import { API_URL, colors, messages } from "../../constants";
 import {
   LoadingComponent,
+  MyPressable,
   ScreenContainer,
   SectionBox,
 } from "../../components";
@@ -182,7 +183,7 @@ const EnrollClasses = () => {
                     ? " ~ " + cls.course.maximumCredits
                     : ""}
                 </BoldText>
-                <Pressable
+                <MyPressable
                   hitSlop={{
                     top: 10,
                     bottom: 10,
@@ -201,7 +202,7 @@ const EnrollClasses = () => {
                     size={15}
                     color={colors.mediumThemeColor}
                   />
-                </Pressable>
+                </MyPressable>
               </View>
             </View>
           ))}

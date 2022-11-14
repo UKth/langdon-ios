@@ -169,8 +169,9 @@ const Chatroom = ({
                   style={{
                     paddingVertical: 10,
                     paddingHorizontal: 18,
+
                     backgroundColor: "white",
-                    width: "80%",
+                    maxWidth: "80%",
 
                     borderRadius: styles.borderRadius.md,
                     marginBottom: 15,
@@ -193,7 +194,10 @@ const Chatroom = ({
                       {message.content}
                     </BoldText>
                     <BoldText
-                      style={{ fontSize: 10, color: colors.lightThemeColor }}
+                      style={{
+                        fontSize: 10,
+                        color: colors.lightThemeColor,
+                      }}
                     >
                       {getTimeDifferenceString(message.createdAt)}
                     </BoldText>

@@ -189,7 +189,10 @@ const TimeTable = () => {
         <CoursePopUpBox
           cls={popUpBoxData.cls}
           meeting={popUpBoxData.meeting}
-          closePopUp={() => setPopUpBoxData(undefined)}
+          closePopUp={() => {
+            updateTable();
+            setPopUpBoxData(undefined);
+          }}
         />
       ) : null}
     </ScreenContainer>

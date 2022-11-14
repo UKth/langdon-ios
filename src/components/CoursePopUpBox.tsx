@@ -5,12 +5,16 @@ import {
   Course,
   FullSection,
 } from "@customTypes/models";
-import React from "react";
+import React, { useContext } from "react";
 import { Alert, Linking, Pressable, View } from "react-native";
 import { BoldText } from "./StyledText";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, messages } from "../constants";
 import { shadow } from "../constants/styles";
+import { MyPressable } from "../components";
+import { ProgressContext } from "../contexts/progressContext";
+import { deleteClass } from "../apiFunctions";
+import { UserContext } from "../contexts/userContext";
 
 const CoursePopUpBox = ({
   cls,
@@ -26,6 +30,10 @@ const CoursePopUpBox = ({
   closePopUp: () => void;
 }) => {
   // const theme = useContext(ThemeContext);
+
+  const { spinner } = useContext(ProgressContext);
+  const userContext = useContext(UserContext);
+
   return (
     <Pressable
       style={{
@@ -52,23 +60,43 @@ const CoursePopUpBox = ({
           backgroundColor: "white",
           borderRadius: 10,
           width: "70%",
-          height: "25%",
+          minHeight: "25%",
           padding: 15,
           ...shadow.hard,
         }}
       >
-        <BoldText style={{ color: colors.mediumThemeColor, opacity: 0.8 }}>
-          {cls.course.fullCourseDesignation}
-        </BoldText>
-        <BoldText
-          style={{
-            color: colors.mediumThemeColor,
-            opacity: 0.8,
-            marginBottom: 2,
-          }}
-        >
-          {cls.course.courseDesignation}
-        </BoldText>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View>
+            <BoldText style={{ color: colors.mediumThemeColor, opacity: 0.8 }}>
+              {cls.course.fullCourseDesignation}
+            </BoldText>
+            <BoldText
+              style={{
+                color: colors.mediumThemeColor,
+                opacity: 0.8,
+                marginBottom: 2,
+              }}
+            >
+              {cls.course.courseDesignation}
+            </BoldText>
+          </View>
+          <MyPressable
+            hitSlop={{
+              top: 10,
+              bottom: 10,
+              right: 10,
+              left: 10,
+            }}
+            onPress={async () => {
+              spinner.start();
+              await deleteClass(userContext, cls.id);
+              spinner.stop();
+              closePopUp();
+            }}
+          >
+            <Ionicons name="trash" size={16} color={colors.mediumThemeColor} />
+          </MyPressable>
+        </View>
         <View
           style={{
             backgroundColor: colors.lightThemeColor,
@@ -77,15 +105,45 @@ const CoursePopUpBox = ({
             marginBottom: 2,
           }}
         />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: 15,
+          }}
+        >
+          <BoldText
+            style={{
+              fontSize: 12,
+              color: colors.mediumThemeColor,
+              opacity: 0.8,
+              maxWidth: "80%",
+            }}
+          >
+            {cls.course.title}
+          </BoldText>
+          <BoldText
+            style={{
+              fontSize: 11,
+              color: colors.mediumThemeColor,
+              opacity: 0.8,
+            }}
+          >
+            credit: {cls.course.minimumCredits}
+            {cls.course.minimumCredits !== cls.course.maximumCredits
+              ? " ~ " + cls.course.maximumCredits
+              : ""}
+          </BoldText>
+        </View>
         <BoldText
           style={{
             fontSize: 12,
             color: colors.mediumThemeColor,
             opacity: 0.8,
-            marginBottom: 2,
+            marginBottom: 5,
           }}
         >
-          {cls.course.title}
+          Prerequisites:
         </BoldText>
         <BoldText
           style={{
@@ -95,70 +153,86 @@ const CoursePopUpBox = ({
             marginBottom: 10,
           }}
         >
-          credit: {cls.course.minimumCredits}
-          {cls.course.minimumCredits !== cls.course.maximumCredits
-            ? " ~ " + cls.course.maximumCredits
-            : ""}
+          {cls.course.enrollmentPrerequisites}
         </BoldText>
         <BoldText
-          style={{ fontSize: 12, color: colors.mediumThemeColor, opacity: 0.8 }}
+          style={{
+            fontSize: 11,
+            color: colors.mediumThemeColor,
+            opacity: 0.9,
+            marginBottom: 15,
+          }}
         >
           {cls.sections.map(
             (sec) =>
-              (sec.instructor.firstName ?? "") + " " + sec.instructor.lastName
+              (sec.instructor.firstName ?? "") +
+              " " +
+              (sec.instructor.middleName
+                ? sec.instructor.middleName + " "
+                : "") +
+              sec.instructor.lastName
           )}
         </BoldText>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              opacity: pressed ? 0.5 : 1,
-            },
-            {
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <MyPressable
+            style={{ paddingHorizontal: 5 }}
+            hitSlop={{
+              top: 10,
+              bottom: 10,
+              right: 10,
+              left: 10,
+            }}
+            onPress={() => {}}
+          >
+            <Ionicons name="reader" color={colors.mediumThemeColor} size={20} />
+          </MyPressable>
+          <MyPressable
+            style={{
               backgroundColor: colors.lightThemeColor,
               paddingHorizontal: 5,
               paddingVertical: 3,
               borderRadius: 5,
-              position: "absolute",
-              right: 10,
-              bottom: 10,
               flexDirection: "row",
               alignItems: "center",
               ...shadow.md,
-            },
-          ]}
-          onPress={() => {
-            try {
-              if (
-                meeting.building &&
-                meeting.building.latitude &&
-                meeting.building.longitude
-              ) {
-                Linking.openURL(
-                  "https://maps.google.com/?q=@" +
-                    meeting.building.latitude +
-                    "," +
-                    meeting.building.longitude
-                );
-              } else {
+            }}
+            onPress={() => {
+              try {
+                if (
+                  meeting.building &&
+                  meeting.building.latitude &&
+                  meeting.building.longitude
+                ) {
+                  Linking.openURL(
+                    "https://maps.google.com/?q=@" +
+                      meeting.building.latitude +
+                      "," +
+                      meeting.building.longitude
+                  );
+                } else {
+                  Alert.alert(
+                    messages.errorMessages.timeTable
+                      .cantOpenGoogleMapsOfBuilding
+                  );
+                }
+              } catch {
                 Alert.alert(
-                  messages.errorMessages.timeTable.cantOpenGoogleMapsOfBuilding
+                  messages.errorMessages.timeTable.cantOpenGoogleMaps
                 );
               }
-            } catch {
-              Alert.alert(messages.errorMessages.timeTable.cantOpenGoogleMaps);
-            }
-          }}
-        >
-          <View style={{ marginRight: 10 }}>
-            <BoldText style={{ color: "white", fontSize: 12 }}>
-              {meeting.building.buildingName}
-            </BoldText>
-            <BoldText style={{ color: "white", fontSize: 12 }}>
-              {meeting.building.streetAddress}
-            </BoldText>
-          </View>
-          <Ionicons name="location" color={"white"} size={20} />
-        </Pressable>
+            }}
+          >
+            <View style={{ marginRight: 10 }}>
+              <BoldText style={{ color: "white", fontSize: 12 }}>
+                {meeting.building.buildingName}
+              </BoldText>
+              <BoldText style={{ color: "white", fontSize: 12 }}>
+                {meeting.building.streetAddress}
+              </BoldText>
+            </View>
+            <Ionicons name="location" color={"white"} size={20} />
+          </MyPressable>
+        </View>
       </View>
     </Pressable>
   );

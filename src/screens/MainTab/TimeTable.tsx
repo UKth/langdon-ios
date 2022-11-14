@@ -181,7 +181,7 @@ const TimeTable = () => {
           </View>
         </View>
         <TimeTableComponent
-          enrolledClasses={table?.enrolledClasses ?? []}
+          enrolledClasses={table?.enrolledClasses}
           setPopUpBoxData={setPopUpBoxData}
         />
       </KeyboardAwareScrollView>

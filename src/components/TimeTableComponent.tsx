@@ -22,7 +22,7 @@ const TimeTableComponent = ({
   enrolledClasses,
   setPopUpBoxData,
 }: {
-  enrolledClasses: (ClassWithSections & { course: Course })[];
+  enrolledClasses?: (ClassWithSections & { course: Course })[];
   setPopUpBoxData: React.Dispatch<
     React.SetStateAction<
       | {
@@ -39,29 +39,30 @@ const TimeTableComponent = ({
 }) => {
   let startTime = 9;
   let endTime = 16;
+  if (enrolledClasses) {
+    for (let i = 0; i < enrolledClasses.length; i++) {
+      const sections = enrolledClasses[i].sections;
+      for (let j = 0; j < sections.length; j++) {
+        const meetings = sections[j].classMeetings;
+        for (let k = 0; k < meetings.length; k++) {
+          const meeting = meetings[k];
 
-  for (let i = 0; i < enrolledClasses.length; i++) {
-    const sections = enrolledClasses[i].sections;
-    for (let j = 0; j < sections.length; j++) {
-      const meetings = sections[j].classMeetings;
-      for (let k = 0; k < meetings.length; k++) {
-        const meeting = meetings[k];
-
-        if (meeting.meetingType === "CLASS") {
-          if (meeting.meetingTimeStart) {
-            const startingTimeHour = Math.floor(
-              (meeting.meetingTimeStart + WI_GMT_DIFF) / HOUR_TS
-            );
-            if (startingTimeHour < startTime) {
-              startTime = startingTimeHour;
+          if (meeting.meetingType === "CLASS") {
+            if (meeting.meetingTimeStart) {
+              const startingTimeHour = Math.floor(
+                (meeting.meetingTimeStart + WI_GMT_DIFF) / HOUR_TS
+              );
+              if (startingTimeHour < startTime) {
+                startTime = startingTimeHour;
+              }
             }
-          }
-          if (meeting.meetingTimeEnd) {
-            const endingTimeHour = Math.ceil(
-              (meeting.meetingTimeEnd + WI_GMT_DIFF) / HOUR_TS
-            );
-            if (endingTimeHour > endTime) {
-              endTime = endingTimeHour;
+            if (meeting.meetingTimeEnd) {
+              const endingTimeHour = Math.ceil(
+                (meeting.meetingTimeEnd + WI_GMT_DIFF) / HOUR_TS
+              );
+              if (endingTimeHour > endTime) {
+                endTime = endingTimeHour;
+              }
             }
           }
         }
@@ -165,6 +166,18 @@ const TimeTableComponent = ({
                 : null
             )
           )
+        )}
+        {enrolledClasses && !enrolledClasses.length && (
+          <BoldText
+            style={{
+              color: colors.lightThemeColor,
+              alignSelf: "center",
+              marginTop: 165,
+              backgroundColor: "white",
+            }}
+          >
+            There's no enrolled class in the table.
+          </BoldText>
         )}
       </View>
     </View>

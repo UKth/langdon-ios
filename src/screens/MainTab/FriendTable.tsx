@@ -127,7 +127,7 @@ const FriendTable = ({
           </BoldText>
         </View>
         <TimeTableComponent
-          enrolledClasses={table?.enrolledClasses ?? []}
+          enrolledClasses={table?.enrolledClasses}
           setPopUpBoxData={setPopUpBoxData}
         />
       </ScrollView>

@@ -3,7 +3,7 @@ import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { API_URL, colors, styles } from "../../constants";
+import { API_URL, BOARDS_KEY, colors, styles } from "../../constants";
 import { getData, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
@@ -17,6 +17,7 @@ import {
 import * as Notifications from "expo-notifications";
 import { handleNotification } from "./TimeTable";
 import { shadow } from "../../constants/styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Boards = () => {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -26,9 +27,14 @@ const Boards = () => {
 
   useEffect(() => {
     (async () => {
+      const cachedBoards = await AsyncStorage.getItem(BOARDS_KEY);
+      if (cachedBoards) {
+        setBoards(JSON.parse(cachedBoards));
+      }
       const data = await postData(userContext, API_URL + "board/getBoards");
-      if (data?.ok) {
-        setBoards(data?.boards);
+      if (data?.ok && data?.boards) {
+        setBoards(data.boards);
+        AsyncStorage.setItem(BOARDS_KEY, JSON.stringify(data.boards));
       }
     })();
 

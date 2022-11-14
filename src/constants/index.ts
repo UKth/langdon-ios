@@ -8,6 +8,8 @@ import {
   USER_KEY,
   ENROLLED_CLASSES_KEY,
   TABLE_KEY,
+  BOARDS_KEY,
+  CHATROOMS_KEY,
 } from "./storageKeys";
 import {
   EXAMDATE_OFFSET,
@@ -28,6 +30,8 @@ export {
   USER_KEY,
   ENROLLED_CLASSES_KEY,
   TABLE_KEY,
+  BOARDS_KEY,
+  CHATROOMS_KEY,
   EXAMDATE_OFFSET,
   MIN_TS,
   HOUR_TS,

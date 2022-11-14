@@ -230,9 +230,12 @@ export type TargetUser = {
   lastName: string;
 };
 
-export type ChatroomWithLastMessage = Chatroom & {
+export type ChatroomForChatroomsList = Chatroom & {
   lastMessage: Message;
   members: TargetUser[];
+  post: {
+    title: string;
+  };
 };
 
 export type FullChatroom = Chatroom & {

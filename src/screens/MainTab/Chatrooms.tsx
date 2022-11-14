@@ -1,10 +1,10 @@
-import { Board, ChatroomWithLastMessage } from "@customTypes/models";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import { ChatroomForChatroomsList } from "@customTypes/models";
+import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
+import { Alert, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { API_URL, colors, styles } from "../../constants";
-import { getData, getTimeString, postData } from "../../util";
+import { getTimeString, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
@@ -20,7 +20,7 @@ import { handleNotification } from "./TimeTable";
 import { shadow } from "../../constants/styles";
 
 const Chatrooms = () => {
-  const [chatrooms, setChatrooms] = useState<ChatroomWithLastMessage[]>();
+  const [chatrooms, setChatrooms] = useState<ChatroomForChatroomsList[]>();
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
   const userContext = useContext(UserContext);
@@ -112,6 +112,19 @@ const Chatrooms = () => {
                           chatroom.members[0].id === user.id ? 1 : 0
                         ].netId
                       }
+                    </BoldText>
+                  ) : chatroom.post ? (
+                    <BoldText
+                      style={{
+                        fontSize: 10,
+                        width: 90,
+                        color: colors.mediumThemeColor,
+                        marginTop: 2,
+                        textAlign: "right",
+                      }}
+                      numberOfLines={1}
+                    >
+                      {chatroom.post.title}
                     </BoldText>
                   ) : null}
                 </View>

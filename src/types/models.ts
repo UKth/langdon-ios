@@ -68,6 +68,7 @@ export type Course = {
   courseDesignationCompressed: string;
   fullCourseDesignation: string;
   fullCourseDesignationCompressed: string;
+  enrollmentPrerequisites: string;
   minimumCredits: number;
   maximumCredits: number;
   title: string;
@@ -131,7 +132,7 @@ export type ClassMeetingWithBuilding = ClassMeeting & { building: Building };
 export type Building = {
   id: number;
   buildingCode: string;
-  buildingName: string;
+  buildingName: string | null;
   streetAddress: string | null;
   latitude: number | null;
   longitude: number | null;

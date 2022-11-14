@@ -249,7 +249,7 @@ const EnrollClasses = () => {
                         ]}
                         onPress={() => {
                           if (selectedCourse?.id === course.id) {
-                            setSearchedCourses(undefined);
+                            setSelectedCourse(undefined);
                           } else {
                             setSelectedCourse(course);
                           }

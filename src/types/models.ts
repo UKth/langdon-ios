@@ -222,15 +222,23 @@ export type Chatroom = {
   updatedAt: Date;
 };
 
+export type TargetUser = {
+  id: number;
+  netId: string;
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+};
+
 export type ChatroomWithLastMessage = Chatroom & {
   lastMessage: Message;
-  members: ShortUser[];
+  members: TargetUser[];
 };
 
 export type FullChatroom = Chatroom & {
-  members: ShortUser[];
+  members: TargetUser[];
   messages: Message[];
-  post: Post;
+  post: Post; // TODO ?
 };
 
 /**

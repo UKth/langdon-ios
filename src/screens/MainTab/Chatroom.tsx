@@ -1,34 +1,14 @@
-import {
-  Board,
-  ChatroomWithLastMessage,
-  FullChatroom,
-  Message,
-  Post,
-} from "@customTypes/models";
+import { FullChatroom, Message, TargetUser } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  KeyboardAvoidingView,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Alert, FlatList, KeyboardAvoidingView, View } from "react-native";
 import { API_URL, colors, styles } from "../../constants";
-import { getData, getTimeDifferenceString, postData } from "../../util";
+import { getNameString, getTimeDifferenceString, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
-import {
-  ErrorComponent,
-  LoadingComponent,
-  MyPressable,
-  ScreenContainer,
-} from "../../components";
+import { ErrorComponent, MyPressable, ScreenContainer } from "../../components";
 import * as Notifications from "expo-notifications";
 import { handleNotification } from "./TimeTable";
 import { shadow } from "../../constants/styles";
@@ -40,23 +20,23 @@ const Chatroom = ({
 }: {
   route: RouteProp<StackGeneratorParamList, "Chatroom">;
 }) => {
-  const [messages, setMessages] = useState<Message[]>();
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
   const userContext = useContext(UserContext);
   const user = userContext.user;
+
   const chatroomId = route.params.id;
   const [msgText, setMsgText] = useState("");
   const [chatroom, setChatroom] = useState<FullChatroom>();
+  const [targetUser, setTargetUser] = useState<TargetUser>();
 
   const { spinner } = useContext(ProgressContext);
 
+  if (!user) {
+    return <ErrorComponent />;
+  }
+
   const refetch = async () => {
-    // const data = await postData(
-    //   userContext,
-    //   API_URL + "chat/message/getChatroomMessages",
-    //   { chatroomId }
-    // );
     const data = await postData(userContext, API_URL + "chat/getChatroom", {
       chatroomId,
     });
@@ -92,9 +72,13 @@ const Chatroom = ({
     return () => navigation.removeListener("focus", refetch);
   }, []);
 
-  if (!user) {
-    return <ErrorComponent />;
-  }
+  useEffect(() => {
+    if (chatroom?.members) {
+      setTargetUser(
+        chatroom.members[chatroom.members[0].id === user.id ? 1 : 0]
+      );
+    }
+  }, [chatroom]);
 
   return (
     <ScreenContainer>
@@ -148,7 +132,13 @@ const Chatroom = ({
                 marginBottom: 3,
                 ...shadow.md,
               }}
-              onPress={() => navigation.push("Post", { id: chatroom.post.id })}
+              onPress={() =>
+                targetUser &&
+                navigation.push("FriendTable", {
+                  id: targetUser?.id,
+                  nameString: getNameString(targetUser), //TODO - fix
+                })
+              }
             >
               <BoldText
                 style={{
@@ -158,17 +148,16 @@ const Chatroom = ({
                 }}
                 numberOfLines={1}
               >
-                Personal chat with @
-                {
-                  chatroom.members[chatroom.members[0].id === user.id ? 1 : 0]
-                    .netId
-                }
+                Personal chat with @{targetUser?.netId ?? "id not found"}
               </BoldText>
             </MyPressable>
           </View>
         ) : null}
         <FlatList
-          style={{ paddingHorizontal: "5%", paddingTop: "10%" }}
+          style={{
+            paddingHorizontal: "5%",
+          }}
+          ListFooterComponent={() => <View style={{ height: 10 }} />}
           data={chatroom?.messages}
           inverted={true}
           renderItem={({ item: message }) => {
@@ -250,8 +239,6 @@ const Chatroom = ({
           />
           <MyPressable
             style={{
-              // borderLeftWidth: 1,
-              // borderColor: colors.lightThemeColor,
               width: 50,
               height: 30,
               alignItems: "center",

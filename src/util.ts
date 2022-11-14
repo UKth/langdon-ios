@@ -1,7 +1,7 @@
 import { userContextType } from "./contexts/userContext";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ClassWithSections, User } from "@customTypes/models";
+import { ClassWithSections, TargetUser, User } from "@customTypes/models";
 import {
   ACCESS_TOKEN_KEY,
   API_URL,
@@ -339,7 +339,7 @@ export const getTimeString = (dateValue: Date | number) => {
   );
 };
 
-export const getNameString = (user: User) => {
+export const getNameString = (user: TargetUser) => {
   return (
     user.firstName +
     " " +

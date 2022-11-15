@@ -55,7 +55,7 @@ const BoardScreen = ({
   }, []);
 
   return (
-    <ScreenContainer style={{ backgroundColor: "rgba(255,255,255,1)" }}>
+    <ScreenContainer>
       {posts ? (
         posts.length ? (
           <FlatList

@@ -15,7 +15,6 @@ import {
 } from "../../components";
 import { API_URL, colors } from "../../constants";
 import { BoldText } from "../../components/StyledText";
-import { ProgressContext } from "../../contexts/progressContext";
 
 const BoardScreen = ({
   route,
@@ -27,8 +26,15 @@ const BoardScreen = ({
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
   const userContext = useContext(UserContext);
   const boardId = route.params.id;
-  const [refreshing, setRefreshing] = useState(false);
-  const { spinner } = useContext(ProgressContext);
+
+  const refetch = async () => {
+    const data = await postData(userContext, API_URL + "board/post/getPosts", {
+      boardId,
+    });
+    if (data?.ok) {
+      setPosts(data.posts);
+    }
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -43,18 +49,7 @@ const BoardScreen = ({
       ),
       headerTitle: route.params.title,
     });
-  }, []);
 
-  const refetch = async () => {
-    const data = await postData(userContext, API_URL + "board/post/getPosts", {
-      boardId,
-    });
-    if (data?.ok) {
-      setPosts(data.posts);
-    }
-  };
-
-  useEffect(() => {
     navigation.addListener("focus", refetch);
     return () => navigation.removeListener("focus", refetch);
   }, []);

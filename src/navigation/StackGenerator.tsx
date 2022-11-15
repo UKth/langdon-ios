@@ -13,6 +13,9 @@ import {
   SendFirstMessage,
   Chatrooms,
   Chatroom,
+  MyPosts,
+  MyComments,
+  Tables,
 } from "../screens/MainTab";
 
 import React, { useContext, useEffect } from "react";
@@ -22,12 +25,12 @@ import { HeaderBackButton, MyPressable } from "../components";
 import { Ionicons } from "@expo/vector-icons";
 
 export type StackGeneratorParamList = {
-  TimeTable: undefined;
+  TimeTable: { tableId?: number };
   Boards: undefined;
   Board: { id: number; title: string };
   Post: { id: number };
   WritePost: { boardId: number };
-  EnrollClasses: undefined;
+  EnrollClasses: { tableId: number; tableTitle: string };
   Friends: undefined;
   FriendTable: { id: number; nameString: string };
   AddFriend: { targetId?: number; code?: number };
@@ -39,6 +42,9 @@ export type StackGeneratorParamList = {
   Chatrooms: undefined;
   Chatroom: { id: number };
   Profile: undefined;
+  MyPosts: undefined;
+  MyComments: undefined;
+  Tables: undefined;
 };
 
 export interface StackGeneratorProps {
@@ -90,7 +96,26 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
         <Stack.Screen name="Chatrooms" component={Chatrooms} />
         <Stack.Screen name="Chatroom" component={Chatroom} />
         <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Board" component={Board} />
+        <Stack.Screen
+          name="Board"
+          component={Board}
+          options={({ route, navigation }) => ({
+            title: route.params.title,
+            headerRight: () => (
+              <MyPressable
+                onPress={() =>
+                  navigation.push("WritePost", { boardId: route.params.id })
+                }
+              >
+                <Ionicons
+                  name="ios-create-outline"
+                  size={26}
+                  color={colors.themeColor}
+                />
+              </MyPressable>
+            ),
+          })}
+        />
         <Stack.Screen name="Post" component={Post} />
         <Stack.Screen
           name="WritePost"
@@ -103,7 +128,28 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
           component={FriendTable}
           options={({ route }) => ({ title: route.params.nameString })}
         />
-        <Stack.Screen name="AddFriend" component={AddFriend} />
+        <Stack.Screen
+          name="AddFriend"
+          component={AddFriend}
+          options={() => ({
+            title: "Friend addition",
+          })}
+        />
+        <Stack.Screen
+          name="MyPosts"
+          component={MyPosts}
+          options={() => ({
+            title: "My posts",
+          })}
+        />
+        <Stack.Screen
+          name="MyComments"
+          component={MyComments}
+          options={() => ({
+            title: "My comments",
+          })}
+        />
+        <Stack.Screen name="Tables" component={Tables} />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen

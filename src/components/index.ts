@@ -4,6 +4,8 @@ import {
   SectionBox,
   TimeBox,
   TimeTableComponent,
+  SmallTimeTableComponent,
+  DropDownTermPicker,
 } from "./timetable";
 
 import {
@@ -15,9 +17,10 @@ import {
   Spinner,
 } from "./shared";
 
-import { PostComponent } from "./board";
+import { PostComponent, CommentComponent } from "./board";
 
 import { ChatroomComponent } from "./chat";
+import { Logout, ProfileCard, ProfileIcon } from "./profile";
 
 export {
   ClassInfoBox,
@@ -30,7 +33,13 @@ export {
   TimeBox,
   LoadingComponent,
   TimeTableComponent,
+  SmallTimeTableComponent,
+  DropDownTermPicker,
   ErrorComponent,
   PostComponent,
+  CommentComponent,
   ChatroomComponent,
+  Logout,
+  ProfileCard,
+  ProfileIcon,
 };

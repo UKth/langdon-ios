@@ -37,19 +37,6 @@ const BoardScreen = ({
   };
 
   useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <MyPressable onPress={() => navigation.push("WritePost", { boardId })}>
-          <Ionicons
-            name="ios-create-outline"
-            size={26}
-            color={colors.themeColor}
-          />
-        </MyPressable>
-      ),
-      headerTitle: route.params.title,
-    });
-
     navigation.addListener("focus", refetch);
     return () => navigation.removeListener("focus", refetch);
   }, []);

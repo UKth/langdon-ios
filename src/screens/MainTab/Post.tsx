@@ -30,6 +30,7 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import {
+  CommentComponent,
   LoadingComponent,
   MyPressable,
   ScreenContainer,
@@ -286,119 +287,12 @@ const PostScreen = ({
                   </BoldText>
                 </View>
                 {post.comments.map((comment) => (
-                  <View
+                  <CommentComponent
                     key={comment.id}
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-
-                      ...shadow.md,
-                      backgroundColor: "white",
-
-                      borderRadius: styles.borderRadius.sm,
-                      paddingHorizontal: 10,
-                      paddingVertical: 7,
-                      marginBottom: 7,
-                    }}
-                  >
-                    <View style={{ width: "90%" }}>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          marginBottom: 5,
-                          alignItems: "center",
-                        }}
-                      >
-                        <BoldText
-                          style={{
-                            fontSize: 12,
-                            color: colors.mediumThemeColor,
-                            marginRight: 3,
-                          }}
-                        >
-                          @
-                          {comment.isAnonymous
-                            ? ANONYMOUS_USERNAME
-                            : comment.createdBy.netId}
-                        </BoldText>
-                        <BoldText
-                          style={{
-                            fontSize: 8,
-                            color: colors.lightThemeColor,
-                          }}
-                        >
-                          {getTimeDifferenceString(comment.createdAt)}
-                        </BoldText>
-                      </View>
-                      <BoldText
-                        style={{
-                          color: colors.mediumThemeColor,
-                          fontSize: 11,
-                        }}
-                      >
-                        {comment.content}
-                      </BoldText>
-                    </View>
-                    <MyPressable
-                      onPress={() => {
-                        const isMine = comment.userId === userContext.user?.id;
-                        ActionSheetIOS.showActionSheetWithOptions(
-                          {
-                            options: [
-                              "Cancel",
-                              isMine
-                                ? "Delete the comment"
-                                : "Report the comment",
-                              ...(isMine ? [] : ["Send message to writer."]),
-                            ],
-                            destructiveButtonIndex: 1,
-                            cancelButtonIndex: 0,
-                            // userInterfaceStyle: 'dark',
-                          },
-                          (buttonIndex) => {
-                            if (buttonIndex === 0) {
-                              // cancel action
-                            } else if (buttonIndex === 1) {
-                              if (isMine) {
-                                Alert.alert(
-                                  "Delete post",
-                                  "Are you sure to delete this post?",
-                                  [
-                                    {
-                                      text: "Yes",
-                                      onPress: () => deleteComment(comment.id),
-                                    },
-                                    {
-                                      text: "cancel",
-                                      style: "cancel",
-                                    },
-                                  ]
-                                );
-                              } else {
-                                reportIssue(userContext, {
-                                  content: "comment report",
-                                  targetId: comment.id,
-                                  targetType: "comment",
-                                });
-                              }
-                            } else if (!isMine && buttonIndex === 2) {
-                              navigation.push("SendFirstMessage", {
-                                targetId: comment.createdBy.id,
-                                postId: post.id,
-                              });
-                            }
-                          }
-                        );
-                      }}
-                    >
-                      <MaterialCommunityIcons
-                        name="dots-horizontal"
-                        size={24}
-                        color={colors.mediumThemeColor}
-                      />
-                    </MyPressable>
-                  </View>
+                    comment={comment}
+                    deleteComment={deleteComment}
+                    post={post}
+                  />
                 ))}
               </View>
             </View>

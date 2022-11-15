@@ -2,6 +2,8 @@ import {
   ClassWithSections,
   Course,
   CourseWithClasses,
+  TableWithClasses,
+  TermCode,
 } from "@customTypes/models";
 import React, { useState, useEffect, useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -12,20 +14,24 @@ import {
   sectionMapper,
   sum,
 } from "../../util";
-import { deleteClass, getEnrolledClasses } from "../../apiFunctions";
+import { deleteClass, getEnrolledClasses, getTable } from "../../apiFunctions";
 import { UserContext, userContextType } from "../../contexts/userContext";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { Alert, Pressable, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ProgressContext } from "../../contexts/progressContext";
-import { API_URL, colors, messages } from "../../constants";
+import { API_URL, colors, messages, termNames } from "../../constants";
 import {
+  ErrorComponent,
   LoadingComponent,
   MyPressable,
   ScreenContainer,
   SectionBox,
+  SmallTimeTableComponent,
 } from "../../components";
 import { shadow } from "../../constants/styles";
+import { RouteProp } from "@react-navigation/native";
+import { StackGeneratorParamList } from "src/navigation/StackGenerator";
 
 type searchCourseParams = {
   keyword: string;
@@ -33,13 +39,20 @@ type searchCourseParams = {
     React.SetStateAction<CourseWithClasses[] | undefined>
   >;
   userContext: userContextType;
+  termCode: TermCode;
 };
 
 const searchCourse: (params: searchCourseParams) => any = debounce(
-  async ({ keyword, setSearchedCourses, userContext }: searchCourseParams) => {
+  async ({
+    keyword,
+    setSearchedCourses,
+    userContext,
+    termCode,
+  }: searchCourseParams) => {
     if (keyword !== "") {
       const data = await postData(userContext, API_URL + "course/getCourses", {
         keyword,
+        termCode,
       });
       if (data?.ok) {
         setSearchedCourses(data.courses);
@@ -49,12 +62,19 @@ const searchCourse: (params: searchCourseParams) => any = debounce(
   400
 );
 
-const EnrollClasses = () => {
-  const [enrolledClasses, setEnrolledClasses] = useState<
-    (ClassWithSections & { course: Course })[]
-  >([]);
-
+const EnrollClasses = ({
+  route,
+}: {
+  route: RouteProp<StackGeneratorParamList, "EnrollClasses">;
+}) => {
   const userContext = useContext(UserContext);
+  const user = userContext.user;
+
+  if (!user) {
+    return <ErrorComponent />;
+  }
+
+  const tableId = route.params.tableId;
 
   const [courseKeyword, setCourseKeyword] = useState("");
 
@@ -63,27 +83,33 @@ const EnrollClasses = () => {
   const [selectedCourse, setSelectedCourse] = useState<CourseWithClasses>();
 
   const [mappedSections, setMappedSections] = useState<nestedSection[]>([]);
+  const [table, setTable] = useState<TableWithClasses>();
   const { spinner } = useContext(ProgressContext);
 
   useEffect(() => {
-    if (courseKeyword.length) {
+    if (courseKeyword.length && table?.termCode) {
       searchCourse({
         keyword: courseKeyword,
         setSearchedCourses,
         userContext,
+        termCode: table.termCode,
       });
     } else {
       setSearchedCourses(undefined);
     }
   }, [courseKeyword]);
 
-  const updateEnrolledClasses = async () => {
-    const data = await getEnrolledClasses(userContext);
-    setEnrolledClasses(data);
+  const updateTable = async () => {
+    const data = await getTable(userContext, { tableId });
+    if (data) {
+      setTable(data);
+    } else {
+      Alert.alert("Failed to get table data.");
+    }
   };
 
   useEffect(() => {
-    updateEnrolledClasses();
+    updateTable();
   }, []);
 
   useEffect(() => {
@@ -104,10 +130,10 @@ const EnrollClasses = () => {
   }, [selectedCourse]);
 
   const minCredSum = sum(
-    enrolledClasses.map((cls) => cls.course.minimumCredits)
+    table?.enrolledClasses.map((cls) => cls.course.minimumCredits) ?? []
   );
   const maxCredSum = sum(
-    enrolledClasses.map((cls) => cls.course.maximumCredits)
+    table?.enrolledClasses.map((cls) => cls.course.maximumCredits) ?? []
   );
 
   return (
@@ -123,6 +149,7 @@ const EnrollClasses = () => {
             alignItems: "center",
             paddingHorizontal: "10%",
             paddingTop: "10%",
+            marginBottom: 5,
           }}
         >
           <View
@@ -138,7 +165,7 @@ const EnrollClasses = () => {
                 color: colors.themeColor,
               }}
             >
-              Enrolled courses: {enrolledClasses.length}
+              Enrolled courses: {table?.enrolledClasses.length}
             </BoldText>
             <BoldText
               style={{
@@ -149,7 +176,7 @@ const EnrollClasses = () => {
               {minCredSum !== maxCredSum ? " ~ " + maxCredSum : ""}
             </BoldText>
           </View>
-          {enrolledClasses.map((cls) => (
+          {table?.enrolledClasses.map((cls) => (
             <View
               key={cls.id}
               style={{
@@ -218,8 +245,11 @@ const EnrollClasses = () => {
                           text: "Delete",
                           onPress: async () => {
                             spinner.start();
-                            await deleteClass(userContext, cls.id);
-                            updateEnrolledClasses();
+                            await deleteClass(userContext, {
+                              classId: cls.id,
+                              tableId: table.id,
+                            });
+                            updateTable();
                             spinner.stop();
                           },
                         },
@@ -237,151 +267,159 @@ const EnrollClasses = () => {
             </View>
           ))}
         </View>
-        <View
-          style={{
-            alignItems: "center",
-            paddingHorizontal: "5%",
-            paddingTop: "10%",
-          }}
-        >
-          <BoldTextInput
+        {table ? <SmallTimeTableComponent table={table} /> : null}
+        <View style={{ paddingHorizontal: 40, marginBottom: 10 }}>
+          <BoldText style={{ color: colors.lightThemeColor }}>
+            {table ? termNames[table.termCode] : ""}
+          </BoldText>
+        </View>
+        {table ? (
+          <View
             style={{
-              width: "100%",
-              paddingHorizontal: 20,
-              fontSize: 20,
-              backgroundColor: "white",
-              borderRadius: 50,
-              height: 50,
-              color: colors.mediumThemeColor,
-              marginBottom: 20,
-
-              ...shadow.md,
+              alignItems: "center",
+              paddingHorizontal: "5%",
             }}
-            onChangeText={(text) => {
-              setCourseKeyword(text.trim());
-            }}
-            autoCapitalize="none"
-            placeholder="ex. COMP SCI 200"
-            placeholderTextColor={colors.lightThemeColor}
-          />
-          {courseKeyword.length ? (
-            searchedCourses ? (
-              searchedCourses.length ? (
-                <View style={{ width: "100%" }}>
-                  {searchedCourses.map((course) => (
-                    <View
-                      style={{
-                        backgroundColor: colors.mediumThemeColor,
-                        marginBottom: 5,
-                        paddingHorizontal: 10,
-                        paddingBottom: 12,
-                        paddingTop: 12,
-                        borderRadius: 15,
+          >
+            <BoldTextInput
+              style={{
+                width: "100%",
+                paddingHorizontal: 20,
+                fontSize: 20,
+                backgroundColor: "white",
+                borderRadius: 50,
+                height: 50,
+                color: colors.mediumThemeColor,
+                marginBottom: 20,
 
-                        ...shadow.md,
-                      }}
-                      key={course.id}
-                    >
-                      <Pressable
-                        style={({ pressed }) => [
-                          {
-                            opacity: pressed ? 0.5 : 1,
-                          },
-                        ]}
-                        onPress={() => {
-                          if (selectedCourse?.id === course.id) {
-                            setSelectedCourse(undefined);
-                          } else {
-                            setSelectedCourse(course);
-                          }
+                ...shadow.md,
+              }}
+              onChangeText={(text) => {
+                setCourseKeyword(text.trim());
+              }}
+              autoCapitalize="none"
+              placeholder="ex. COMP SCI 200"
+              placeholderTextColor={colors.lightThemeColor}
+            />
+            {courseKeyword.length ? (
+              searchedCourses ? (
+                searchedCourses.length ? (
+                  <View style={{ width: "100%" }}>
+                    {searchedCourses.map((course) => (
+                      <View
+                        style={{
+                          backgroundColor: colors.mediumThemeColor,
+                          marginBottom: 5,
+                          paddingHorizontal: 10,
+                          paddingBottom: 12,
+                          paddingTop: 12,
+                          borderRadius: 15,
+
+                          ...shadow.md,
                         }}
+                        key={course.id}
                       >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            marginBottom: 5,
+                        <Pressable
+                          style={({ pressed }) => [
+                            {
+                              opacity: pressed ? 0.5 : 1,
+                            },
+                          ]}
+                          onPress={() => {
+                            if (selectedCourse?.id === course.id) {
+                              setSelectedCourse(undefined);
+                            } else {
+                              setSelectedCourse(course);
+                            }
                           }}
                         >
-                          <BoldText
+                          <View
                             style={{
-                              fontSize: 13,
-                              color: "white",
-                              maxWidth: "80%",
-                            }}
-                          >
-                            {course.title}
-                          </BoldText>
-                          <BoldText
-                            style={{
-                              fontSize: 13,
-                              alignSelf: "flex-end",
-                              color: "white",
-                            }}
-                          >
-                            credit: {course.minimumCredits}
-                            {course.minimumCredits !== course.maximumCredits
-                              ? " ~ " + course.maximumCredits
-                              : ""}
-                          </BoldText>
-                        </View>
-                        <BoldText style={{ fontSize: 13, color: "white" }}>
-                          {course.courseDesignation}
-                        </BoldText>
-                        <BoldText
-                          style={{
-                            fontSize: 13,
-                            color: "white",
-                          }}
-                        >
-                          {course.fullCourseDesignation}
-                        </BoldText>
-                      </Pressable>
-                      {selectedCourse?.id === course.id ? (
-                        <View
-                          style={{
-                            marginTop: 5,
-                            borderTopColor: "white",
-                            borderTopWidth: 1,
-                            padding: 5,
-                          }}
-                        >
-                          <BoldText
-                            style={{
-                              fontSize: 12,
-                              color: "white",
+                              flexDirection: "row",
+                              justifyContent: "space-between",
                               marginBottom: 5,
                             }}
-                            numberOfLines={
-                              selectedCourse?.id === course.id ? undefined : 1
-                            }
                           >
-                            Prerequisites: {course.enrollmentPrerequisites}
+                            <BoldText
+                              style={{
+                                fontSize: 13,
+                                color: "white",
+                                maxWidth: "80%",
+                              }}
+                            >
+                              {course.title}
+                            </BoldText>
+                            <BoldText
+                              style={{
+                                fontSize: 13,
+                                alignSelf: "flex-end",
+                                color: "white",
+                              }}
+                            >
+                              credit: {course.minimumCredits}
+                              {course.minimumCredits !== course.maximumCredits
+                                ? " ~ " + course.maximumCredits
+                                : ""}
+                            </BoldText>
+                          </View>
+                          <BoldText style={{ fontSize: 13, color: "white" }}>
+                            {course.courseDesignation}
                           </BoldText>
-                          {mappedSections.map((mappedSection) => (
-                            <SectionBox
-                              key={mappedSection.code}
-                              section={mappedSection}
-                              onPress={(id: number) => {}}
-                              enrolledClasses={enrolledClasses}
-                              updateEnrolledClasses={updateEnrolledClasses}
-                            />
-                          ))}
-                        </View>
-                      ) : null}
-                    </View>
-                  ))}
-                </View>
+                          <BoldText
+                            style={{
+                              fontSize: 13,
+                              color: "white",
+                            }}
+                          >
+                            {course.fullCourseDesignation}
+                          </BoldText>
+                        </Pressable>
+                        {selectedCourse?.id === course.id ? (
+                          <View
+                            style={{
+                              marginTop: 5,
+                              borderTopColor: "white",
+                              borderTopWidth: 1,
+                              padding: 5,
+                            }}
+                          >
+                            <BoldText
+                              style={{
+                                fontSize: 12,
+                                color: "white",
+                                marginBottom: 5,
+                              }}
+                              numberOfLines={
+                                selectedCourse?.id === course.id ? undefined : 1
+                              }
+                            >
+                              Prerequisites: {course.enrollmentPrerequisites}
+                            </BoldText>
+                            {table &&
+                              mappedSections.map((mappedSection) => (
+                                <SectionBox
+                                  key={mappedSection.code}
+                                  section={mappedSection}
+                                  onPress={(id: number) => {}}
+                                  table={table}
+                                  updateTable={updateTable}
+                                />
+                              ))}
+                          </View>
+                        ) : null}
+                      </View>
+                    ))}
+                  </View>
+                ) : (
+                  <BoldText style={{ color: colors.mediumThemeColor }}>
+                    Data not found
+                  </BoldText>
+                )
               ) : (
-                <BoldText style={{ color: colors.mediumThemeColor }}>
-                  Data not found
-                </BoldText>
+                <LoadingComponent />
               )
-            ) : (
-              <LoadingComponent />
-            )
-          ) : null}
-        </View>
+            ) : null}
+          </View>
+        ) : null}
       </KeyboardAwareScrollView>
     </ScreenContainer>
   );

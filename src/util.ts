@@ -13,6 +13,9 @@ import {
   REFRESH_TOKEN_KEY,
   USER_KEY,
 } from "./constants";
+import { StackGeneratorParamList } from "./navigation/StackGenerator";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import * as Notifications from "expo-notifications";
 
 export const logout = (ctx: userContextType) => {
   ctx.setUser(undefined);
@@ -365,4 +368,30 @@ export const getNameString = (user: TargetUser) => {
     (user.middleName ? user.middleName + " " : "") +
     user.lastName
   );
+};
+
+export type pushNotificationData = {
+  route: string;
+  params: StackGeneratorParamList[keyof StackGeneratorParamList];
+};
+
+export const handleNotification = ({
+  navigation,
+  notification,
+}: {
+  navigation: NativeStackNavigationProp<StackGeneratorParamList>;
+  notification: Notifications.Notification;
+}) => {
+  const data = notification.request.content.data as pushNotificationData;
+
+  if (["Post", "Chatrooms"].includes(data.route)) {
+    if (data.route === "Post") {
+      const params = data.params as StackGeneratorParamList["Post"];
+      if (params.id) {
+        navigation.navigate("Post", params);
+      }
+    } else if (data.route === "Chatrooms") {
+      navigation.navigate("Chatrooms");
+    }
+  }
 };

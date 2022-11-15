@@ -10,6 +10,9 @@ import Profile from "./Profile";
 import SendFirstMessage from "./SendFirstMessage";
 import Chatrooms from "./Chatrooms";
 import Chatroom from "./Chatroom";
+import MyPosts from "./MyPosts";
+import MyComments from "./MyComments";
+import Tables from "./Tables";
 
 export {
   Board,
@@ -24,4 +27,7 @@ export {
   SendFirstMessage,
   Chatrooms,
   Chatroom,
+  MyPosts,
+  MyComments,
+  Tables,
 };

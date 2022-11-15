@@ -3,7 +3,7 @@ import {
   ClassMeetingWithBuilding,
   Course,
   FullSection,
-  Table,
+  TableWithClasses,
 } from "@customTypes/models";
 import {
   NavigationProp,
@@ -40,7 +40,7 @@ const FriendTable = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
 
-  const [table, setTable] = useState<Table>();
+  const [table, setTable] = useState<TableWithClasses>();
   const [popUpBoxData, setPopUpBoxData] = useState<{
     cls: Class & {
       sections: FullSection[];
@@ -131,11 +131,12 @@ const FriendTable = ({
           setPopUpBoxData={setPopUpBoxData}
         />
       </ScrollView>
-      {popUpBoxData ? (
+      {table && popUpBoxData ? (
         <CoursePopUpBox
           cls={popUpBoxData.cls}
           meeting={popUpBoxData.meeting}
           closePopUp={() => setPopUpBoxData(undefined)}
+          table={table}
         />
       ) : null}
     </ScreenContainer>

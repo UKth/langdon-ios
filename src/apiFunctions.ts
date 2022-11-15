@@ -1,12 +1,18 @@
-import { ReportTargetType, Table } from "@customTypes/models";
+import { ReportTargetType, TableWithClasses } from "@customTypes/models";
 import { Alert } from "react-native";
 import { API_URL, messages } from "./constants";
 import { userContextType } from "./contexts/userContext";
 import { postData } from "./util";
 
-export const addClass = async (ctx: userContextType, classId: number) => {
+type classUpdateProps = { classId: number; tableId: number };
+
+export const addClass = async (
+  ctx: userContextType,
+  { classId, tableId }: classUpdateProps
+) => {
   const data = await postData(ctx, API_URL + "course/class/enrollClass", {
     classId,
+    tableId,
   });
   if (!data?.ok) {
     Alert.alert("Add failed.\n" + data?.error);
@@ -15,9 +21,13 @@ export const addClass = async (ctx: userContextType, classId: number) => {
   }
 };
 
-export const deleteClass = async (ctx: userContextType, classId: number) => {
+export const deleteClass = async (
+  ctx: userContextType,
+  { classId, tableId }: classUpdateProps
+) => {
   const data = await postData(ctx, API_URL + "course/class/dropClass", {
     classId,
+    tableId,
   });
   if (!data?.ok) {
     Alert.alert("Delete failed.\n" + data?.error);
@@ -45,7 +55,7 @@ export const getEnrolledClasses = async (
 export const getTable = async (
   ctx: userContextType,
   params?: { targetId?: number; tableId?: number }
-): Promise<Table | undefined> => {
+): Promise<TableWithClasses | undefined> => {
   const { targetId, tableId } = params ?? {};
   const data = await postData(ctx, API_URL + "table/getTable", {
     ...(targetId ? { targetId } : {}),

@@ -1,20 +1,19 @@
 import {
   Class,
   ClassMeetingWithBuilding,
-  ClassWithSections,
   Course,
   FullSection,
-  Table,
+  TableWithClasses,
 } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { View } from "react-native";
+import { ActionSheetIOS, Alert, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { UserContext } from "../../contexts/userContext";
 import { getTable } from "../../apiFunctions";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { colors, TABLE_KEY } from "../../constants";
+import { API_URL, colors, TABLE_KEY, termNames } from "../../constants";
 import { BoldText } from "../../components/StyledText";
 import { ProgressContext } from "../../contexts/progressContext";
 import {
@@ -27,42 +26,21 @@ import {
 import * as Notifications from "expo-notifications";
 import { Ionicons } from "@expo/vector-icons";
 import { shadow } from "../../constants/styles";
-import * as Linking from "expo-linking";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { handleNotification, postData } from "../../util";
 
-export type pushNotificationData = {
-  route: string;
-  params: StackGeneratorParamList[keyof StackGeneratorParamList];
-};
-
-export const handleNotification = ({
-  navigation,
-  notification,
+const TimeTable = ({
+  route,
 }: {
-  navigation: NativeStackNavigationProp<StackGeneratorParamList>;
-  notification: Notifications.Notification;
+  route: RouteProp<StackGeneratorParamList, "TimeTable">;
 }) => {
-  const data = notification.request.content.data as pushNotificationData;
-
-  if (["Post", "Chatrooms"].includes(data.route)) {
-    if (data.route === "Post") {
-      const params = data.params as StackGeneratorParamList["Post"];
-      if (params.id) {
-        navigation.navigate("Post", params);
-      }
-    } else if (data.route === "Chatrooms") {
-      navigation.navigate("Chatrooms");
-    }
-  }
-};
-
-const TimeTable = () => {
   const userContext = useContext(UserContext);
   const user = userContext.user;
 
   if (!user) {
     return <ErrorComponent />;
   }
+  const tableId = route?.params?.tableId ?? user.defaultTableId;
 
   const [popUpBoxData, setPopUpBoxData] = useState<{
     cls: Class & {
@@ -72,45 +50,139 @@ const TimeTable = () => {
     };
     meeting: ClassMeetingWithBuilding;
   }>();
-  const [table, setTable] = useState<Table>();
+  const [table, setTable] = useState<TableWithClasses>();
 
   const { spinner } = useContext(ProgressContext);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
 
+  console.log(user.defaultTableId);
+
+  const onPressMenu = () => {
+    if (!table) {
+      return;
+    }
+    const isDefault = user.defaultTableId === table.id;
+    console.log(user.defaultTableId, tableId);
+    if (isDefault) {
+      return;
+    }
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ["Cancel", "Delete Table", "Set table as a public table"],
+        destructiveButtonIndex: 1,
+        cancelButtonIndex: 0,
+        // userInterfaceStyle: 'dark',
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 0) {
+          // cancel action
+        } else if (buttonIndex === 1) {
+          spinner.start();
+          const data = await postData(
+            userContext,
+            API_URL + "table/deleteTable",
+            {
+              tableId: table.id,
+            }
+          );
+          spinner.stop();
+          if (data?.ok) {
+            Alert.alert("Table deleted.");
+            navigation.pop();
+          } else {
+            Alert.alert("Deletion failed.", data.error ?? "Please try again.");
+          }
+        } else if (buttonIndex === 2) {
+          spinner.start();
+          const data = await postData(
+            userContext,
+            API_URL + "table/setDefaultTable",
+            {
+              tableId: table.id,
+            }
+          );
+          spinner.stop();
+          if (data?.ok) {
+            Alert.alert("The table set as a public table.");
+            userContext.setUser({
+              ...user,
+              defaultTableId: table.id,
+            });
+          } else {
+            Alert.alert("Set failed.", data.error ?? "Please try again.");
+          }
+        }
+      }
+    );
+  };
+
   const updateTable = async () => {
-    const data = await getTable(userContext);
+    const data = await getTable(userContext, { tableId });
     if (data) {
       setTable(data);
-      AsyncStorage.setItem(TABLE_KEY, JSON.stringify(data));
+    }
+  };
+
+  const updateUser = async () => {
+    // const data = await postData(userContext, API_URL + "user/getUser");
+    // if (data?.ok && data.user) {
+    //   userContext.setUser(data.user);
+    // }
+  };
+
+  const updateData = async () => {
+    updateUser();
+    updateTable();
+  };
+
+  // useEffect(()=>{
+  //   if(table){
+  //     AsyncStorage.setItem(TABLE_KEY + table.id, JSON.stringify(table));
+  //   }
+  // },[table])
+
+  const restoreData = async () => {
+    const cachedTable = await AsyncStorage.getItem(TABLE_KEY + tableId);
+    if (!cachedTable) {
+      spinner.start();
+    } else {
+      setTable(JSON.parse(cachedTable)); // may produce error
     }
   };
 
   useEffect(() => {
+    navigation.setOptions({
+      headerRight: () =>
+        tableId !== user.defaultTableId ? (
+          <MyPressable onPress={onPressMenu}>
+            <Ionicons name={"menu"} size={22} color={colors.mediumThemeColor} />
+          </MyPressable>
+        ) : null,
+    });
+  }, [user, table]);
+
+  useEffect(() => {
     (async () => {
-      const cachedTable = await AsyncStorage.getItem(TABLE_KEY);
+      const cachedTable = await AsyncStorage.getItem(TABLE_KEY + tableId);
       if (!cachedTable) {
         spinner.start();
       } else {
         setTable(JSON.parse(cachedTable)); // may produce error
       }
-      await updateTable();
+      await updateData();
       spinner.stop();
     })();
-    navigation.addListener("focus", updateTable);
 
-    // Notifications.addNotificationReceivedListener((notification) => {
-    //   console.log("rl\n");
-    //   logJSON(notification);
-    // });
+    navigation.addListener("focus", updateData);
 
     Notifications.addNotificationResponseReceivedListener(({ notification }) =>
       handleNotification({ navigation, notification })
     );
 
-    return () => navigation.removeListener("focus", updateTable);
-  }, []);
+    return () => navigation.removeListener("focus", updateData);
+  }, [user]);
 
   return (
     <ScreenContainer>
@@ -124,9 +196,21 @@ const TimeTable = () => {
             paddingVertical: 10,
           }}
         >
-          <BoldText style={{ fontSize: 17, color: colors.mediumThemeColor }}>
-            {table?.title}
-          </BoldText>
+          <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+            <BoldText
+              style={{
+                fontSize: 17,
+                color: colors.mediumThemeColor,
+                marginRight: 5,
+              }}
+            >
+              {table?.title}
+            </BoldText>
+            <BoldText style={{ fontSize: 12, color: colors.lightThemeColor }}>
+              {table ? termNames[table.termCode] : ""}
+              {user.defaultTableId === table?.id ? " (public)" : ""}
+            </BoldText>
+          </View>
           <View style={{ flexDirection: "row" }}>
             <MyPressable
               style={{
@@ -139,14 +223,35 @@ const TimeTable = () => {
                 justifyContent: "center",
                 ...shadow.md,
               }}
-              onPress={() => navigation.push("Friends")}
+              onPress={() => navigation.push("Tables")}
             >
               <Ionicons
-                name="people"
+                name="ios-calendar-outline"
                 size={20}
                 color={colors.mediumThemeColor}
               />
             </MyPressable>
+            {route?.params?.tableId ? null : (
+              <MyPressable
+                style={{
+                  marginRight: 10,
+                  backgroundColor: "white",
+                  width: 35,
+                  height: 35,
+                  borderRadius: 35,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  ...shadow.md,
+                }}
+                onPress={() => navigation.push("Friends")}
+              >
+                <Ionicons
+                  name="people"
+                  size={20}
+                  color={colors.mediumThemeColor}
+                />
+              </MyPressable>
+            )}
             <MyPressable
               style={{
                 borderRadius: 35,
@@ -157,7 +262,14 @@ const TimeTable = () => {
                 backgroundColor: "white",
                 ...shadow.md,
               }}
-              onPress={() => navigation.push("EnrollClasses")}
+              onPress={() => {
+                if (table) {
+                  navigation.push("EnrollClasses", {
+                    tableId: table.id,
+                    tableTitle: table?.title,
+                  });
+                }
+              }}
             >
               <View
                 style={{
@@ -185,14 +297,15 @@ const TimeTable = () => {
           setPopUpBoxData={setPopUpBoxData}
         />
       </KeyboardAwareScrollView>
-      {popUpBoxData ? (
+      {table && popUpBoxData ? (
         <CoursePopUpBox
           cls={popUpBoxData.cls}
           meeting={popUpBoxData.meeting}
           closePopUp={() => {
-            updateTable();
+            updateData();
             setPopUpBoxData(undefined);
           }}
+          table={table}
         />
       ) : null}
     </ScreenContainer>

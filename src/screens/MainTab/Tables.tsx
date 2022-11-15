@@ -32,7 +32,6 @@ import {
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import styles, { shadow } from "../../constants/styles";
 import { ProgressContext } from "../../contexts/progressContext";
-import { Picker } from "@react-native-picker/picker";
 
 const Tables = () => {
   const [tables, setTables] = useState<Table[]>();
@@ -68,14 +67,15 @@ const Tables = () => {
 
   const updateTables = async () => {
     const data = await postData(userContext, API_URL + "table/getTables");
-    console.log(data);
     if (data?.ok && data.tables) {
       setTables(data.tables);
     }
   };
 
   useEffect(() => {
-    updateTables();
+    navigation.addListener("focus", updateTables);
+
+    return () => navigation.removeListener("focus", updateTables);
   }, []);
 
   useEffect(() => {

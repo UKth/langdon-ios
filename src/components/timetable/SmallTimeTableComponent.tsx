@@ -20,8 +20,8 @@ import { BoldText } from "../StyledText";
 import TimeBox from "./TimeBox";
 
 const SmallTimeTableComponent = ({ table }: { table?: TableWithClasses }) => {
-  let startTime = 12;
-  let endTime = 16;
+  let startTime = 20;
+  let endTime = 7;
   if (table) {
     for (let i = 0; i < table.enrolledClasses.length; i++) {
       const sections = table.enrolledClasses[i].sections;
@@ -51,6 +51,9 @@ const SmallTimeTableComponent = ({ table }: { table?: TableWithClasses }) => {
         }
       }
     }
+  }
+  if (startTime >= endTime) {
+    return null;
   }
 
   return (

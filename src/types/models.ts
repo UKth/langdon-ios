@@ -38,9 +38,21 @@ export type ShortUser = {
 export type Table = {
   id: number;
   userId: number | null;
-  termCode: number;
+  termCode: TermCode;
   title: string;
   collegeId: number;
+};
+
+export const TermCode = {
+  T_1232: "T_1232",
+  T_1234: "T_1234",
+};
+
+export type TermCode = typeof TermCode[keyof typeof TermCode];
+
+export type TermCodeType = "T_1232" | "T_1234";
+
+export type TableWithClasses = Table & {
   enrolledClasses: (ClassWithSections & { course: Course })[];
 };
 
@@ -190,6 +202,10 @@ export type PostWithCounts = Post & {
   createdBy: ShortUser;
 };
 
+export type PostWithBoard = Post & {
+  board: Board;
+};
+
 export type fullPost = PostWithCounts & {
   createdBy: User;
   comments: Comment[];
@@ -209,6 +225,13 @@ export type Comment = {
   postId: number;
   isAnonymous: Boolean;
   createdBy: User;
+};
+
+export type CommentWithPost = Comment & {
+  post: Post;
+  _count: {
+    likedUsers: number;
+  };
 };
 
 /**

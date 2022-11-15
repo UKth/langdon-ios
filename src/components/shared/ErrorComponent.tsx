@@ -1,8 +1,8 @@
 import React from "react";
-import { ActivityIndicator, Linking, View } from "react-native";
-import { colors } from "../constants";
+import { Linking } from "react-native";
+import { colors } from "../../constants";
 import ScreenContainer from "./ScreenContainer";
-import { BoldText } from "./StyledText";
+import { BoldText } from "../StyledText";
 
 const ErrorComponent = () => {
   return (

@@ -1,8 +1,7 @@
 import { PostWithCounts } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { FlatList, View } from "react-native";
 import { postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
@@ -62,31 +61,31 @@ const BoardScreen = ({
 
   return (
     <ScreenContainer style={{ backgroundColor: "rgba(255,255,255,1)" }}>
-      <KeyboardAwareScrollView
-        style={{
-          paddingTop: "20%",
-          paddingHorizontal: "8%",
-        }}
-      >
-        {posts ? (
-          posts.length ? (
-            posts.map((post) => <PostComponent post={post} />)
-          ) : (
-            <BoldText style={{ color: colors.mediumThemeColor, fontSize: 20 }}>
-              The board is empty.
-            </BoldText>
-          )
+      {posts ? (
+        posts.length ? (
+          <FlatList
+            style={{ paddingHorizontal: "8%" }}
+            data={posts}
+            ListHeaderComponent={() => <View style={{ height: 40 }} />}
+            ListFooterComponent={() => <View style={{ height: 20 }} />}
+            keyExtractor={(post) => post.id + ""}
+            renderItem={({ item: post }) => <PostComponent post={post} />}
+          />
         ) : (
-          <View
-            style={{
-              height: 100,
-              justifyContent: "center",
-            }}
-          >
-            <LoadingComponent />
-          </View>
-        )}
-      </KeyboardAwareScrollView>
+          <BoldText style={{ color: colors.mediumThemeColor, fontSize: 20 }}>
+            The board is empty.
+          </BoldText>
+        )
+      ) : (
+        <View
+          style={{
+            height: 100,
+            justifyContent: "center",
+          }}
+        >
+          <LoadingComponent />
+        </View>
+      )}
     </ScreenContainer>
   );
 };

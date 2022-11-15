@@ -1,24 +1,23 @@
 import {
   Class,
-  ClassMeeting,
   ClassMeetingWithBuilding,
   Course,
   FullSection,
 } from "@customTypes/models";
 import React, { useContext } from "react";
 import { Alert, Linking, Pressable, View } from "react-native";
-import { BoldText } from "./StyledText";
+import { BoldText } from "../StyledText";
 import { Ionicons } from "@expo/vector-icons";
-import { API_URL, colors, messages } from "../constants";
-import styles, { shadow } from "../constants/styles";
-import MyPressable from "./MyPressable";
-import { ProgressContext } from "../contexts/progressContext";
-import { deleteClass } from "../apiFunctions";
-import { UserContext } from "../contexts/userContext";
+import { API_URL, colors, messages } from "../../constants";
+import styles, { shadow } from "../../constants/styles";
+import MyPressable from "../shared/MyPressable";
+import { ProgressContext } from "../../contexts/progressContext";
+import { deleteClass } from "../../apiFunctions";
+import { UserContext } from "../../contexts/userContext";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StackGeneratorParamList } from "../navigation/StackGenerator";
-import { postData } from "../util";
+import { StackGeneratorParamList } from "../../navigation/StackGenerator";
+import { postData } from "../../util";
 
 const CoursePopUpBox = ({
   cls,

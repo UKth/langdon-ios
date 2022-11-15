@@ -13,9 +13,9 @@ import {
   HOUR_TS,
   TIMEBOX_HOUR_HEIGHT,
   WI_GMT_DIFF,
-} from "../constants";
-import { dayCharToInt, meetingDayChar } from "../util";
-import { BoldText } from "./StyledText";
+} from "../../constants";
+import { dayCharToInt, meetingDayChar } from "../../util";
+import { BoldText } from "../StyledText";
 import TimeBox from "./TimeBox";
 
 const TimeTableComponent = ({
@@ -82,10 +82,10 @@ const TimeTableComponent = ({
         <BoldText
           key={i}
           style={{
+            color: "#808080",
             position: "absolute",
             top: i * TIMEBOX_HOUR_HEIGHT + 25,
             borderTopWidth: 1,
-            color: "#808080",
           }}
         >
           {i + startTime}

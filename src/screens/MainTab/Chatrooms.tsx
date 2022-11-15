@@ -1,7 +1,7 @@
 import { ChatroomForChatroomsList } from "@customTypes/models";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { Alert, View } from "react-native";
+import { Alert, FlatList, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { API_URL, CHATROOMS_KEY, colors, styles } from "../../constants";
 import { getTimeString, postData } from "../../util";
@@ -10,6 +10,7 @@ import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
 import { BoldText } from "../../components/StyledText";
 import {
+  ChatroomComponent,
   ErrorComponent,
   LoadingComponent,
   MyPressable,
@@ -63,99 +64,35 @@ const Chatrooms = () => {
 
   return (
     <ScreenContainer>
-      <KeyboardAwareScrollView
-        style={{
-          paddingTop: "20%",
-          paddingHorizontal: "8%",
-        }}
-      >
-        {chatrooms ? (
-          chatrooms.length ? (
-            chatrooms.map((chatroom) => (
-              <MyPressable
-                key={chatroom.id}
-                style={{
-                  paddingVertical: 15,
-                  paddingHorizontal: 18,
-                  backgroundColor: "white",
-                  borderColor: colors.themeColor,
-                  borderRadius: styles.borderRadius.md,
-                  marginBottom: 15,
-                  ...shadow.md,
-
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-                onPress={() => navigation.push("Chatroom", { id: chatroom.id })}
-              >
-                <BoldText
-                  style={{
-                    fontSize: 15,
-                    color: colors.mediumThemeColor,
-                    maxWidth: "75%",
-                    marginRight: 3,
-                  }}
-                  numberOfLines={1}
-                >
-                  {chatroom.lastMessage.content}
-                </BoldText>
-                <View style={{ alignItems: "flex-end" }}>
-                  <BoldText
-                    style={{ fontSize: 10, color: colors.lightThemeColor }}
-                  >
-                    {getTimeString(chatroom.lastMessage.createdAt)}
-                  </BoldText>
-                  {!chatroom.isAnonymous ? (
-                    <BoldText
-                      style={{
-                        fontSize: 10,
-                        color: colors.mediumThemeColor,
-                        marginTop: 2,
-                      }}
-                    >
-                      @
-                      {
-                        chatroom.members[
-                          chatroom.members[0].id === user.id ? 1 : 0
-                        ].netId
-                      }
-                    </BoldText>
-                  ) : chatroom.post ? (
-                    <BoldText
-                      style={{
-                        fontSize: 10,
-                        width: 90,
-                        color: colors.mediumThemeColor,
-                        marginTop: 2,
-                        textAlign: "right",
-                      }}
-                      numberOfLines={1}
-                    >
-                      {chatroom.post.title}
-                    </BoldText>
-                  ) : null}
-                </View>
-              </MyPressable>
-            ))
-          ) : (
-            <View>
-              <BoldText style={{ color: colors.mediumThemeColor }}>
-                You don't have any chatrooms.
-              </BoldText>
-            </View>
-          )
+      {chatrooms ? (
+        chatrooms.length ? (
+          <FlatList
+            style={{ paddingHorizontal: "8%" }}
+            data={chatrooms}
+            ListHeaderComponent={() => <View style={{ height: 40 }} />}
+            ListFooterComponent={() => <View style={{ height: 20 }} />}
+            keyExtractor={(chatroom) => chatroom.id + ""}
+            renderItem={({ item: chatroom }) => (
+              <ChatroomComponent chatroom={chatroom} user={user} />
+            )}
+          />
         ) : (
-          <View
-            style={{
-              height: 100,
-              justifyContent: "center",
-            }}
-          >
-            <LoadingComponent />
+          <View>
+            <BoldText style={{ color: colors.mediumThemeColor }}>
+              You don't have any chatrooms.
+            </BoldText>
           </View>
-        )}
-      </KeyboardAwareScrollView>
+        )
+      ) : (
+        <View
+          style={{
+            height: 100,
+            justifyContent: "center",
+          }}
+        >
+          <LoadingComponent />
+        </View>
+      )}
     </ScreenContainer>
   );
 };

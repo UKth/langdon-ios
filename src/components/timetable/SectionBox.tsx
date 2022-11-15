@@ -9,10 +9,10 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
-import { getMeetingTimeString, nestedSection } from "../util";
+import { getMeetingTimeString, nestedSection } from "../../util";
 import ClassInfoBox from "./ClassInfoBox";
-import MyPressable from "./MyPressable";
-import { BoldText } from "./StyledText";
+import { BoldText } from "../StyledText";
+import { MyPressable } from "../shared";
 
 export const getClassFromNested = (nested: nestedSection) => {
   let section = nested;

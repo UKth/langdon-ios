@@ -120,7 +120,7 @@ const Enter = ({
               autoCapitalize="none"
               textAlign="right"
             />
-            <BoldText style={{ flex: 1, fontSize: 18, color: "white" }}>
+            <BoldText style={{ color: "white", flex: 1, fontSize: 18 }}>
               @{college.mailFooter}
             </BoldText>
           </View>
@@ -162,7 +162,9 @@ const Enter = ({
               }
             }}
           >
-            <BoldText style={{ paddingHorizontal: 10 }}>Send Code</BoldText>
+            <BoldText style={{ color: "white", paddingHorizontal: 10 }}>
+              Send Code
+            </BoldText>
           </Pressable>
 
           {codeSent ? (
@@ -300,7 +302,9 @@ const Enter = ({
                   }
                 }}
               >
-                <BoldText>{userId ? "Enter" : "Register"}</BoldText>
+                <BoldText style={{ color: "white" }}>
+                  {userId ? "Enter" : "Register"}
+                </BoldText>
               </Pressable>
             </View>
           ) : null}

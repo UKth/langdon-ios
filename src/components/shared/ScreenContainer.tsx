@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
-import { Keyboard } from "react-native";
-import { Pressable, View, ViewStyle } from "react-native";
+import React from "react";
+import { View, ViewStyle } from "react-native";
 
 const ScreenContainer = ({
   children,

@@ -6,26 +6,15 @@ import {
 } from "@customTypes/models";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  GestureResponderEvent,
-  Pressable,
-  View,
-} from "react-native";
-import {
-  formatTimeString,
-  getData,
-  getMeetingTimeString,
-  nestedSection,
-} from "../util";
-import { BoldText } from "./StyledText";
-import { deleteClass, addClass } from "../apiFunctions";
-import { UserContext } from "../contexts/userContext";
-import { ProgressContext } from "../contexts/progressContext";
-import { API_URL, colors, EXAMDATE_OFFSET } from "../constants";
-import MyPressable from "./MyPressable";
-import { shadow } from "../constants/styles";
+import { ActivityIndicator, Alert, View } from "react-native";
+import { getData, getMeetingTimeString } from "../../util";
+import { BoldText } from "../StyledText";
+import { deleteClass, addClass } from "../../apiFunctions";
+import { UserContext } from "../../contexts/userContext";
+import { ProgressContext } from "../../contexts/progressContext";
+import { API_URL, colors, EXAMDATE_OFFSET } from "../../constants";
+import MyPressable from "../shared/MyPressable";
+import { shadow } from "../../constants/styles";
 
 const ClassInfoBox = ({
   id,

@@ -131,7 +131,7 @@ const Profile = ({
           }}
           onPress={() => logout(userContext)}
         >
-          <BoldText>logout</BoldText>
+          <BoldText style={{ color: "white" }}>logout</BoldText>
         </MyPressable>
       </KeyboardAwareScrollView>
     </ScreenContainer>

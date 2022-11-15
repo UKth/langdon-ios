@@ -145,7 +145,14 @@ const WritePost = ({
               }
             }}
           />
-          <BoldText style={{ position: "absolute", right: 15, bottom: 15 }}>
+          <BoldText
+            style={{
+              position: "absolute",
+              right: 15,
+              bottom: 15,
+              color: "white",
+            }}
+          >
             {content.length} / 1000
           </BoldText>
         </View>

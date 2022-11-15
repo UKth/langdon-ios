@@ -1,5 +1,5 @@
-import { TextInput, TextInputProps } from "react-native";
-import { Text, TextProps } from "./Themed";
+import { Text, TextInput, TextInputProps } from "react-native";
+import { TextProps } from "./included/Themed";
 
 export function MonoText(props: TextProps) {
   return (

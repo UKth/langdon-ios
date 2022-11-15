@@ -4,19 +4,18 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useContext } from "react";
 import { View } from "react-native";
-import { getTimeDifferenceString } from "../util";
-import { ANONYMOUS_USERNAME, colors } from "../constants";
-import styles, { shadow } from "../constants/styles";
-import { StackGeneratorParamList } from "../navigation/StackGenerator";
-import MyPressable from "./MyPressable";
-import { BoldText } from "./StyledText";
+import { getTimeDifferenceString } from "../../util";
+import { ANONYMOUS_USERNAME, colors } from "../../constants";
+import styles, { shadow } from "../../constants/styles";
+import { StackGeneratorParamList } from "../../navigation/StackGenerator";
+import MyPressable from "../shared/MyPressable";
+import { BoldText } from "../StyledText";
 
 type PostComponentProps = {
   post: PostWithCounts;
 };
 
 const PostComponent = ({ post }: PostComponentProps) => {
-  // const theme = useContext(ThemeContext);
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
 

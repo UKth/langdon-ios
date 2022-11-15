@@ -1,15 +1,23 @@
-import ClassInfoBox from "./ClassInfoBox";
-import CoursePopUpBox from "./CoursePopUpBox";
-import HeaderBackButton from "./HeaderBackButton";
-import MyPressable from "./MyPressable";
-import ScreenContainer from "./ScreenContainer";
-import SectionBox from "./SectionBox";
-import Spinner from "./Spinner";
-import TimeBox from "./TimeBox";
-import LoadingComponent from "./LoadingComponent";
-import TimeTableComponent from "./TimeTableComponent";
-import ErrorComponent from "./ErrorComponent";
-import PostComponent from "./PostComponent";
+import {
+  ClassInfoBox,
+  CoursePopUpBox,
+  SectionBox,
+  TimeBox,
+  TimeTableComponent,
+} from "./timetable";
+
+import {
+  ErrorComponent,
+  HeaderBackButton,
+  LoadingComponent,
+  MyPressable,
+  ScreenContainer,
+  Spinner,
+} from "./shared";
+
+import { PostComponent } from "./board";
+
+import { ChatroomComponent } from "./chat";
 
 export {
   ClassInfoBox,
@@ -24,4 +32,5 @@ export {
   TimeTableComponent,
   ErrorComponent,
   PostComponent,
+  ChatroomComponent,
 };

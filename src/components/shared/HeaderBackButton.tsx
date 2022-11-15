@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { GestureResponderEvent, Pressable } from "react-native";
-import { colors } from "../constants";
+import { colors } from "../../constants";
 
 const HeaderBackButton = ({
   onPress,

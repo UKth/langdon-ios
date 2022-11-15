@@ -178,7 +178,7 @@ const RequestCollegeSupport = ({
                 }
               }}
             >
-              <BoldText>{"Request"}</BoldText>
+              <BoldText style={{ color: "white" }}>{"Request"}</BoldText>
             </MyPressable>
           </View>
         </View>

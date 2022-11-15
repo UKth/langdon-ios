@@ -69,7 +69,7 @@ const SendFirstMessage = ({
             }}
             onPress={() => sendFirstMessage(content.trim())}
           >
-            <BoldText>Send</BoldText>
+            <BoldText style={{ color: "white" }}>Send</BoldText>
           </MyPressable>
         ),
       });

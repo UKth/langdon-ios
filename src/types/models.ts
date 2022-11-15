@@ -266,7 +266,7 @@ export type Message = {
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
 export const BoardType = {
-  class: "class",
+  course: "course",
   general: "general",
 };
 

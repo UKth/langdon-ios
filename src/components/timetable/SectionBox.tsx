@@ -1,9 +1,7 @@
 import {
-  Class,
   ClassMeeting,
   ClassWithSections,
-  Course,
-  FullSection,
+  TableWithClasses,
 } from "@customTypes/models";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
@@ -27,17 +25,13 @@ export const getClassFromNested = (nested: nestedSection) => {
 const SectionBox = ({
   section,
   onPress,
-  enrolledClasses,
-  updateEnrolledClasses,
+  table,
+  updateTable,
 }: {
   section: nestedSection;
   onPress: (id: number) => void;
-  enrolledClasses: (Class & {
-    sections: FullSection[];
-  } & {
-    course: Course;
-  })[];
-  updateEnrolledClasses: () => void;
+  table: TableWithClasses;
+  updateTable: () => void;
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const cls = getClassFromNested(section);
@@ -102,8 +96,8 @@ const SectionBox = ({
                 key={sect.code}
                 section={sect}
                 onPress={onPress}
-                enrolledClasses={enrolledClasses}
-                updateEnrolledClasses={updateEnrolledClasses}
+                table={table}
+                updateTable={updateTable}
               />
             ))}
           </View>
@@ -111,8 +105,8 @@ const SectionBox = ({
           <View style={{ paddingVertical: 10 }}>
             <ClassInfoBox
               id={section.value.id}
-              enrolledClasses={enrolledClasses}
-              updateEnrolledClasses={updateEnrolledClasses}
+              table={table}
+              updateTable={updateTable}
             />
           </View>
         )

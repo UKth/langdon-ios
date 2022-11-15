@@ -3,6 +3,7 @@ import {
   ClassMeetingWithBuilding,
   Course,
   FullSection,
+  Table,
 } from "@customTypes/models";
 import React, { useContext } from "react";
 import { Alert, Linking, Pressable, View } from "react-native";
@@ -23,6 +24,7 @@ const CoursePopUpBox = ({
   cls,
   meeting,
   closePopUp,
+  table,
 }: {
   cls: Class & {
     sections: FullSection[];
@@ -31,6 +33,7 @@ const CoursePopUpBox = ({
   };
   meeting: ClassMeetingWithBuilding;
   closePopUp: () => void;
+  table: Table;
 }) => {
   // const theme = useContext(ThemeContext);
   const navigation =
@@ -106,7 +109,10 @@ const CoursePopUpBox = ({
                     text: "Delete",
                     onPress: async () => {
                       spinner.start();
-                      await deleteClass(userContext, cls.id);
+                      await deleteClass(userContext, {
+                        classId: cls.id,
+                        tableId: table.id,
+                      });
                       closePopUp();
                       spinner.stop();
                     },
@@ -186,12 +192,12 @@ const CoursePopUpBox = ({
         >
           {cls.sections.map(
             (sec) =>
-              (sec.instructor.firstName ?? "") +
+              (sec.instructor?.firstName ?? "") +
               " " +
-              (sec.instructor.middleName
-                ? sec.instructor.middleName + " "
+              (sec.instructor?.middleName
+                ? sec.instructor?.middleName + " "
                 : "") +
-              sec.instructor.lastName
+              sec.instructor?.lastName
           )}
         </BoldText>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>

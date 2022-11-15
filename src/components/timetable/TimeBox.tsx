@@ -6,10 +6,6 @@ import { colors, TIMEBOX_HOUR_HEIGHT, WI_GMT_DIFF } from "../../constants";
 import { BoldText } from "../StyledText";
 import { MyPressable } from "../shared";
 
-const getPixel = (duration: number) => {
-  return (TIMEBOX_HOUR_HEIGHT / (60 * 60 * 1000)) * duration;
-};
-
 const TimeBox = ({
   style,
   design,
@@ -19,6 +15,8 @@ const TimeBox = ({
   isMine = true,
   startTime,
   color = colors.lightThemeColor,
+  hourHeightPixel = TIMEBOX_HOUR_HEIGHT,
+  fontSize = 13,
 }: {
   style?: ViewStyle;
   design: string;
@@ -28,12 +26,18 @@ const TimeBox = ({
   isMine?: boolean;
   startTime: number;
   color?: string;
+  hourHeightPixel: number;
+  fontSize: number;
 }) => {
   if (!meeting.meetingTimeStart || !meeting.meetingTimeEnd) {
     return null;
   }
 
   const duration = meeting.meetingTimeEnd - meeting.meetingTimeStart;
+
+  const getPixel = (duration: number) => {
+    return (hourHeightPixel / (60 * 60 * 1000)) * duration;
+  };
 
   return (
     <MyPressable
@@ -43,7 +47,7 @@ const TimeBox = ({
         height: getPixel(duration),
         backgroundColor: color,
         borderRadius: 3,
-        padding: 3,
+        padding: hourHeightPixel > 40 ? 3 : 2,
         position: "absolute",
         left: 20 * day + "%",
         top: getPixel(
@@ -56,7 +60,7 @@ const TimeBox = ({
       }}
       onPress={isMine ? onPress : () => {}}
     >
-      <BoldText style={{ color: "white", fontSize: 13 }}>{design}</BoldText>
+      <BoldText style={{ color: "white", fontSize }}>{design}</BoldText>
     </MyPressable>
   );
 };

@@ -22,7 +22,6 @@ const ChatroomComponent = ({ chatroom, user }: ChatroomComponentProps) => {
 
   return (
     <MyPressable
-      key={chatroom.id}
       style={{
         paddingVertical: 15,
         paddingHorizontal: 18,

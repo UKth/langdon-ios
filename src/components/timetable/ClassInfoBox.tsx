@@ -3,6 +3,7 @@ import {
   ClassWithSections,
   Course,
   FullSection,
+  TableWithClasses,
 } from "@customTypes/models";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
@@ -18,16 +19,12 @@ import { shadow } from "../../constants/styles";
 
 const ClassInfoBox = ({
   id,
-  enrolledClasses,
-  updateEnrolledClasses,
+  table,
+  updateTable,
 }: {
   id: number;
-  enrolledClasses: (Class & {
-    sections: FullSection[];
-  } & {
-    course: Course;
-  })[];
-  updateEnrolledClasses: () => void;
+  table: TableWithClasses;
+  updateTable: () => void;
 }) => {
   const [classData, setClassData] = useState<ClassWithSections>();
 
@@ -46,6 +43,8 @@ const ClassInfoBox = ({
   if (!classData) {
     return <ActivityIndicator size={"small"} color={"white"} />;
   }
+
+  const enrolled = table.enrolledClasses.map((cls) => cls.id).includes(id);
 
   return (
     <View
@@ -130,9 +129,9 @@ const ClassInfoBox = ({
                   instructor:
                 </BoldText>
                 <BoldText style={{ color: colors.mediumThemeColor }}>
-                  {section.instructor.firstName +
+                  {section.instructor?.firstName +
                     " " +
-                    section.instructor.lastName}
+                    section.instructor?.lastName}
                 </BoldText>
               </View>
             ) : null}
@@ -142,7 +141,7 @@ const ClassInfoBox = ({
       <View style={{ alignItems: "center", paddingBottom: 5 }}>
         <MyPressable
           onPress={async () => {
-            if (enrolledClasses.map((cls) => cls.id).includes(id)) {
+            if (enrolled) {
               Alert.alert(
                 "Course deletion",
                 "Do you want to delete the course?",
@@ -156,8 +155,11 @@ const ClassInfoBox = ({
                     text: "Delete",
                     onPress: async () => {
                       spinner.start();
-                      await deleteClass(userContext, id);
-                      updateEnrolledClasses();
+                      await deleteClass(userContext, {
+                        classId: id,
+                        tableId: table.id,
+                      });
+                      updateTable();
                       spinner.stop();
                     },
                   },
@@ -165,8 +167,8 @@ const ClassInfoBox = ({
               );
             } else {
               spinner.start();
-              await addClass(userContext, id);
-              updateEnrolledClasses();
+              await addClass(userContext, { classId: id, tableId: table.id });
+              updateTable();
               spinner.stop();
             }
           }}
@@ -182,9 +184,7 @@ const ClassInfoBox = ({
           }}
         >
           <BoldText style={{ color: "white" }}>
-            {enrolledClasses.map((cls) => cls.id).includes(id)
-              ? "Delete"
-              : "Add"}
+            {enrolled ? "Delete" : "Add"}
           </BoldText>
         </MyPressable>
       </View>

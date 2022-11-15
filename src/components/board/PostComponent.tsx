@@ -1,4 +1,4 @@
-import { PostWithCounts } from "@customTypes/models";
+import { PostWithBoard, PostWithCounts } from "@customTypes/models";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -11,17 +11,16 @@ import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import MyPressable from "../shared/MyPressable";
 import { BoldText } from "../StyledText";
 
-type PostComponentProps = {
-  post: PostWithCounts;
-};
+type PostComponentProps =
+  | { isMine: true; post: PostWithBoard }
+  | { isMine?: false; post: PostWithCounts };
 
-const PostComponent = ({ post }: PostComponentProps) => {
+const PostComponent = ({ post, isMine }: PostComponentProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
 
   return (
     <MyPressable
-      key={post.id}
       style={{
         paddingVertical: 10,
         paddingHorizontal: 15,
@@ -60,38 +59,57 @@ const PostComponent = ({ post }: PostComponentProps) => {
           justifyContent: "space-between",
         }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <BoldText
+        {isMine ? (
+          <View
             style={{
-              color: colors.mediumThemeColor,
-              fontSize: 11,
-              alignSelf: "flex-end",
-              marginRight: 4,
+              flexDirection: "row",
             }}
           >
-            @{post.isAnonymous ? ANONYMOUS_USERNAME : post.createdBy?.netId}
-          </BoldText>
-          <View style={{ flexDirection: "row", width: 20 }}>
-            <Ionicons
-              style={{ marginRight: 3 }}
-              name="chatbox-outline"
-              color={colors.mediumThemeColor}
-              size={10}
-            />
             <BoldText
               style={{
                 color: colors.mediumThemeColor,
-                fontSize: 9,
+                fontSize: 11,
+                alignSelf: "flex-end",
+                marginRight: 4,
               }}
             >
-              {post._count.comments}
+              {post.board.title}
             </BoldText>
           </View>
-        </View>
+        ) : (
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <BoldText
+              style={{
+                color: colors.mediumThemeColor,
+                fontSize: 11,
+                alignSelf: "flex-end",
+                marginRight: 4,
+              }}
+            >
+              @{post.isAnonymous ? ANONYMOUS_USERNAME : post.createdBy?.netId}
+            </BoldText>
+            <View style={{ flexDirection: "row", width: 20 }}>
+              <Ionicons
+                style={{ marginRight: 3 }}
+                name="chatbox-outline"
+                color={colors.mediumThemeColor}
+                size={10}
+              />
+              <BoldText
+                style={{
+                  color: colors.mediumThemeColor,
+                  fontSize: 9,
+                }}
+              >
+                {post._count.comments}
+              </BoldText>
+            </View>
+          </View>
+        )}
 
         <BoldText
           style={{

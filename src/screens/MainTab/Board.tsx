@@ -1,9 +1,9 @@
 import { PostWithCounts } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { Pressable, RefreshControl, Text, View } from "react-native";
+import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { getTimeDifferenceString, postData } from "../../util";
+import { postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
@@ -11,12 +11,12 @@ import { Ionicons } from "@expo/vector-icons";
 import {
   LoadingComponent,
   MyPressable,
+  PostComponent,
   ScreenContainer,
 } from "../../components";
-import { ANONYMOUS_USERNAME, API_URL, colors, styles } from "../../constants";
+import { API_URL, colors } from "../../constants";
 import { BoldText } from "../../components/StyledText";
 import { ProgressContext } from "../../contexts/progressContext";
-import { shadow } from "../../constants/styles";
 
 const BoardScreen = ({
   route,
@@ -70,97 +70,7 @@ const BoardScreen = ({
       >
         {posts ? (
           posts.length ? (
-            posts.map((post) => (
-              <MyPressable
-                key={post.id}
-                style={{
-                  paddingVertical: 10,
-                  paddingHorizontal: 15,
-                  backgroundColor: "white",
-
-                  ...shadow.md,
-
-                  borderColor: colors.themeColor,
-                  borderRadius: styles.borderRadius.md,
-                  marginBottom: 10,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-                onPress={() => navigation.push("Post", { id: post.id })}
-              >
-                <View style={{ maxWidth: "75%" }}>
-                  <BoldText
-                    numberOfLines={1}
-                    style={{
-                      color: colors.themeColor,
-                      fontSize: 14,
-                      marginBottom: 7,
-                    }}
-                  >
-                    {post.title}
-                  </BoldText>
-                  <BoldText
-                    style={{ color: colors.mediumThemeColor, fontSize: 12 }}
-                  >
-                    {post.content.substring(0, 30) +
-                      (post.content.length > 30 ? "..." : "")}
-                  </BoldText>
-                </View>
-                <View
-                  style={{
-                    height: 40,
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                    }}
-                  >
-                    <BoldText
-                      style={{
-                        color: colors.mediumThemeColor,
-                        fontSize: 11,
-                        alignSelf: "flex-end",
-                        marginRight: 4,
-                      }}
-                    >
-                      @
-                      {post.isAnonymous
-                        ? ANONYMOUS_USERNAME
-                        : post.createdBy?.netId}
-                    </BoldText>
-                    <View style={{ flexDirection: "row", width: 20 }}>
-                      <Ionicons
-                        style={{ marginRight: 3 }}
-                        name="chatbox-outline"
-                        color={colors.mediumThemeColor}
-                        size={10}
-                      />
-                      <BoldText
-                        style={{
-                          color: colors.mediumThemeColor,
-                          fontSize: 9,
-                        }}
-                      >
-                        {post._count.comments}
-                      </BoldText>
-                    </View>
-                  </View>
-
-                  <BoldText
-                    style={{
-                      color: colors.lightThemeColor,
-                      fontSize: 10,
-                      alignSelf: "flex-end",
-                    }}
-                  >
-                    {getTimeDifferenceString(post.createdAt)}
-                  </BoldText>
-                </View>
-              </MyPressable>
-            ))
+            posts.map((post) => <PostComponent post={post} />)
           ) : (
             <BoldText style={{ color: colors.mediumThemeColor, fontSize: 20 }}>
               The board is empty.

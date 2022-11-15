@@ -9,6 +9,7 @@ import TimeBox from "./TimeBox";
 import LoadingComponent from "./LoadingComponent";
 import TimeTableComponent from "./TimeTableComponent";
 import ErrorComponent from "./ErrorComponent";
+import PostComponent from "./PostComponent";
 
 export {
   ClassInfoBox,
@@ -22,4 +23,5 @@ export {
   LoadingComponent,
   TimeTableComponent,
   ErrorComponent,
+  PostComponent,
 };

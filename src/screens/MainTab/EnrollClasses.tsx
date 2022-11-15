@@ -170,14 +170,28 @@ const EnrollClasses = () => {
               <BoldText style={{ color: colors.mediumThemeColor }}>
                 {cls.course.courseDesignation}
               </BoldText>
-              <View style={{ flexDirection: "row" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  marginLeft: 20,
+                  flex: 1,
+                }}
+              >
                 <BoldText
-                  style={{ color: colors.mediumThemeColor, marginRight: 5 }}
+                  style={{
+                    color: colors.mediumThemeColor,
+                    marginRight: 5,
+                    fontSize: 12,
+                    textAlign: "right",
+                  }}
                 >
                   {cls.sections
-                    .map((section) => section.type + "" + section.sectionNumber)
+                    .map(
+                      (section) => section.type + " " + section.sectionNumber
+                    )
                     .join("/")}
-                  {"  -  "}
+                  {" - "}
                   {cls.course.minimumCredits}
                   {cls.course.minimumCredits !== cls.course.maximumCredits
                     ? " ~ " + cls.course.maximumCredits
@@ -191,10 +205,26 @@ const EnrollClasses = () => {
                     left: 10,
                   }}
                   onPress={async () => {
-                    spinner.start();
-                    await deleteClass(userContext, cls.id);
-                    updateEnrolledClasses();
-                    spinner.stop();
+                    Alert.alert(
+                      "Course deletion",
+                      "Do you want to delete the course?",
+                      [
+                        {
+                          text: "Cancel",
+                          onPress: () => console.log("Cancel Pressed"),
+                          style: "cancel",
+                        },
+                        {
+                          text: "Delete",
+                          onPress: async () => {
+                            spinner.start();
+                            await deleteClass(userContext, cls.id);
+                            updateEnrolledClasses();
+                            spinner.stop();
+                          },
+                        },
+                      ]
+                    );
                   }}
                 >
                   <Ionicons

@@ -69,6 +69,7 @@ export type Course = {
   fullCourseDesignation: string;
   fullCourseDesignationCompressed: string;
   enrollmentPrerequisites: string;
+  boardId: number | null;
   minimumCredits: number;
   maximumCredits: number;
   title: string;

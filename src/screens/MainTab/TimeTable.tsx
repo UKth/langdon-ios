@@ -48,10 +48,10 @@ export const handleNotification = ({
     if (data.route === "Post") {
       const params = data.params as StackGeneratorParamList["Post"];
       if (params.id) {
-        navigation.push("Post", params);
+        navigation.navigate("Post", params);
       }
     } else if (data.route === "Chatrooms") {
-      navigation.push("Chatrooms");
+      navigation.navigate("Chatrooms");
     }
   }
 };

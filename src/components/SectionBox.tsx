@@ -80,7 +80,7 @@ const SectionBox = ({
         >
           <BoldText style={{ marginRight: 5, color: "white" }}>
             {section.code}{" "}
-            {meeting
+            {meeting?.meetingDays
               ? `( ${meeting.meetingDays} ${getMeetingTimeString(meeting)} )`
               : ""}
           </BoldText>

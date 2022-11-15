@@ -9,12 +9,16 @@ import React, { useContext } from "react";
 import { Alert, Linking, Pressable, View } from "react-native";
 import { BoldText } from "./StyledText";
 import { Ionicons } from "@expo/vector-icons";
-import { colors, messages } from "../constants";
-import { shadow } from "../constants/styles";
-import { MyPressable } from "../components";
+import { API_URL, colors, messages } from "../constants";
+import styles, { shadow } from "../constants/styles";
+import MyPressable from "./MyPressable";
 import { ProgressContext } from "../contexts/progressContext";
 import { deleteClass } from "../apiFunctions";
 import { UserContext } from "../contexts/userContext";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { StackGeneratorParamList } from "../navigation/StackGenerator";
+import { postData } from "../util";
 
 const CoursePopUpBox = ({
   cls,
@@ -30,6 +34,8 @@ const CoursePopUpBox = ({
   closePopUp: () => void;
 }) => {
   // const theme = useContext(ThemeContext);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
 
   const { spinner } = useContext(ProgressContext);
   const userContext = useContext(UserContext);
@@ -88,10 +94,26 @@ const CoursePopUpBox = ({
               left: 10,
             }}
             onPress={async () => {
-              spinner.start();
-              await deleteClass(userContext, cls.id);
-              spinner.stop();
-              closePopUp();
+              Alert.alert(
+                "Course deletion",
+                "Do you want to delete the course?",
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "Delete",
+                    onPress: async () => {
+                      spinner.start();
+                      await deleteClass(userContext, cls.id);
+                      closePopUp();
+                      spinner.stop();
+                    },
+                  },
+                ]
+              );
             }}
           >
             <Ionicons name="trash" size={16} color={colors.mediumThemeColor} />
@@ -175,14 +197,48 @@ const CoursePopUpBox = ({
         </BoldText>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <MyPressable
-            style={{ paddingHorizontal: 5 }}
+            style={{
+              paddingHorizontal: 10,
+              paddingVertical: 7,
+              backgroundColor: "white",
+              borderRadius: styles.borderRadius.sm,
+              alignItems: "center",
+              justifyContent: "center",
+              ...shadow.md,
+            }}
             hitSlop={{
               top: 10,
               bottom: 10,
               right: 10,
               left: 10,
             }}
-            onPress={() => {}}
+            onPress={async () => {
+              if (cls.course.boardId) {
+                navigation.push("Board", {
+                  id: cls.course.boardId,
+                  title: cls.course.title,
+                });
+                closePopUp();
+              } else {
+                spinner.start();
+                const data = await postData(
+                  userContext,
+                  API_URL + "board/createCourseBoard",
+                  { courseId: cls.course.id }
+                );
+                spinner.stop();
+
+                if (data?.ok && data?.board) {
+                  navigation.push("Board", {
+                    id: data.board.id,
+                    title: data.board.title,
+                  });
+                  closePopUp();
+                } else {
+                  Alert.alert(data?.error ?? "Failed to get course board.");
+                }
+              }
+            }}
           >
             <Ionicons name="reader" color={colors.mediumThemeColor} size={20} />
           </MyPressable>

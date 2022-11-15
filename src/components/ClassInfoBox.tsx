@@ -8,6 +8,7 @@ import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   GestureResponderEvent,
   Pressable,
   View,
@@ -83,49 +84,57 @@ const ClassInfoBox = ({
             >
               meetings
             </BoldText>
-            {section.classMeetings.map((meeting) => {
-              const isExam = meeting.meetingType === "EXAM";
+            {section.classMeetings.length ? (
+              section.classMeetings.map((meeting) => {
+                const isExam = meeting.meetingType === "EXAM";
 
-              return (
-                <View
-                  key={meeting.id}
-                  style={{
-                    borderWidth: 1,
-                    borderColor: colors.mediumThemeColor,
-                    borderRadius: 5,
-                    marginBottom: 5,
-                    padding: 5,
-                  }}
-                >
-                  <BoldText style={{ color: colors.mediumThemeColor }}>
-                    {meeting.meetingType}
-                  </BoldText>
-                  {!isExam ? (
+                return (
+                  <View
+                    key={meeting.id}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: colors.mediumThemeColor,
+                      borderRadius: 5,
+                      marginBottom: 5,
+                      padding: 5,
+                    }}
+                  >
                     <BoldText style={{ color: colors.mediumThemeColor }}>
-                      {meeting.meetingDays}
+                      {meeting.meetingType}
                     </BoldText>
-                  ) : null}
-                  {meeting.examDate ? (
-                    <BoldText style={{ color: colors.mediumThemeColor }}>
-                      {new Date(
-                        meeting.examDate + EXAMDATE_OFFSET || 0
-                      ).toDateString()}
-                    </BoldText>
-                  ) : null}
-                  {meeting.meetingTimeStart && meeting.meetingTimeEnd ? (
-                    <BoldText style={{ color: colors.mediumThemeColor }}>
-                      {getMeetingTimeString(meeting)}
-                    </BoldText>
-                  ) : null}
+                    {!isExam ? (
+                      <BoldText style={{ color: colors.mediumThemeColor }}>
+                        {meeting.meetingDays}
+                      </BoldText>
+                    ) : null}
+                    {meeting.examDate ? (
+                      <BoldText style={{ color: colors.mediumThemeColor }}>
+                        {new Date(
+                          meeting.examDate + EXAMDATE_OFFSET || 0
+                        ).toDateString()}
+                      </BoldText>
+                    ) : null}
+                    {meeting.meetingTimeStart && meeting.meetingTimeEnd ? (
+                      <BoldText style={{ color: colors.mediumThemeColor }}>
+                        {getMeetingTimeString(meeting)}
+                      </BoldText>
+                    ) : null}
 
-                  {meeting.building ? (
-                    <BoldText style={{ color: colors.mediumThemeColor }}>
-                      {meeting.building.buildingName}
-                    </BoldText>
-                  ) : null}
-                </View>
-              );
-            })}
+                    {meeting.building ? (
+                      <BoldText style={{ color: colors.mediumThemeColor }}>
+                        {meeting.building.buildingName}
+                      </BoldText>
+                    ) : null}
+                  </View>
+                );
+              })
+            ) : (
+              <BoldText
+                style={{ color: colors.mediumThemeColor, marginBottom: 5 }}
+              >
+                [No meetings]
+              </BoldText>
+            )}
             {section.instructor ? (
               <View>
                 <BoldText style={{ color: colors.mediumThemeColor }}>
@@ -144,14 +153,33 @@ const ClassInfoBox = ({
       <View style={{ alignItems: "center", paddingBottom: 5 }}>
         <MyPressable
           onPress={async () => {
-            spinner.start();
             if (enrolledClasses.map((cls) => cls.id).includes(id)) {
-              await deleteClass(userContext, id);
+              Alert.alert(
+                "Course deletion",
+                "Do you want to delete the course?",
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "Delete",
+                    onPress: async () => {
+                      spinner.start();
+                      await deleteClass(userContext, id);
+                      updateEnrolledClasses();
+                      spinner.stop();
+                    },
+                  },
+                ]
+              );
             } else {
+              spinner.start();
               await addClass(userContext, id);
+              updateEnrolledClasses();
+              spinner.stop();
             }
-            updateEnrolledClasses();
-            spinner.stop();
           }}
           style={{
             backgroundColor: colors.mediumThemeColor,

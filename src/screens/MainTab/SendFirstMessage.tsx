@@ -45,9 +45,14 @@ const SendFirstMessage = ({
         }
       );
       spinner.stop();
-      if (data?.ok) {
+      if (data?.ok && data.chatroom) {
         navigation.pop();
+        navigation.navigate("Chatroom", { id: data.chatroom.id });
         Alert.alert("Message sent.");
+      } else if (data.existingChatroom) {
+        navigation.pop();
+        navigation.push("Chatroom", { id: data.existingChatroom.id });
+        Alert.alert(data.error);
       } else {
         Alert.alert(data?.error ?? "Failed to send message.");
       }

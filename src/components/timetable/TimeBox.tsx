@@ -26,8 +26,8 @@ const TimeBox = ({
   isMine?: boolean;
   startTime: number;
   color?: string;
-  hourHeightPixel: number;
-  fontSize: number;
+  hourHeightPixel?: number;
+  fontSize?: number;
 }) => {
   if (!meeting.meetingTimeStart || !meeting.meetingTimeEnd) {
     return null;

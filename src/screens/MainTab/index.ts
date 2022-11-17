@@ -2,7 +2,7 @@ import Board from "./Board";
 import Boards from "./Boards";
 import Post from "./Post";
 import TimeTable from "./TimeTable";
-import WritePost from "./WritePost";
+import CreatePost from "./CreatePost";
 import Friends from "./Friends";
 import FriendTable from "./FriendTable";
 import AddFriend from "./AddFriend";
@@ -19,7 +19,7 @@ export {
   Boards,
   Post,
   TimeTable,
-  WritePost,
+  CreatePost,
   Friends,
   FriendTable,
   AddFriend,

@@ -5,7 +5,7 @@ import {
   Boards,
   Post,
   TimeTable,
-  WritePost,
+  CreatePost,
   Friends,
   FriendTable,
   AddFriend,
@@ -29,7 +29,7 @@ export type StackGeneratorParamList = {
   Boards: undefined;
   Board: { id: number; title: string };
   Post: { id: number };
-  WritePost: { boardId: number };
+  CreatePost: { boardId: number };
   EnrollClasses: { tableId: number; tableTitle: string };
   Friends: undefined;
   FriendTable: { id: number; nameString: string };
@@ -104,7 +104,7 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
             headerRight: () => (
               <MyPressable
                 onPress={() =>
-                  navigation.push("WritePost", { boardId: route.params.id })
+                  navigation.push("CreatePost", { boardId: route.params.id })
                 }
               >
                 <Ionicons
@@ -118,8 +118,8 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
         />
         <Stack.Screen name="Post" component={Post} />
         <Stack.Screen
-          name="WritePost"
-          component={WritePost}
+          name="CreatePost"
+          component={CreatePost}
           options={{ title: "New post" }}
         />
         <Stack.Screen name="Friends" component={Friends} />

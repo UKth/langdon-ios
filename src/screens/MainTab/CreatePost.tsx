@@ -14,10 +14,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { ProgressContext } from "../../contexts/progressContext";
 import { shadow } from "../../constants/styles";
 
-const WritePost = ({
+const CreatePost = ({
   route,
 }: {
-  route: RouteProp<StackGeneratorParamList, "WritePost">;
+  route: RouteProp<StackGeneratorParamList, "CreatePost">;
 }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -102,42 +102,51 @@ const WritePost = ({
           />
           <BoldText style={{ color: colors.mediumThemeColor }}>Anon.</BoldText>
         </View>
-        <BoldTextInput
+        <View
           style={{
-            width: "100%",
-            backgroundColor: colors.lightThemeColor,
-            fontSize: 18,
             marginBottom: "5%",
-            padding: 10,
+            paddingHorizontal: 12,
+            paddingTop: 8,
+            paddingBottom: 12,
+            backgroundColor: "white",
             borderRadius: 4,
-            color: "white",
             ...shadow.md,
           }}
-          placeholder="title"
-          multiline={true}
-          maxLength={200}
-          placeholderTextColor={colors.placeHolerTextColor}
-          onChangeText={(text) => {
-            setTitle(text.trim());
-          }}
-        />
-        <View style={{ marginBottom: "10%" }}>
+        >
           <BoldTextInput
             style={{
               width: "100%",
-              backgroundColor: colors.lightThemeColor,
               fontSize: 18,
-              marginBottom: 8,
-              padding: 8,
-              borderRadius: 4,
+              color: colors.mediumThemeColor,
+            }}
+            placeholder="title"
+            multiline={true}
+            maxLength={200}
+            placeholderTextColor={colors.lightThemeColor}
+            onChangeText={(text) => {
+              setTitle(text.trim());
+            }}
+          />
+        </View>
+        <View
+          style={{
+            backgroundColor: "white",
+            paddingHorizontal: 12,
+            paddingTop: 8,
+            borderRadius: 4,
+            ...shadow.md,
+          }}
+        >
+          <BoldTextInput
+            style={{
+              // width: "100%",
+              fontSize: 18,
               minHeight: 200,
-              color: "white",
-              paddingBottom: 25,
-              ...shadow.md,
+              color: colors.mediumThemeColor,
             }}
             multiline={true}
             placeholder="content"
-            placeholderTextColor={colors.placeHolerTextColor}
+            placeholderTextColor={colors.lightThemeColor}
             maxLength={1000}
             onChangeText={(text) => {
               if (text.length <= 1000) {
@@ -161,4 +170,4 @@ const WritePost = ({
   );
 };
 
-export default WritePost;
+export default CreatePost;

@@ -361,7 +361,11 @@ export const getTimeString = (dateValue: Date | number) => {
   );
 };
 
-export const getNameString = (user: TargetUser) => {
+export const getNameString = (user: {
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+}) => {
   return (
     user.firstName +
     " " +
@@ -393,5 +397,30 @@ export const handleNotification = ({
     } else if (data.route === "Chatrooms") {
       navigation.navigate("Chatrooms");
     }
+  }
+};
+
+export const loadData = ({
+  data,
+  loadedData,
+  setData,
+  lastId,
+}: {
+  data: any[] | undefined;
+  loadedData: any[];
+  setData: (prop: any[]) => void;
+  lastId: number | undefined;
+}) => {
+  if (!lastId || !data) {
+    setData(loadedData);
+    return;
+  }
+
+  if (!loadedData.length) return;
+
+  const oldData = [...data];
+
+  if (oldData[oldData.length - 1].id === lastId) {
+    setData([...oldData, ...loadedData]);
   }
 };

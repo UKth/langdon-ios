@@ -31,7 +31,7 @@ const Boards = () => {
         setBoards(JSON.parse(cachedBoards));
       }
       const data = await postData(userContext, API_URL + "board/getBoards");
-      console.log(data);
+
       if (data?.ok && data?.boards) {
         setBoards(data.boards);
         AsyncStorage.setItem(BOARDS_KEY, JSON.stringify(data.boards));

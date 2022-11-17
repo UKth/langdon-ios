@@ -29,7 +29,7 @@ import {
   Share,
   View,
 } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import styles, { shadow } from "../../constants/styles";
 import { ProgressContext } from "../../contexts/progressContext";
 
@@ -163,9 +163,9 @@ const Tables = () => {
                     {table.title}
                   </BoldText>
                   {user.defaultTableId === table.id ? (
-                    <MaterialIcons
-                      name="online-prediction"
-                      size={20}
+                    <Octicons
+                      name="pin"
+                      size={18}
                       color={colors.mediumThemeColor}
                     />
                   ) : null}

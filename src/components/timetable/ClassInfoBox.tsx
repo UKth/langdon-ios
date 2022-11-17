@@ -13,7 +13,7 @@ import { BoldText } from "../StyledText";
 import { deleteClass, addClass } from "../../apiFunctions";
 import { UserContext } from "../../contexts/userContext";
 import { ProgressContext } from "../../contexts/progressContext";
-import { API_URL, colors, EXAMDATE_OFFSET } from "../../constants";
+import { API_URL, colors } from "../../constants";
 import MyPressable from "../shared/MyPressable";
 import { shadow } from "../../constants/styles";
 
@@ -34,8 +34,8 @@ const ClassInfoBox = ({
   useEffect(() => {
     (async () => {
       const data = await getData(API_URL + "course/class/getClass/" + id);
-      if (data?.ok) {
-        setClassData(data?.classData);
+      if (data?.ok && data?.class) {
+        setClassData(data.class);
       }
     })();
   }, []);
@@ -97,9 +97,7 @@ const ClassInfoBox = ({
                     ) : null}
                     {meeting.examDate ? (
                       <BoldText style={{ color: colors.mediumThemeColor }}>
-                        {new Date(
-                          meeting.examDate + EXAMDATE_OFFSET || 0
-                        ).toDateString()}
+                        {new Date(meeting.examDate).toDateString()}
                       </BoldText>
                     ) : null}
                     {meeting.meetingTimeStart && meeting.meetingTimeEnd ? (

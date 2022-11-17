@@ -11,7 +11,6 @@ import {
   CHATROOMS_KEY,
 } from "./storageKeys";
 import {
-  EXAMDATE_OFFSET,
   MIN_TS,
   HOUR_TS,
   WI_GMT_DIFF,
@@ -37,7 +36,6 @@ export {
   TABLE_KEY,
   BOARDS_KEY,
   CHATROOMS_KEY,
-  EXAMDATE_OFFSET,
   MIN_TS,
   HOUR_TS,
   WI_GMT_DIFF,

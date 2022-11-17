@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Alert, FlatList, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { API_URL, CHATROOMS_KEY, colors, styles } from "../../constants";
-import { getTimeString, postData } from "../../util";
+import { getTimeString, handleNotification, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
@@ -17,7 +17,6 @@ import {
   ScreenContainer,
 } from "../../components";
 import * as Notifications from "expo-notifications";
-import { handleNotification } from "./TimeTable";
 import { shadow } from "../../constants/styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -77,8 +76,13 @@ const Chatrooms = () => {
             )}
           />
         ) : (
-          <View>
-            <BoldText style={{ color: colors.mediumThemeColor }}>
+          <View
+            style={{
+              paddingHorizontal: "10%",
+              paddingTop: "10%",
+            }}
+          >
+            <BoldText style={{ color: colors.mediumThemeColor, fontSize: 18 }}>
               You don't have any chatrooms.
             </BoldText>
           </View>

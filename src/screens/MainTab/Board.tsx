@@ -54,9 +54,16 @@ const BoardScreen = ({
             renderItem={({ item: post }) => <PostComponent post={post} />}
           />
         ) : (
-          <BoldText style={{ color: colors.mediumThemeColor, fontSize: 20 }}>
-            The board is empty.
-          </BoldText>
+          <View style={{ paddingHorizontal: "10%", paddingTop: "10%" }}>
+            <BoldText
+              style={{
+                color: colors.mediumThemeColor,
+                fontSize: 18,
+              }}
+            >
+              The board is empty.
+            </BoldText>
+          </View>
         )
       ) : (
         <View

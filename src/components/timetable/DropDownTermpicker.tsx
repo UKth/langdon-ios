@@ -59,6 +59,7 @@ const DropDownTermPicker = ({
         >
           {terms.map((term, index) => (
             <MyPressable
+              key={term.code}
               style={{
                 paddingHorizontal: 15,
                 paddingVertical: 7,

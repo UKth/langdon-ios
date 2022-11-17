@@ -3,14 +3,18 @@ import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
 import { Alert, FlatList, KeyboardAvoidingView, View } from "react-native";
 import { API_URL, colors, styles } from "../../constants";
-import { getNameString, getTimeDifferenceString, postData } from "../../util";
+import {
+  getNameString,
+  getTimeDifferenceString,
+  handleNotification,
+  postData,
+} from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
 import { BoldText, BoldTextInput } from "../../components/StyledText";
 import { ErrorComponent, MyPressable, ScreenContainer } from "../../components";
 import * as Notifications from "expo-notifications";
-import { handleNotification } from "./TimeTable";
 import { shadow } from "../../constants/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { ProgressContext } from "../../contexts/progressContext";

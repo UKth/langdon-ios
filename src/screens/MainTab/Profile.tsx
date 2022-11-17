@@ -40,7 +40,7 @@ const Profile = () => {
         <ProfileCard user={user} />
         <MyPressable
           style={{
-            paddingVertical: 10,
+            paddingVertical: 13,
             paddingHorizontal: 15,
             backgroundColor: "white",
 
@@ -61,7 +61,7 @@ const Profile = () => {
               style={{
                 color: colors.themeColor,
                 fontSize: 14,
-                marginBottom: 7,
+                marginBottom: 2,
               }}
             >
               My posts
@@ -70,7 +70,7 @@ const Profile = () => {
         </MyPressable>
         <MyPressable
           style={{
-            paddingVertical: 10,
+            paddingVertical: 13,
             paddingHorizontal: 15,
             backgroundColor: "white",
 
@@ -78,7 +78,7 @@ const Profile = () => {
 
             borderColor: colors.themeColor,
             borderRadius: styles.borderRadius.md,
-            marginBottom: 10,
+            marginBottom: 15,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
@@ -91,7 +91,7 @@ const Profile = () => {
               style={{
                 color: colors.themeColor,
                 fontSize: 14,
-                marginBottom: 7,
+                marginBottom: 2,
               }}
             >
               My comments

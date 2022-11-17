@@ -32,6 +32,13 @@ const Friends = () => {
     return <ErrorComponent />;
   }
 
+  const updateFriends = async () => {
+    const data = await postData(userContext, API_URL + "friend/getFriends");
+    if (data?.ok) {
+      setFriends(data?.friendsData);
+    }
+  };
+
   const createFriendRequest = async () => {
     spinner.start();
     const data = await postData(
@@ -45,6 +52,21 @@ const Friends = () => {
     }
     if (data?.code) {
       setCode(data.code);
+    }
+  };
+
+  const deleteFriend = async (targetId: number) => {
+    spinner.start();
+    const data = await postData(userContext, API_URL + "friend/deleteFriend", {
+      targetId,
+    });
+    spinner.stop();
+
+    if (data?.ok) {
+      Alert.alert("Friend deleted.");
+      updateFriends();
+    } else {
+      Alert.alert(data?.error ?? "Failed to delete friend.");
     }
   };
 
@@ -68,17 +90,8 @@ const Friends = () => {
   }, [code]);
 
   useEffect(() => {
-    (async () => {
-      const data = await postData(userContext, API_URL + "friend/getFriends");
-      if (data?.ok) {
-        setFriends(data?.friendsData);
-      }
-    })();
+    updateFriends();
   }, []);
-
-  if (!userContext.user) {
-    return null;
-  }
 
   return (
     <ScreenContainer>
@@ -132,7 +145,7 @@ const Friends = () => {
         {friends ? (
           friends?.length ? (
             friends.map((friend) => (
-              <MyPressable
+              <View
                 key={friend.id}
                 style={{
                   flexDirection: "row",
@@ -144,29 +157,69 @@ const Friends = () => {
                   ...shadow.md,
                   borderRadius: styles.borderRadius.md,
                 }}
-                onPress={() =>
-                  navigation.push("FriendTable", {
-                    id: friend.id,
-                    nameString: getNameString(friend),
-                  })
-                }
               >
-                <BoldText
-                  style={{ fontSize: 15, color: colors.mediumThemeColor }}
+                <MyPressable
+                  onPress={() =>
+                    navigation.push("FriendTable", {
+                      id: friend.id,
+                      nameString: getNameString(friend),
+                    })
+                  }
+                  hitSlop={{
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                  }}
+                  style={{
+                    width: "90%",
+                  }}
                 >
-                  {getNameString(friend)} @{friend.netId}
-                </BoldText>
-                <Ionicons
-                  name="ios-calendar-sharp"
-                  size={20}
-                  color={colors.mediumThemeColor}
-                />
-              </MyPressable>
+                  <BoldText
+                    style={{
+                      fontSize: 15,
+                      color: colors.mediumThemeColor,
+                    }}
+                    numberOfLines={1}
+                  >
+                    {getNameString(friend)} @{friend.netId}
+                  </BoldText>
+                </MyPressable>
+                <MyPressable
+                  hitSlop={{
+                    top: 10,
+                    bottom: 10,
+                    right: 10,
+                  }}
+                  style={{ paddingHorizontal: 5 }}
+                  onPress={() => {
+                    Alert.alert(
+                      "Delete friend",
+                      "Are you sure to delete this friend?",
+                      [
+                        {
+                          text: "Yes",
+                          onPress: () => deleteFriend(friend.id),
+                        },
+                        {
+                          text: "cancel",
+                          style: "cancel",
+                        },
+                      ]
+                    );
+                  }}
+                >
+                  <Ionicons
+                    name="ios-trash"
+                    size={20}
+                    color={colors.mediumThemeColor}
+                  />
+                </MyPressable>
+              </View>
             ))
           ) : (
             <View>
               <BoldText style={{ color: colors.mediumThemeColor }}>
-                You don't have any friends...? TT
+                You don't have any friends... TT
               </BoldText>
             </View>
           )

@@ -2,7 +2,7 @@ import { CommentWithPost } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState, useEffect, useContext } from "react";
-import { FlatList, View } from "react-native";
+import { Alert, FlatList, View } from "react-native";
 import {
   CommentComponent,
   LoadingComponent,
@@ -11,7 +11,7 @@ import {
 import { API_URL, colors } from "../../constants";
 import { UserContext } from "../../contexts/userContext";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
-import { postData } from "../../util";
+import { loadData, postData } from "../../util";
 import { BoldText } from "../../components/StyledText";
 
 const MyComments = ({
@@ -24,13 +24,32 @@ const MyComments = ({
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
   const userContext = useContext(UserContext);
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetch = async (lastId?: number) => {
+    const data = await postData(userContext, API_URL + "user/getComments", {
+      lastId,
+    });
+    if (data?.ok && data.comments) {
+      loadData({
+        data: comments,
+        setData: setComments,
+        loadedData: data.comments,
+        lastId: data.lastId,
+      });
+    } else {
+      Alert.alert(data?.error ?? "Failed to load posts.");
+    }
+  };
+
+  const refresh = async () => {
+    setRefreshing(true);
+    await fetch();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
-    (async () => {
-      const data = await postData(userContext, API_URL + "user/getComments");
-      if (data?.ok && data.comments) {
-        setComments(data.comments);
-      }
-    })();
+    refresh();
   }, []);
 
   return (
@@ -46,11 +65,17 @@ const MyComments = ({
             renderItem={({ item: comment }) => (
               <CommentComponent comment={comment} post={comment.post} />
             )}
+            refreshing={refreshing}
+            onRefresh={refresh}
+            onEndReached={() => fetch(comments[comments.length - 1].id)}
+            onEndReachedThreshold={0.5}
           />
         ) : (
-          <BoldText style={{ color: colors.mediumThemeColor, fontSize: 20 }}>
-            You didn't write any comments yet.
-          </BoldText>
+          <View style={{ paddingHorizontal: "10%", paddingTop: "10%" }}>
+            <BoldText style={{ color: colors.mediumThemeColor, fontSize: 16 }}>
+              You didn't write any comments yet.
+            </BoldText>
+          </View>
         )
       ) : (
         <View

@@ -4,7 +4,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { Alert, FlatList, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { API_URL, CHATROOMS_KEY, colors, styles } from "../../constants";
-import { getTimeString, handleNotification, postData } from "../../util";
+import {
+  getTimeString,
+  handleNotification,
+  loadData,
+  postData,
+} from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
@@ -30,14 +35,31 @@ const Chatrooms = () => {
     return <ErrorComponent />;
   }
 
-  const refetch = async () => {
-    const data = await postData(userContext, API_URL + "chat/getChatrooms");
-    if (data?.ok && data?.chatrooms) {
-      setChatrooms(data.chatrooms);
-      AsyncStorage.setItem(CHATROOMS_KEY, JSON.stringify(data.chatrooms));
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetch = async (lastId?: number) => {
+    const data = await postData(userContext, API_URL + "chat/getChatrooms", {
+      lastId,
+    });
+    if (data?.ok && data.chatrooms) {
+      loadData({
+        data: chatrooms,
+        setData: setChatrooms,
+        loadedData: data.chatrooms,
+        lastId: data.lastId,
+      });
+      if (!lastId) {
+        AsyncStorage.setItem(CHATROOMS_KEY, JSON.stringify(data.chatrooms));
+      }
     } else {
       Alert.alert(data?.error ?? "Failed to get chatrooms.");
     }
+  };
+
+  const refresh = async () => {
+    setRefreshing(true);
+    await fetch();
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -46,15 +68,12 @@ const Chatrooms = () => {
       if (cachedChatrooms) {
         setChatrooms(JSON.parse(cachedChatrooms)); // may produce error
       }
-      refetch();
+      refresh();
     })();
-
-    navigation.addListener("focus", refetch);
 
     Notifications.addNotificationResponseReceivedListener(({ notification }) =>
       handleNotification({ navigation, notification })
     );
-    return () => navigation.removeListener("focus", refetch);
   }, []);
 
   if (!userContext.user) {
@@ -68,12 +87,16 @@ const Chatrooms = () => {
           <FlatList
             style={{ paddingHorizontal: "8%" }}
             data={chatrooms}
+            refreshing={refreshing}
+            onRefresh={refresh}
             ListHeaderComponent={() => <View style={{ height: 40 }} />}
             ListFooterComponent={() => <View style={{ height: 20 }} />}
             keyExtractor={(chatroom) => chatroom.id + ""}
             renderItem={({ item: chatroom }) => (
               <ChatroomComponent chatroom={chatroom} user={user} />
             )}
+            onEndReached={() => fetch(chatrooms[chatrooms.length - 1].id)}
+            onEndReachedThreshold={0.5}
           />
         ) : (
           <View

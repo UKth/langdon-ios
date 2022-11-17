@@ -1,9 +1,10 @@
-import { fullPost } from "@customTypes/models";
+import { Comment, FullPost } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
 import {
   ActionSheetIOS,
   Alert,
+  FlatList,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
@@ -19,7 +20,12 @@ import {
   messages,
   styles,
 } from "../../constants";
-import { getTimeDifferenceString, getTimeString, postData } from "../../util";
+import {
+  getTimeDifferenceString,
+  getTimeString,
+  loadData,
+  postData,
+} from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
@@ -46,7 +52,7 @@ const PostScreen = ({
 }: {
   route: RouteProp<StackGeneratorParamList, "Post">;
 }) => {
-  const [post, setPost] = useState<fullPost>();
+  const [post, setPost] = useState<FullPost>();
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
   const userContext = useContext(UserContext);
@@ -56,13 +62,32 @@ const PostScreen = ({
   const { spinner } = useContext(ProgressContext);
   const commentInputRef = useRef<any>();
 
-  const refresh = async () => {
+  const fetch = async (lastCommentId?: number) => {
     const data = await postData(
       userContext,
-      API_URL + "board/post/getPost/" + postId
+      API_URL + "board/post/getPost/" + postId,
+      {
+        lastCommentId,
+      }
     );
-    if (data?.ok) {
-      setPost(data.post);
+
+    if (data?.ok && data.post) {
+      if (post && data.lastCommentId) {
+        loadData({
+          data: post.comments,
+          setData: (newComments: Comment[]) =>
+            setPost({
+              ...data.post,
+              comments: newComments ?? [],
+            }),
+          loadedData: data.post.comments,
+          lastId: data.lastCommentId,
+        });
+      } else {
+        setPost(data.post);
+      }
+    } else {
+      Alert.alert(data?.error ?? "Failed to load posts.");
     }
   };
 
@@ -83,7 +108,7 @@ const PostScreen = ({
         Alert.alert("Failed to create comment.\n" + data?.error);
       } else {
         setComment("");
-        refresh();
+        fetch();
       }
     }
   };
@@ -118,12 +143,12 @@ const PostScreen = ({
       Alert.alert("Failed to delete comment.\n" + data?.error);
     } else {
       Alert.alert(messages.messages.comment.commentDeleted);
-      refresh();
+      fetch();
     }
   };
 
   useEffect(() => {
-    refresh();
+    fetch();
   }, []);
 
   useEffect(() => {
@@ -195,6 +220,87 @@ const PostScreen = ({
       }
     );
 
+  const PostContentComponent = ({ post }: { post: FullPost }) => (
+    <View>
+      <BoldText
+        style={{
+          fontSize: 20,
+          color: colors.themeColor,
+          marginBottom: 2,
+        }}
+      >
+        {post.title}
+      </BoldText>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <BoldText
+          style={{
+            fontSize: 13,
+            color: colors.lightThemeColor,
+            marginBottom: 10,
+          }}
+        >
+          {getTimeString(post.createdAt)}
+        </BoldText>
+        <BoldText
+          style={{
+            fontSize: 15,
+            color: colors.mediumThemeColor,
+            marginBottom: "10%",
+          }}
+        >
+          @{post.isAnonymous ? ANONYMOUS_USERNAME : post.createdBy.netId}
+        </BoldText>
+      </View>
+      <BoldText
+        style={{
+          fontSize: 15,
+          color: colors.mediumThemeColor,
+          minHeight: 150,
+          marginBottom: "3%",
+        }}
+      >
+        {post.content}
+      </BoldText>
+      <View
+        style={{
+          borderTopWidth: 1,
+          paddingHorizontal: 5,
+          borderColor: colors.lightThemeColor,
+          paddingTop: 5,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            marginBottom: 10,
+          }}
+        >
+          <Ionicons
+            style={{ marginTop: 2, marginRight: 3 }}
+            name="chatbox-outline"
+            color={colors.mediumThemeColor}
+            size={12}
+          />
+          <BoldText
+            style={{
+              marginTop: 1,
+              color: colors.mediumThemeColor,
+              fontSize: 12,
+            }}
+          >
+            {post._count.comments}
+          </BoldText>
+        </View>
+      </View>
+    </View>
+  );
+
   return (
     <ScreenContainer>
       <KeyboardAvoidingView
@@ -202,172 +308,105 @@ const PostScreen = ({
         keyboardVerticalOffset={90}
         style={{ backgroundColor: "white", flex: 1 }}
       >
-        <ScrollView
-          style={{
-            paddingTop: "10%",
-            paddingHorizontal: "8%",
-          }}
-        >
-          {post ? (
-            <View style={{ marginBottom: 40 }}>
-              <BoldText
-                style={{
-                  fontSize: 20,
-                  color: colors.themeColor,
-                  marginBottom: 2,
-                }}
-              >
-                {post.title}
-              </BoldText>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <BoldText
-                  style={{
-                    fontSize: 13,
-                    color: colors.lightThemeColor,
-                    marginBottom: 10,
-                  }}
-                >
-                  {getTimeString(post.createdAt)}
-                </BoldText>
-                <BoldText
-                  style={{
-                    fontSize: 15,
-                    color: colors.mediumThemeColor,
-                    marginBottom: "10%",
-                  }}
-                >
-                  @
-                  {post.isAnonymous ? ANONYMOUS_USERNAME : post.createdBy.netId}
-                </BoldText>
-              </View>
-              <BoldText
-                style={{
-                  fontSize: 15,
-                  color: colors.mediumThemeColor,
-                  minHeight: 150,
-                  marginBottom: "3%",
-                }}
-              >
-                {post.content}
-              </BoldText>
-              <View
-                style={{
-                  borderTopWidth: 1,
-                  paddingHorizontal: 5,
-                  borderColor: colors.lightThemeColor,
-                  paddingTop: 5,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                    marginBottom: 10,
-                  }}
-                >
-                  <Ionicons
-                    style={{ marginTop: 2, marginRight: 3 }}
-                    name="chatbox-outline"
-                    color={colors.mediumThemeColor}
-                    size={12}
-                  />
-                  <BoldText
-                    style={{
-                      marginTop: 1,
-                      color: colors.mediumThemeColor,
-                      fontSize: 12,
-                    }}
-                  >
-                    {post._count.comments}
-                  </BoldText>
-                </View>
-                {post.comments.map((comment) => (
-                  <CommentComponent
-                    key={comment.id}
-                    comment={comment}
-                    deleteComment={deleteComment}
-                    post={post}
-                  />
-                ))}
-              </View>
-            </View>
-          ) : (
-            <View
-              style={{
-                height: 100,
-                justifyContent: "center",
-              }}
-            >
-              <LoadingComponent />
-            </View>
-          )}
-        </ScrollView>
-
-        <View
-          style={{
-            paddingLeft: 20,
-            paddingRight: 10,
-            paddingVertical: 10,
-            borderRadius: 30,
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: "white",
-            marginHorizontal: 10,
-            marginBottom: 5,
-
-            ...shadow.md,
-          }}
-        >
-          <Checkbox
-            hitSlop={{
-              top: 10,
-              bottom: 10,
-              right: 10,
-              left: 10,
-            }}
-            value={isAnonymous}
-            onValueChange={(newValue) => setIsAnonymous(newValue)}
-            color={colors.mediumThemeColor}
-            style={{ width: 15, height: 15, marginRight: 5 }}
-          />
-          <BoldText style={{ color: colors.mediumThemeColor }}>Anon.</BoldText>
-          <BoldTextInput
+        {post ? (
+          <FlatList
             style={{
-              flex: 1,
-              color: colors.mediumThemeColor,
-              fontSize: 18,
-              padding: 8,
-              borderRadius: 4,
-              marginRight: 10,
+              paddingTop: "10%",
+              paddingHorizontal: "8%",
             }}
-            placeholder="comment"
-            placeholderTextColor={colors.lightThemeColor}
-            value={comment}
-            multiline={true}
-            maxLength={200}
-            onChangeText={(text) => setComment(text)}
+            ListHeaderComponent={() => <PostContentComponent post={post} />}
+            ListFooterComponent={() => <View style={{ height: 45 }} />}
+            data={post.comments}
+            renderItem={({ item: comment }) => (
+              <CommentComponent
+                key={comment.id}
+                comment={comment}
+                deleteComment={deleteComment}
+                post={post}
+              />
+            )}
+            keyExtractor={(comment) => comment.id + ""}
+            onEndReached={() =>
+              fetch(post.comments[post.comments.length - 1].id)
+            }
+            onEndReachedThreshold={0.5}
           />
-          <MyPressable
+        ) : (
+          <View
             style={{
-              borderLeftWidth: 1,
-              borderColor: colors.lightThemeColor,
-              width: 80,
-              height: 35,
-              alignItems: "center",
+              height: 100,
               justifyContent: "center",
             }}
-            onPress={createComment}
           >
-            <BoldText style={{ color: colors.mediumThemeColor, fontSize: 16 }}>
-              upload
+            <LoadingComponent />
+          </View>
+        )}
+        {post ? (
+          <View
+            style={{
+              paddingLeft: 20,
+              paddingRight: 10,
+              paddingVertical: 10,
+              borderRadius: 30,
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: "white",
+              marginHorizontal: 10,
+              marginBottom: 5,
+
+              ...shadow.md,
+            }}
+          >
+            <Checkbox
+              hitSlop={{
+                top: 10,
+                bottom: 10,
+                right: 10,
+                left: 10,
+              }}
+              value={isAnonymous}
+              onValueChange={(newValue) => setIsAnonymous(newValue)}
+              color={colors.mediumThemeColor}
+              style={{ width: 15, height: 15, marginRight: 5 }}
+            />
+            <BoldText style={{ color: colors.mediumThemeColor }}>
+              Anon.
             </BoldText>
-          </MyPressable>
-        </View>
+            <BoldTextInput
+              style={{
+                flex: 1,
+                color: colors.mediumThemeColor,
+                fontSize: 18,
+                padding: 8,
+                borderRadius: 4,
+                marginRight: 10,
+              }}
+              placeholder="comment"
+              placeholderTextColor={colors.lightThemeColor}
+              value={comment}
+              multiline={true}
+              maxLength={200}
+              onChangeText={(text) => setComment(text)}
+            />
+            <MyPressable
+              style={{
+                borderLeftWidth: 1,
+                borderColor: colors.lightThemeColor,
+                width: 80,
+                height: 35,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={createComment}
+            >
+              <BoldText
+                style={{ color: colors.mediumThemeColor, fontSize: 16 }}
+              >
+                upload
+              </BoldText>
+            </MyPressable>
+          </View>
+        ) : null}
       </KeyboardAvoidingView>
     </ScreenContainer>
   );

@@ -2,11 +2,12 @@ import { FullChatroom, Message, TargetUser } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
 import { Alert, FlatList, KeyboardAvoidingView, View } from "react-native";
-import { API_URL, colors, styles } from "../../constants";
+import { API_URL, colors, messages, styles } from "../../constants";
 import {
   getNameString,
   getTimeDifferenceString,
   handleNotification,
+  loadData,
   postData,
 } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -32,7 +33,6 @@ const Chatroom = ({
   const chatroomId = route.params.id;
   const [msgText, setMsgText] = useState("");
   const [chatroom, setChatroom] = useState<FullChatroom>();
-  const [targetUser, setTargetUser] = useState<TargetUser>();
 
   const { spinner } = useContext(ProgressContext);
 
@@ -40,49 +40,107 @@ const Chatroom = ({
     return <ErrorComponent />;
   }
 
-  const refetch = async () => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetch = async (lastMessageId?: number) => {
     const data = await postData(userContext, API_URL + "chat/getChatroom", {
       chatroomId,
+      lastMessageId,
     });
 
-    if (data?.ok && data?.chatroom) {
-      setChatroom(data.chatroom);
+    if (data?.ok && data.chatroom) {
+      if (chatroom && data.lastMessageId) {
+        loadData({
+          data: chatroom.messages,
+          setData: (newMessages: Message[]) =>
+            setChatroom({ ...data.chatroom, messages: newMessages ?? [] }),
+          loadedData: data.chatroom.messages,
+          lastId: data.lastMessageId,
+        });
+      } else {
+        setChatroom(data.chatroom);
+      }
     } else {
-      Alert.alert(data?.error ?? "Failed to get chatroom.");
+      Alert.alert(data?.error ?? "Failed to load posts.");
     }
+  };
+
+  const refresh = async () => {
+    setRefreshing(true);
+    await fetch();
+    setRefreshing(false);
   };
 
   const sendMessage = async (text: string) => {
     if (text.length > 0) {
       setMsgText("");
-      spinner.start();
+      spinner.start(false);
+
       await postData(userContext, API_URL + "chat/message/sendMessage", {
         chatroomId,
         content: text,
       });
-      await refetch();
+
+      await fetch();
       spinner.stop();
     }
   };
 
   useEffect(() => {
-    refetch();
-
-    navigation.addListener("focus", refetch);
+    fetch();
 
     Notifications.addNotificationResponseReceivedListener(({ notification }) =>
       handleNotification({ navigation, notification })
     );
-    return () => navigation.removeListener("focus", refetch);
   }, []);
 
-  useEffect(() => {
-    if (chatroom?.members) {
-      setTargetUser(
-        chatroom.members[chatroom.members[0].id === user.id ? 1 : 0]
-      );
-    }
-  }, [chatroom]);
+  const targetUser =
+    chatroom?.members[chatroom.members[0].id === user.id ? 1 : 0];
+
+  const renderItem = ({ item: message }: { item: Message }) => {
+    const isMine = message.userId === user.id;
+    return (
+      <View style={{ alignItems: isMine ? "flex-end" : "flex-start" }}>
+        <View
+          key={message.id}
+          style={{
+            paddingVertical: 10,
+            paddingHorizontal: 18,
+
+            backgroundColor: "white",
+            maxWidth: "80%",
+
+            borderRadius: styles.borderRadius.md,
+            marginBottom: 15,
+            flexDirection: "row",
+            justifyContent: isMine ? "flex-end" : "flex-start",
+            alignItems: "center",
+            ...shadow.md,
+          }}
+        >
+          <View style={{ alignItems: isMine ? "flex-end" : "flex-start" }}>
+            <BoldText
+              style={{
+                fontSize: 12,
+                color: colors.mediumThemeColor,
+                marginBottom: 2,
+              }}
+            >
+              {message.content}
+            </BoldText>
+            <BoldText
+              style={{
+                fontSize: 10,
+                color: colors.lightThemeColor,
+              }}
+            >
+              {getTimeDifferenceString(message.createdAt)}
+            </BoldText>
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <ScreenContainer>
@@ -164,52 +222,16 @@ const Chatroom = ({
           ListFooterComponent={() => <View style={{ height: 10 }} />}
           data={chatroom?.messages}
           inverted={true}
-          renderItem={({ item: message }) => {
-            const isMine = message.userId === user.id;
-            return (
-              <View style={{ alignItems: isMine ? "flex-end" : "flex-start" }}>
-                <View
-                  key={message.id}
-                  style={{
-                    paddingVertical: 10,
-                    paddingHorizontal: 18,
-
-                    backgroundColor: "white",
-                    maxWidth: "80%",
-
-                    borderRadius: styles.borderRadius.md,
-                    marginBottom: 15,
-                    flexDirection: "row",
-                    justifyContent: isMine ? "flex-end" : "flex-start",
-                    alignItems: "center",
-                    ...shadow.md,
-                  }}
-                >
-                  <View
-                    style={{ alignItems: isMine ? "flex-end" : "flex-start" }}
-                  >
-                    <BoldText
-                      style={{
-                        fontSize: 12,
-                        color: colors.mediumThemeColor,
-                        marginBottom: 2,
-                      }}
-                    >
-                      {message.content}
-                    </BoldText>
-                    <BoldText
-                      style={{
-                        fontSize: 10,
-                        color: colors.lightThemeColor,
-                      }}
-                    >
-                      {getTimeDifferenceString(message.createdAt)}
-                    </BoldText>
-                  </View>
-                </View>
-              </View>
-            );
+          renderItem={renderItem}
+          keyExtractor={(message) => message.id + ""}
+          refreshing={refreshing}
+          onRefresh={refresh}
+          onEndReached={() => {
+            if (chatroom && chatroom.messages.length) {
+              fetch(chatroom.messages[chatroom.messages.length - 1].id);
+            }
           }}
+          onEndReachedThreshold={0.5}
         />
         <View
           style={{

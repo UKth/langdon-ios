@@ -1,15 +1,13 @@
 import { PostWithCounts } from "@customTypes/models";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
-import { FlatList, View } from "react-native";
-import { postData } from "../../util";
+import { Alert, FlatList, View } from "react-native";
+import { loadData, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
-import { Ionicons } from "@expo/vector-icons";
 import {
   LoadingComponent,
-  MyPressable,
   PostComponent,
   ScreenContainer,
 } from "../../components";
@@ -26,19 +24,33 @@ const BoardScreen = ({
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
   const userContext = useContext(UserContext);
   const boardId = route.params.id;
+  const [refreshing, setRefreshing] = useState(false);
 
-  const refetch = async () => {
+  const fetch = async (lastId?: number) => {
     const data = await postData(userContext, API_URL + "board/post/getPosts", {
       boardId,
+      lastId,
     });
-    if (data?.ok) {
-      setPosts(data.posts);
+    if (data?.ok && data.posts) {
+      loadData({
+        data: posts,
+        setData: setPosts,
+        loadedData: data.posts,
+        lastId: data.lastId,
+      });
+    } else {
+      Alert.alert(data?.error ?? "Failed to load posts.");
     }
   };
 
+  const refresh = async () => {
+    setRefreshing(true);
+    await fetch();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
-    navigation.addListener("focus", refetch);
-    return () => navigation.removeListener("focus", refetch);
+    refresh();
   }, []);
 
   return (
@@ -48,10 +60,14 @@ const BoardScreen = ({
           <FlatList
             style={{ paddingHorizontal: "8%" }}
             data={posts}
+            refreshing={refreshing}
+            onRefresh={refresh}
             ListHeaderComponent={() => <View style={{ height: 40 }} />}
             ListFooterComponent={() => <View style={{ height: 20 }} />}
             keyExtractor={(post) => post.id + ""}
             renderItem={({ item: post }) => <PostComponent post={post} />}
+            onEndReached={() => fetch(posts[posts.length - 1].id)}
+            onEndReachedThreshold={0.5}
           />
         ) : (
           <View style={{ paddingHorizontal: "10%", paddingTop: "10%" }}>

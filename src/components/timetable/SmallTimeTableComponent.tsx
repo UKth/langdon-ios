@@ -33,7 +33,7 @@ const SmallTimeTableComponent = ({ table }: { table?: TableWithClasses }) => {
           if (meeting.meetingType === "CLASS") {
             if (meeting.meetingTimeStart) {
               const startingTimeHour = Math.floor(
-                (meeting.meetingTimeStart + WI_GMT_DIFF) / HOUR_TS
+                (meeting.meetingTimeStart + WI_GMT_DIFF - 1) / HOUR_TS
               );
               if (startingTimeHour < startTime) {
                 startTime = startingTimeHour;

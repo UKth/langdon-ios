@@ -49,7 +49,7 @@ const MyComments = ({
           />
         ) : (
           <BoldText style={{ color: colors.mediumThemeColor, fontSize: 20 }}>
-            You didn't write any post yet.
+            You didn't write any comments yet.
           </BoldText>
         )
       ) : (

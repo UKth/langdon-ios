@@ -48,6 +48,7 @@ const FriendTable = ({
       course: Course;
     };
     meeting: ClassMeetingWithBuilding;
+    section: FullSection;
   }>();
 
   const { spinner } = useContext(ProgressContext);
@@ -58,7 +59,6 @@ const FriendTable = ({
       setTable(data);
     }
   };
-  // console.log(navigation.getParent());
 
   const openChatroom = async () => {
     spinner.start();
@@ -133,8 +133,7 @@ const FriendTable = ({
       </ScrollView>
       {table && popUpBoxData ? (
         <CoursePopUpBox
-          cls={popUpBoxData.cls}
-          meeting={popUpBoxData.meeting}
+          {...popUpBoxData}
           closePopUp={() => setPopUpBoxData(undefined)}
           table={table}
         />

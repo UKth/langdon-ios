@@ -24,7 +24,7 @@ import {
   TimeTableComponent,
 } from "../../components";
 import * as Notifications from "expo-notifications";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Octicons } from "@expo/vector-icons";
 import { shadow } from "../../constants/styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { handleNotification, postData } from "../../util";
@@ -48,6 +48,7 @@ const TimeTable = ({
     } & {
       course: Course;
     };
+    section: FullSection;
     meeting: ClassMeetingWithBuilding;
   }>();
   const [table, setTable] = useState<TableWithClasses>();
@@ -57,14 +58,11 @@ const TimeTable = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
 
-  console.log(user.defaultTableId);
-
   const onPressMenu = () => {
     if (!table) {
       return;
     }
     const isDefault = user.defaultTableId === table.id;
-    console.log(user.defaultTableId, tableId);
     if (isDefault) {
       return;
     }
@@ -197,19 +195,37 @@ const TimeTable = ({
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-            <BoldText
-              style={{
-                fontSize: 17,
-                color: colors.mediumThemeColor,
-                marginRight: 5,
-              }}
-            >
-              {table?.title}
-            </BoldText>
-            <BoldText style={{ fontSize: 12, color: colors.lightThemeColor }}>
-              {table ? termNames[table.termCode] : ""}
-              {user.defaultTableId === table?.id ? " (public)" : ""}
-            </BoldText>
+            <View>
+              {table && table.title !== termNames[table.termCode] ? (
+                <BoldText
+                  style={{ fontSize: 12, color: colors.lightThemeColor }}
+                >
+                  {termNames[table.termCode]}
+                </BoldText>
+              ) : null}
+
+              <BoldText
+                style={{
+                  fontSize: 17,
+                  color: colors.mediumThemeColor,
+                  marginRight: 5,
+                }}
+              >
+                {table?.title}
+              </BoldText>
+            </View>
+            {user.defaultTableId === table?.id ? (
+              <MyPressable
+                onPress={() =>
+                  Alert.alert(
+                    "Public table",
+                    "The table is shown to your friends"
+                  )
+                }
+              >
+                <Octicons name="pin" size={16} color={colors.lightThemeColor} />
+              </MyPressable>
+            ) : null}
           </View>
           <View style={{ flexDirection: "row" }}>
             <MyPressable
@@ -297,10 +313,9 @@ const TimeTable = ({
           setPopUpBoxData={setPopUpBoxData}
         />
       </KeyboardAwareScrollView>
-      {table && popUpBoxData ? (
+      {table && table.userId === user.id && popUpBoxData ? (
         <CoursePopUpBox
-          cls={popUpBoxData.cls}
-          meeting={popUpBoxData.meeting}
+          {...popUpBoxData}
           closePopUp={() => {
             updateData();
             setPopUpBoxData(undefined);

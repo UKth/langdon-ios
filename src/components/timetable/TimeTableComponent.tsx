@@ -32,6 +32,7 @@ const TimeTableComponent = ({
             course: Course;
           };
           meeting: ClassMeetingWithBuilding;
+          section: FullSection;
         }
       | undefined
     >
@@ -158,6 +159,7 @@ const TimeTableComponent = ({
                       onPress={() =>
                         setPopUpBoxData({
                           cls,
+                          section,
                           meeting,
                         })
                       }

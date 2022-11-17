@@ -5,7 +5,7 @@ import {
   FullSection,
   Table,
 } from "@customTypes/models";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Alert, Linking, Pressable, View } from "react-native";
 import { BoldText } from "../StyledText";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,10 +18,11 @@ import { UserContext } from "../../contexts/userContext";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
-import { postData } from "../../util";
+import { getMeetingTimeString, getNameString, postData } from "../../util";
 
 const CoursePopUpBox = ({
   cls,
+  section,
   meeting,
   closePopUp,
   table,
@@ -31,6 +32,7 @@ const CoursePopUpBox = ({
   } & {
     course: Course;
   };
+  section: FullSection;
   meeting: ClassMeetingWithBuilding;
   closePopUp: () => void;
   table: Table;
@@ -41,6 +43,7 @@ const CoursePopUpBox = ({
 
   const { spinner } = useContext(ProgressContext);
   const userContext = useContext(UserContext);
+  const [showFullPrerequisites, setShowFullPrerequisites] = useState(false);
 
   return (
     <Pressable
@@ -102,7 +105,6 @@ const CoursePopUpBox = ({
                 [
                   {
                     text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
                     style: "cancel",
                   },
                   {
@@ -170,36 +172,114 @@ const CoursePopUpBox = ({
             marginBottom: 5,
           }}
         >
-          Prerequisites:
+          Prerequisites:{" "}
+          {cls.course.enrollmentPrerequisites === "None"
+            ? cls.course.enrollmentPrerequisites
+            : ""}
         </BoldText>
-        <BoldText
-          style={{
-            fontSize: 11,
-            color: colors.mediumThemeColor,
-            opacity: 0.8,
-            marginBottom: 10,
-          }}
-        >
-          {cls.course.enrollmentPrerequisites}
-        </BoldText>
-        <BoldText
-          style={{
-            fontSize: 11,
-            color: colors.mediumThemeColor,
-            opacity: 0.9,
-            marginBottom: 15,
-          }}
-        >
-          {cls.sections.map(
-            (sec) =>
-              (sec.instructor?.firstName ?? "") +
-              " " +
-              (sec.instructor?.middleName
-                ? sec.instructor?.middleName + " "
-                : "") +
-              sec.instructor?.lastName
-          )}
-        </BoldText>
+        {cls.course.enrollmentPrerequisites !== "None" ? (
+          <MyPressable
+            onPress={() => setShowFullPrerequisites(!showFullPrerequisites)}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                maxWidth: "95%",
+                marginBottom: 10,
+              }}
+            >
+              <BoldText
+                style={{
+                  fontSize: 11,
+                  color: colors.mediumThemeColor,
+                  opacity: 0.8,
+                }}
+                numberOfLines={showFullPrerequisites ? undefined : 1}
+              >
+                {cls.course.enrollmentPrerequisites}
+              </BoldText>
+              {!showFullPrerequisites ? (
+                <Ionicons
+                  name="triangle"
+                  size={10}
+                  color={colors.mediumThemeColor}
+                  style={{
+                    opacity: 0.8,
+                    marginLeft: 5,
+                    transform: [{ rotate: "180deg" }],
+                  }}
+                />
+              ) : null}
+            </View>
+          </MyPressable>
+        ) : null}
+        {section.instructor ? (
+          <BoldText
+            style={{
+              fontSize: 11,
+              color: colors.mediumThemeColor,
+              opacity: 0.9,
+              marginBottom: 10,
+            }}
+          >
+            {getNameString({
+              firstName: section.instructor.firstName ?? "",
+              lastName: section.instructor.lastName ?? "",
+              middleName: section.instructor.middleName,
+            })}
+          </BoldText>
+        ) : null}
+        {section.classMeetings.map((meeting) => {
+          const isExam = meeting.meetingType === "EXAM";
+
+          return (
+            <View
+              key={meeting.id}
+              style={{
+                borderWidth: 1,
+                borderColor: colors.mediumThemeColor,
+                borderRadius: 5,
+                marginBottom: 10,
+                padding: 5,
+              }}
+            >
+              <BoldText
+                style={{
+                  fontSize: 11,
+                  color: colors.mediumThemeColor,
+                  marginBottom: 3,
+                }}
+              >
+                {meeting.meetingType}
+                {isExam ? "" : ` - ${section.type} ${section.sectionNumber}`}
+              </BoldText>
+
+              <BoldText
+                style={{
+                  fontSize: 10,
+                  color: colors.mediumThemeColor,
+                }}
+              >
+                {meeting.examDate
+                  ? new Date(meeting.examDate).toDateString()
+                  : meeting.meetingDays}
+                {" - "}({getMeetingTimeString(meeting)})
+              </BoldText>
+
+              {meeting.building ? (
+                <BoldText
+                  style={{
+                    fontSize: 10,
+                    color: colors.mediumThemeColor,
+                    marginTop: 3,
+                  }}
+                >
+                  {meeting.building.buildingName}
+                </BoldText>
+              ) : null}
+            </View>
+          );
+        })}
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <MyPressable
             style={{

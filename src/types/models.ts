@@ -206,7 +206,7 @@ export type PostWithBoard = Post & {
   board: Board;
 };
 
-export type fullPost = PostWithCounts & {
+export type FullPost = PostWithCounts & {
   createdBy: User;
   comments: Comment[];
   likedUsers: User[];

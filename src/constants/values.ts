@@ -3,7 +3,7 @@ import { TermCode, TermCodeType } from "@customTypes/models";
 export const MIN_TS = 60 * 1000;
 export const HOUR_TS = 60 * MIN_TS;
 export const WI_GMT_DIFF = -6 * HOUR_TS;
-export const TIMEBOX_HOUR_HEIGHT = 50;
+export const TIMEBOX_HOUR_HEIGHT = 44;
 export const SMALLBOX_HOUR_HEIGHT = 30;
 
 export const ANONYMOUS_USERNAME = "Badger";

@@ -169,6 +169,7 @@ const EnrollClasses = ({
             </BoldText>
             <BoldText
               style={{
+                fontSize: 14,
                 color: colors.themeColor,
               }}
             >

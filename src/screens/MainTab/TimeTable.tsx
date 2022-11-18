@@ -308,10 +308,7 @@ const TimeTable = ({
             </MyPressable>
           </View>
         </View>
-        <TimeTableComponent
-          enrolledClasses={table?.enrolledClasses}
-          setPopUpBoxData={setPopUpBoxData}
-        />
+        <TimeTableComponent table={table} setPopUpBoxData={setPopUpBoxData} />
       </KeyboardAwareScrollView>
       {table && table.userId === user.id && popUpBoxData ? (
         <CoursePopUpBox

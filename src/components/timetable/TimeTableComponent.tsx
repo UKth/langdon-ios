@@ -4,6 +4,7 @@ import {
   ClassWithSections,
   Course,
   FullSection,
+  TableWithClasses,
 } from "@customTypes/models";
 import React from "react";
 import { useState } from "react";
@@ -14,15 +15,15 @@ import {
   TIMEBOX_HOUR_HEIGHT,
   WI_GMT_DIFF,
 } from "../../constants";
-import { dayCharToInt, meetingDayChar } from "../../util";
+import { dayCharToInt, meetingDayChar, sum } from "../../util";
 import { BoldText } from "../StyledText";
 import TimeBox from "./TimeBox";
 
 const TimeTableComponent = ({
-  enrolledClasses,
+  table,
   setPopUpBoxData,
 }: {
-  enrolledClasses?: (ClassWithSections & { course: Course })[];
+  table?: TableWithClasses;
   setPopUpBoxData: React.Dispatch<
     React.SetStateAction<
       | {
@@ -40,9 +41,9 @@ const TimeTableComponent = ({
 }) => {
   let startTime = 9;
   let endTime = 16;
-  if (enrolledClasses) {
-    for (let i = 0; i < enrolledClasses.length; i++) {
-      const sections = enrolledClasses[i].sections;
+  if (table?.enrolledClasses) {
+    for (let i = 0; i < table.enrolledClasses.length; i++) {
+      const sections = table.enrolledClasses[i].sections;
       for (let j = 0; j < sections.length; j++) {
         const meetings = sections[j].classMeetings;
         for (let k = 0; k < meetings.length; k++) {
@@ -71,12 +72,19 @@ const TimeTableComponent = ({
     }
   }
 
+  const minCredSum = sum(
+    table?.enrolledClasses.map((cls) => cls.course.minimumCredits) ?? []
+  );
+  const maxCredSum = sum(
+    table?.enrolledClasses.map((cls) => cls.course.maximumCredits) ?? []
+  );
+
   return (
     <View
       style={{
         paddingLeft: 20,
         paddingRight: 10,
-        marginBottom: 30,
+        marginBottom: 20,
       }}
     >
       {Array.from({ length: endTime - startTime }, (_, i) => i).map((i) => (
@@ -118,6 +126,7 @@ const TimeTableComponent = ({
           width: "100%",
           height: (endTime - startTime) * TIMEBOX_HOUR_HEIGHT, // 9~9
           backgroundColor: "#ffffff",
+          marginBottom: 5,
         }}
       >
         {Array.from({ length: endTime - startTime }, (_, i) => i).map((i) => (
@@ -144,7 +153,7 @@ const TimeTableComponent = ({
             }}
           />
         ))}
-        {enrolledClasses?.map((cls, idx) =>
+        {table?.enrolledClasses.map((cls, idx) =>
           cls.sections.map((section) =>
             section.classMeetings.map((meeting) =>
               meeting.meetingType !== "EXAM"
@@ -169,7 +178,7 @@ const TimeTableComponent = ({
             )
           )
         )}
-        {enrolledClasses && !enrolledClasses.length && (
+        {table && !table.enrolledClasses.length && (
           <BoldText
             style={{
               color: colors.lightThemeColor,
@@ -181,6 +190,18 @@ const TimeTableComponent = ({
             There's no enrolled class in the table.
           </BoldText>
         )}
+      </View>
+      <View style={{ paddingHorizontal: 5 }}>
+        <BoldText
+          style={{
+            fontSize: 12,
+            color: colors.themeColor,
+            opacity: 0.7,
+          }}
+        >
+          credit: {minCredSum}
+          {minCredSum !== maxCredSum ? " ~ " + maxCredSum : ""}
+        </BoldText>
       </View>
     </View>
   );

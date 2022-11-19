@@ -191,18 +191,20 @@ const TimeTableComponent = ({
           </BoldText>
         )}
       </View>
-      <View style={{ paddingHorizontal: 5 }}>
-        <BoldText
-          style={{
-            fontSize: 12,
-            color: colors.themeColor,
-            opacity: 0.7,
-          }}
-        >
-          credit: {minCredSum}
-          {minCredSum !== maxCredSum ? " ~ " + maxCredSum : ""}
-        </BoldText>
-      </View>
+      {minCredSum ? (
+        <View style={{ paddingHorizontal: 5 }}>
+          <BoldText
+            style={{
+              fontSize: 12,
+              color: colors.themeColor,
+              opacity: 0.7,
+            }}
+          >
+            credit: {minCredSum}
+            {minCredSum !== maxCredSum ? " ~ " + maxCredSum : ""}
+          </BoldText>
+        </View>
+      ) : null}
     </View>
   );
 };

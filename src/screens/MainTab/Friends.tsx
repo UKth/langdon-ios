@@ -113,7 +113,8 @@ const Friends = () => {
             <MyPressable
               style={{
                 borderRadius: 30,
-                padding: 20,
+                width: 35,
+                height: 35,
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: "white",
@@ -121,23 +122,11 @@ const Friends = () => {
               }}
               onPress={createFriendRequest}
             >
-              <View
-                style={{
-                  position: "absolute",
-                  width: 15,
-                  height: 2,
-                  borderRadius: 2,
-                  backgroundColor: colors.themeColor,
-                }}
-              />
-              <View
-                style={{
-                  position: "absolute",
-                  width: 2,
-                  height: 15,
-                  borderRadius: 2,
-                  backgroundColor: colors.mediumThemeColor,
-                }}
+              <Ionicons
+                name="person-add"
+                size={17}
+                color={colors.themeColor}
+                style={{ opacity: 0.5 }}
               />
             </MyPressable>
           ) : null}

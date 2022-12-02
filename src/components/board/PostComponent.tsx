@@ -37,7 +37,7 @@ const PostComponent = ({ post, isMine }: PostComponentProps) => {
       }}
       onPress={() => navigation.push("Post", { id: post.id })}
     >
-      <View style={{ maxWidth: "75%" }}>
+      <View style={{ flex: 1 }}>
         <BoldText
           numberOfLines={1}
           style={{
@@ -63,13 +63,13 @@ const PostComponent = ({ post, isMine }: PostComponentProps) => {
           <View
             style={{
               flexDirection: "row",
+              justifyContent: "flex-end",
             }}
           >
             <BoldText
               style={{
                 color: colors.mediumThemeColor,
                 fontSize: 11,
-                alignSelf: "flex-end",
                 marginRight: 4,
               }}
             >

@@ -199,6 +199,7 @@ export type PostWithCounts = Post & {
     comments: number;
     likedUsers: number;
   };
+  isLiked: boolean;
   createdBy: ShortUser;
 };
 

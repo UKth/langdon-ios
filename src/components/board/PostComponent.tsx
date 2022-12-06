@@ -92,10 +92,32 @@ const PostComponent = ({ post, isMine }: PostComponentProps) => {
             >
               @{post.isAnonymous ? ANONYMOUS_USERNAME : post.createdBy?.netId}
             </BoldText>
-            <View style={{ flexDirection: "row", width: 20 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginRight: 3,
+              }}
+            >
               <Ionicons
-                style={{ marginRight: 3 }}
+                style={{ marginRight: 2 }}
                 name="chatbox-outline"
+                color={colors.mediumThemeColor}
+                size={9}
+              />
+              <BoldText
+                style={{
+                  color: colors.mediumThemeColor,
+                  fontSize: 9,
+                }}
+              >
+                {post._count.comments}
+              </BoldText>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons
+                style={{ marginRight: 1 }}
+                name="heart-outline"
                 color={colors.mediumThemeColor}
                 size={10}
               />
@@ -105,7 +127,7 @@ const PostComponent = ({ post, isMine }: PostComponentProps) => {
                   fontSize: 9,
                 }}
               >
-                {post._count.comments}
+                {post._count.likedUsers}
               </BoldText>
             </View>
           </View>

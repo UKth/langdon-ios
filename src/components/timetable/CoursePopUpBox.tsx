@@ -345,7 +345,7 @@ const CoursePopUpBox = ({
                   meeting.building.longitude
                 ) {
                   Linking.openURL(
-                    "https://maps.google.com/?q=@" +
+                    "comgooglemaps://maps.google.com/?q=@" +
                       meeting.building.latitude +
                       "," +
                       meeting.building.longitude

@@ -6,7 +6,6 @@ import { getNameString, logout, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
-import { Ionicons } from "@expo/vector-icons";
 import {
   ErrorComponent,
   Logout,
@@ -14,7 +13,7 @@ import {
   ProfileCard,
   ScreenContainer,
 } from "../../components";
-import { API_URL, colors, styles } from "../../constants";
+import { colors, styles } from "../../constants";
 import { BoldText } from "../../components/StyledText";
 import { shadow } from "../../constants/styles";
 
@@ -78,6 +77,36 @@ const Profile = () => {
 
             borderColor: colors.themeColor,
             borderRadius: styles.borderRadius.md,
+            marginBottom: 10,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+          onPress={() => navigation.push("MyPosts")}
+        >
+          <View style={{ maxWidth: "75%" }}>
+            <BoldText
+              numberOfLines={1}
+              style={{
+                color: colors.themeColor,
+                fontSize: 14,
+                marginBottom: 2,
+              }}
+            >
+              Liked posts
+            </BoldText>
+          </View>
+        </MyPressable>
+        <MyPressable
+          style={{
+            paddingVertical: 13,
+            paddingHorizontal: 15,
+            backgroundColor: "white",
+
+            ...shadow.md,
+
+            borderColor: colors.themeColor,
+            borderRadius: styles.borderRadius.md,
             marginBottom: 20,
             flexDirection: "row",
             justifyContent: "space-between",
@@ -99,7 +128,7 @@ const Profile = () => {
           </View>
         </MyPressable>
         <Logout />
-        <View style={{ alignItems: "center", paddingTop: "60%", flex: 1 }}>
+        <View style={{ alignItems: "center", paddingTop: "40%", flex: 1 }}>
           <BoldText
             style={{
               color: colors.mediumThemeColor,

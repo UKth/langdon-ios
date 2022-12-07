@@ -14,6 +14,7 @@ import {
   Chatrooms,
   Chatroom,
   MyPosts,
+  LikedPosts,
   MyComments,
   Tables,
 } from "../screens/MainTab";
@@ -43,6 +44,7 @@ export type StackGeneratorParamList = {
   Chatroom: { id: number };
   Profile: undefined;
   MyPosts: undefined;
+  LikedPosts: undefined;
   MyComments: undefined;
   Tables: undefined;
 };
@@ -140,6 +142,13 @@ const StackGenerator = ({ screenName }: StackGeneratorProps) => {
           component={MyPosts}
           options={() => ({
             title: "My posts",
+          })}
+        />
+        <Stack.Screen
+          name="LikedPosts"
+          component={LikedPosts}
+          options={() => ({
+            title: "Liked Posts",
           })}
         />
         <Stack.Screen

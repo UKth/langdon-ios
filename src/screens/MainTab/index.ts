@@ -11,6 +11,7 @@ import SendFirstMessage from "./SendFirstMessage";
 import Chatrooms from "./Chatrooms";
 import Chatroom from "./Chatroom";
 import MyPosts from "./MyPosts";
+import LikedPosts from "./LikedPosts";
 import MyComments from "./MyComments";
 import Tables from "./Tables";
 
@@ -28,6 +29,7 @@ export {
   Chatrooms,
   Chatroom,
   MyPosts,
+  LikedPosts,
   MyComments,
   Tables,
 };

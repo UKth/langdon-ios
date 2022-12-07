@@ -1,6 +1,6 @@
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useContext } from "react";
-import { View, ViewProps } from "react-native";
+import { Linking, View, ViewProps } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { getNameString, logout, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -78,7 +78,7 @@ const Profile = () => {
 
             borderColor: colors.themeColor,
             borderRadius: styles.borderRadius.md,
-            marginBottom: 15,
+            marginBottom: 20,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
@@ -99,6 +99,25 @@ const Profile = () => {
           </View>
         </MyPressable>
         <Logout />
+        <View style={{ alignItems: "center", paddingTop: "60%", flex: 1 }}>
+          <BoldText
+            style={{
+              color: colors.mediumThemeColor,
+              marginBottom: 5,
+              fontSize: 13,
+            }}
+          >
+            If you have any inquiry, please contact us via
+          </BoldText>
+          <BoldText
+            onPress={() => {
+              Linking.openURL("mailto:collegetable.dev@gmail.com");
+            }}
+            style={{ color: colors.themeColor, fontSize: 13 }}
+          >
+            collegetable.dev@gmail.com.
+          </BoldText>
+        </View>
       </KeyboardAwareScrollView>
     </ScreenContainer>
   );

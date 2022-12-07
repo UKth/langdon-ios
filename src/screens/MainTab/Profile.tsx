@@ -82,7 +82,7 @@ const Profile = () => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
-          onPress={() => navigation.push("MyPosts")}
+          onPress={() => navigation.push("LikedPosts")}
         >
           <View style={{ maxWidth: "75%" }}>
             <BoldText

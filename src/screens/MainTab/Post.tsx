@@ -6,35 +6,15 @@ import {
   Alert,
   FlatList,
   KeyboardAvoidingView,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
   View,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  ANONYMOUS_USERNAME,
-  API_URL,
-  colors,
-  messages,
-  styles,
-} from "../../constants";
-import {
-  getTimeDifferenceString,
-  getTimeString,
-  loadData,
-  postData,
-} from "../../util";
+import { ANONYMOUS_USERNAME, API_URL, colors, messages } from "../../constants";
+import { getTimeString, loadData, postData } from "../../util";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackGeneratorParamList } from "../../navigation/StackGenerator";
 import { UserContext } from "../../contexts/userContext";
 import Checkbox from "expo-checkbox";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import {
   CommentComponent,
   LoadingComponent,
@@ -61,6 +41,7 @@ const PostScreen = ({
   const [isAnonymous, setIsAnonymous] = useState(true);
   const { spinner } = useContext(ProgressContext);
   const commentInputRef = useRef<any>();
+  const [isLiked, setIsLiked] = useState(false);
 
   const fetch = async (lastCommentId?: number) => {
     const data = await postData(
@@ -86,6 +67,7 @@ const PostScreen = ({
       } else {
         setPost(data.post);
       }
+      setIsLiked(data.post.isLiked);
     } else {
       Alert.alert(data?.error ?? "Failed to load posts.");
     }
@@ -144,6 +126,35 @@ const PostScreen = ({
     } else {
       Alert.alert(messages.messages.comment.commentDeleted);
       fetch();
+    }
+  };
+
+  const pressLike = async (like: boolean) => {
+    if (post) {
+      spinner.start();
+      const data = await postData(
+        userContext,
+        API_URL + "board/post/" + (like ? "likePost" : "unlikePost"),
+        {
+          postId: post.id,
+        }
+      );
+      spinner.stop();
+      if (data?.ok) {
+        if (data.count?.likedUser !== undefined) {
+          setPost({
+            ...post,
+            _count: {
+              ...post._count,
+              likedUsers: data.count.likedUser,
+            },
+            isLiked: like,
+          });
+        }
+      } else {
+        Alert.alert(data.error ?? (like ? "Like failed." : "Unlike failed"));
+        setIsLiked(!like);
+      }
     }
   };
 
@@ -281,21 +292,48 @@ const PostScreen = ({
             marginBottom: 10,
           }}
         >
-          <Ionicons
-            style={{ marginTop: 2, marginRight: 3 }}
-            name="chatbox-outline"
-            color={colors.mediumThemeColor}
-            size={12}
-          />
-          <BoldText
-            style={{
-              marginTop: 1,
-              color: colors.mediumThemeColor,
-              fontSize: 12,
+          <View style={{ flexDirection: "row", marginRight: 3 }}>
+            <Ionicons
+              style={{ marginTop: 2, marginRight: 3 }}
+              name="chatbox-outline"
+              color={colors.mediumThemeColor}
+              size={14}
+            />
+            <BoldText
+              style={{
+                marginTop: 1,
+                color: colors.mediumThemeColor,
+                fontSize: 12,
+              }}
+            >
+              {post._count.comments}
+            </BoldText>
+          </View>
+
+          <MyPressable
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            style={{ flexDirection: "row" }}
+            onPress={() => {
+              pressLike(!isLiked);
+              setIsLiked(!isLiked);
             }}
           >
-            {post._count.comments}
-          </BoldText>
+            <Ionicons
+              style={{ marginTop: 2, marginRight: 3 }}
+              name={isLiked ? "heart" : "heart-outline"}
+              color={colors.mediumThemeColor}
+              size={14}
+            />
+            <BoldText
+              style={{
+                marginTop: 1,
+                color: colors.mediumThemeColor,
+                fontSize: 12,
+              }}
+            >
+              {post._count.likedUsers + +(!post.isLiked && isLiked)}
+            </BoldText>
+          </MyPressable>
         </View>
       </View>
     </View>

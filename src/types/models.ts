@@ -210,7 +210,6 @@ export type PostWithBoard = Post & {
 export type FullPost = PostWithCounts & {
   createdBy: User;
   comments: Comment[];
-  likedUsers: User[];
 };
 
 /**

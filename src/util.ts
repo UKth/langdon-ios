@@ -387,6 +387,10 @@ export const handleNotification = ({
   notification: Notifications.Notification;
 }) => {
   const data = notification.request.content.data as pushNotificationData;
+  sendPostRequest(API_URL + "recordPushClicked", {
+    pushString: getPushString(notification.request.content),
+    accessToken,
+  });
 
   if (["Post", "Chatrooms"].includes(data.route)) {
     if (data.route === "Post") {
@@ -423,4 +427,12 @@ export const loadData = ({
   if (oldData[oldData.length - 1].id === lastId) {
     setData([...oldData, ...loadedData]);
   }
+};
+
+export const getPushString = (content: Notifications.NotificationContent) => {
+  let str = "";
+  str += content.subtitle ?? "";
+  str += content.body ?? "";
+  str += JSON.stringify(content.data);
+  return str;
 };

@@ -432,7 +432,9 @@ export const loadData = ({
 export const getPushString = (content: Notifications.NotificationContent) => {
   let str = "";
   str += content.subtitle ?? "";
+  str += " ";
   str += content.body ?? "";
+  str += " ";
   str += JSON.stringify(content.data);
   return str;
 };

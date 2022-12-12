@@ -2,7 +2,7 @@
   "expo": {
     "name": "College Table",
     "slug": "langdon-ios",
-    "version": "1.0.6",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "collegetable",

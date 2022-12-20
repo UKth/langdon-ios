@@ -76,6 +76,13 @@ const Chatrooms = () => {
     );
   }, []);
 
+  useEffect(() => {
+    if (!chatrooms) {
+      navigation.addListener("focus", refresh);
+      return () => navigation.removeListener("focus", refresh);
+    }
+  }, [chatrooms]); // TODO: Not working
+
   if (!userContext.user) {
     return null;
   }

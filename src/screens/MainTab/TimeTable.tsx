@@ -54,6 +54,7 @@ const TimeTable = ({
   const [table, setTable] = useState<TableWithClasses>();
 
   const { spinner } = useContext(ProgressContext);
+  console.log(accessToken);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();
@@ -135,11 +136,11 @@ const TimeTable = ({
     updateTable();
   };
 
-  // useEffect(()=>{
-  //   if(table){
-  //     AsyncStorage.setItem(TABLE_KEY + table.id, JSON.stringify(table));
-  //   }
-  // },[table])
+  useEffect(() => {
+    if (table) {
+      AsyncStorage.setItem(TABLE_KEY + table.id, JSON.stringify(table));
+    }
+  }, [table]);
 
   const restoreData = async () => {
     const cachedTable = await AsyncStorage.getItem(TABLE_KEY + tableId);

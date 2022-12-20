@@ -229,25 +229,27 @@ const TimeTable = ({
             ) : null}
           </View>
           <View style={{ flexDirection: "row" }}>
-            <MyPressable
-              style={{
-                marginRight: 10,
-                backgroundColor: "white",
-                width: 35,
-                height: 35,
-                borderRadius: 35,
-                alignItems: "center",
-                justifyContent: "center",
-                ...shadow.md,
-              }}
-              onPress={() => navigation.push("Tables")}
-            >
-              <Ionicons
-                name="ios-calendar-outline"
-                size={20}
-                color={colors.mediumThemeColor}
-              />
-            </MyPressable>
+            {route?.params?.tableId ? null : (
+              <MyPressable
+                style={{
+                  marginRight: 10,
+                  backgroundColor: "white",
+                  width: 35,
+                  height: 35,
+                  borderRadius: 35,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  ...shadow.md,
+                }}
+                onPress={() => navigation.push("Tables")}
+              >
+                <Ionicons
+                  name="ios-calendar-outline"
+                  size={20}
+                  color={colors.mediumThemeColor}
+                />
+              </MyPressable>
+            )}
             {route?.params?.tableId ? null : (
               <MyPressable
                 style={{

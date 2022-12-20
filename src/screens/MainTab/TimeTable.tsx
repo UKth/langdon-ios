@@ -169,7 +169,7 @@ const TimeTable = ({
       } else {
         setTable(JSON.parse(cachedTable)); // may produce error
       }
-      await updateData();
+      await updateData(); // TODO: double alert (focus listener)
       spinner.stop();
     })();
 

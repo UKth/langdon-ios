@@ -54,7 +54,6 @@ const TimeTable = ({
   const [table, setTable] = useState<TableWithClasses>();
 
   const { spinner } = useContext(ProgressContext);
-  console.log(accessToken);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<StackGeneratorParamList>>();

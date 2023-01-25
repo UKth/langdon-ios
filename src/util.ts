@@ -336,7 +336,7 @@ export const getTimeDifferenceString = (createdAt: Date) => {
     // return Math.floor(diff / (60 * 60000 * 24 * 7)) + "week(s) ago";
   } else if (diff / (60 * 60000 * 24) < 365) {
     value = Math.floor(diff / (60 * 60000 * 24 * 30));
-    unit = "week";
+    unit = "month";
     // return Math.floor(diff / (60 * 60000 * 24 * 30)) + "month(s) ago";
   } else {
     value = Math.floor(diff / (60 * 60000 * 24 * 365));
